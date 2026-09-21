@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./supabase-config.js"></script>
 <style>
 :root{
   --bg:#f1eff7; --bg2:#e7e3f1; --surface:#ffffff; --surface2:#f6f4fb; --line:#d6d1e6;
@@ -312,6 +314,7 @@ textarea.inp{resize:vertical;min-height:90px}
 <div id="toast" role="status" aria-live="polite"></div>
 <script>
 'use strict';
+const SUPABASE_CONFIG = window.GRIMORIO_SUPABASE || { url: '', anonKey: '' };
 /* =========================================================
    Usuários fixos da mesa
    ========================================================= */
@@ -399,17 +402,52 @@ function labelsFor(campId) {
    Armazenamento: banco compartilhado (db) ou modo local
    ========================================================= */
 let store = null;
-function makeDbStore(db) {
+function makeSupabaseStore(db) {
+  const table = 'grimorio_data';
+  const imageTable = 'grimorio_images';
+  const read = async col => {
+    const { data, error } = await db.from(table).select('id,data').eq('collection', col);
+    if (error) throw error;
+    return (data || []).map(row => ({ id: row.id, ...(row.data || {}) }));
+  };
+  const watch = (col, cb, onErr) => {
+    let closed = false;
+    const refresh = () => read(col).then(rows => { if (!closed) cb(rows); }).catch(err => { if (!closed) onErr?.(err); });
+    refresh();
+    const channel = db.channel('grimorio-' + col)
+      .on('postgres_changes', { event: '*', schema: 'public', table, filter: 'collection=eq.' + col }, refresh)
+      .subscribe(status => { if (status === 'CHANNEL_ERROR') onErr?.(new Error('Falha no canal realtime do Supabase.')); });
+    return () => { closed = true; db.removeChannel(channel); };
+  };
   return {
-    watch(col, cb, onErr) {
-      return db.collection(col).onSnapshot(s => cb(s.docs.map(d => ({ id: d.id, ...d.data() }))), onErr);
+    watch,
+    async set(col, id, data) {
+      const { error } = await db.from(table).upsert({ collection: col, id, data });
+      if (error) throw error;
     },
-    set: (col, id, data) => db.doc(col + '/' + id).set(data),
-    update: (col, id, data) => db.doc(col + '/' + id).update(data),
-    remove: (col, id) => db.doc(col + '/' + id).delete(),
-    async getImage(id) { const s = await db.doc('images/' + id).get(); return s.exists ? s.data().data : null; },
-    putImage: (id, data) => db.doc('images/' + id).set({ data, createdAt: Date.now() }),
-    delImage: id => db.doc('images/' + id).delete()
+    async update(col, id, data) {
+      const { data: current, error: readError } = await db.from(table).select('data').eq('collection', col).eq('id', id).single();
+      if (readError) throw readError;
+      const { error } = await db.from(table).update({ data: { ...(current?.data || {}), ...data } }).eq('collection', col).eq('id', id);
+      if (error) throw error;
+    },
+    async remove(col, id) {
+      const { error } = await db.from(table).delete().eq('collection', col).eq('id', id);
+      if (error) throw error;
+    },
+    async getImage(id) {
+      const { data, error } = await db.from(imageTable).select('data').eq('id', id).maybeSingle();
+      if (error) throw error;
+      return data?.data || null;
+    },
+    async putImage(id, data) {
+      const { error } = await db.from(imageTable).upsert({ id, data, created_at: new Date().toISOString() });
+      if (error) throw error;
+    },
+    async delImage(id) {
+      const { error } = await db.from(imageTable).delete().eq('id', id);
+      if (error) throw error;
+    }
   };
 }
 function makeLocalStore() {
@@ -1408,10 +1446,13 @@ document.addEventListener('click', async e => {
 })();
 async function boot() {
   let db = null;
-  try { if (window.claude && typeof window.claude.use === 'function') db = await window.claude.use('db'); } catch (e) { db = null; }
+  try {
+    if (window.supabase && SUPABASE_CONFIG.url && SUPABASE_CONFIG.anonKey) {
+      db = makeSupabaseStore(window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey));
+    }
+  } catch (e) { db = null; }
   if (db) {
-    store = makeDbStore(db); S.mode = 'online';
-    window.claude.use('assets').then(a => { S.assets = a || null; }).catch(() => {});
+    store = db; S.mode = 'online';
   } else {
     store = makeLocalStore(); S.mode = 'local';
   }
