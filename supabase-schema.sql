@@ -11,6 +11,10 @@ create table if not exists public.grimorio_images (
   created_at timestamptz not null default now()
 );
 
+grant usage on schema public to anon;
+grant select, insert, update, delete on public.grimorio_data to anon;
+grant select, insert, update, delete on public.grimorio_images to anon;
+
 alter table public.grimorio_data enable row level security;
 alter table public.grimorio_images enable row level security;
 

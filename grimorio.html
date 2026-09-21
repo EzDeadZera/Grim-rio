@@ -412,11 +412,17 @@ function makeSupabaseStore(db) {
   };
   const watch = (col, cb, onErr) => {
     let closed = false;
-    const refresh = () => read(col).then(rows => { if (!closed) cb(rows); }).catch(err => { if (!closed) onErr?.(err); });
+    const refresh = () => read(col).then(rows => { if (!closed) cb(rows); }).catch(err => {
+      if (!closed) { console.error('Supabase: falha ao ler ' + col, err); onErr?.(err); }
+    });
     refresh();
     const channel = db.channel('grimorio-' + col)
       .on('postgres_changes', { event: '*', schema: 'public', table, filter: 'collection=eq.' + col }, refresh)
-      .subscribe(status => { if (status === 'CHANNEL_ERROR') onErr?.(new Error('Falha no canal realtime do Supabase.')); });
+      .subscribe(status => {
+        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+          console.warn('Supabase Realtime indisponível para ' + col + '. O carregamento inicial continua funcionando.');
+        }
+      });
     return () => { closed = true; db.removeChannel(channel); };
   };
   return {
@@ -1467,7 +1473,10 @@ async function boot() {
       }
     }, err => {
       pending.delete(c); if (!pending.size) S.ready = true; scheduleRender();
-      if (err && err.code !== 'revoked') toast('A conexão com os dados da mesa caiu. Recarregue a página.', 'err');
+      if (err && err.code !== 'revoked') {
+        const detail = err.message || err.code || 'erro desconhecido';
+        toast('Supabase: ' + detail, 'err');
+      }
     });
   });
 }
