@@ -1,0 +1,1435 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grimório — mesa de RPG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f1eff7; --bg2:#e7e3f1; --surface:#ffffff; --surface2:#f6f4fb; --line:#d6d1e6;
+  --text:#231f3a; --muted:#5f5982; --brass:#8f6a1c; --brass-soft:#f3e6c6; --on-brass:#ffffff;
+  --hp:#bf3f36; --mana:#2f63c9; --ok:#2f8a57; --danger:#b3362e;
+  --plank:#b58a55; --plank-edge:#8a6436; --shadow:0 14px 40px rgba(35,31,58,.16);
+  --serif:'Fraunces', Georgia, 'Times New Roman', serif;
+  --sans:'Work Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1d1b30; --bg2:#252340; --surface:#2c2948; --surface2:#343057; --line:#46406d;
+    --text:#efe8d8; --muted:#aca6c9; --brass:#d8b060; --brass-soft:#3d3553; --on-brass:#221c0e;
+    --hp:#dd5c52; --mana:#6a98f2; --ok:#63bc8b; --danger:#e0645b;
+    --plank:#5a4128; --plank-edge:#3b2a19; --shadow:0 16px 44px rgba(6,4,18,.55);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1d1b30; --bg2:#252340; --surface:#2c2948; --surface2:#343057; --line:#46406d;
+  --text:#efe8d8; --muted:#aca6c9; --brass:#d8b060; --brass-soft:#3d3553; --on-brass:#221c0e;
+  --hp:#dd5c52; --mana:#6a98f2; --ok:#63bc8b; --danger:#e0645b;
+  --plank:#5a4128; --plank-edge:#3b2a19; --shadow:0 16px 44px rgba(6,4,18,.55);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text)}
+body{font-family:var(--sans);font-size:15px;line-height:1.55;min-height:100vh;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px;border-radius:4px}
+h1,h2,h3{font-family:var(--serif);font-weight:600;margin:0;line-height:1.15}
+.display{font-size:clamp(30px,4.6vw,46px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:22px} h3{font-size:18px}
+.lede{color:var(--muted);max-width:60ch;margin:.4em 0 0}
+.muted{color:var(--muted)}
+.hidden{display:none!important}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+/* botões */
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);padding:9px 16px;border-radius:8px;cursor:pointer;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--brass)}
+.btn.primary{background:var(--brass);border-color:var(--brass);color:var(--on-brass)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--danger)}
+.btn.danger:hover{border-color:var(--danger)}
+.btn.sm{padding:6px 11px;font-size:14px}
+.btn.block{width:100%;justify-content:center}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.btn svg,.icon-btn svg{width:17px;height:17px;flex:none}
+.icon-btn{display:inline-grid;place-items:center;width:36px;height:36px;border-radius:8px;border:1px solid var(--line);background:var(--surface);cursor:pointer}
+.icon-btn:hover{border-color:var(--brass)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+/* topo */
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:18px;padding:12px clamp(14px,3vw,32px);background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--serif);font-weight:700;font-size:20px}
+.brand svg{width:26px;height:26px;color:var(--brass)}
+.crumbs{display:flex;align-items:center;gap:6px;min-width:0;flex:1;color:var(--muted);font-size:14px;overflow:hidden}
+.crumbs a{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:22ch}
+.crumbs a:hover{color:var(--text)}
+.crumbs .sep{opacity:.5}
+.top-right{display:flex;align-items:center;gap:10px}
+.user-chip{display:flex;align-items:center;gap:8px;padding:4px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:14px;font-weight:500}
+.user-chip .uname{padding-right:6px}
+.role{padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600}
+.role.master{background:var(--brass);color:var(--on-brass)}
+.role.player{background:var(--surface2);color:var(--muted);border:1px solid var(--line)}
+.mode-badge{font-size:12px;padding:3px 9px;border-radius:999px;border:1px dashed var(--muted);color:var(--muted)}
+@media (max-width:760px){.crumbs{display:none}.user-chip .uname{display:none}.brand span{display:none}.topbar{justify-content:space-between}}
+
+.main{padding:clamp(18px,3.5vw,40px) clamp(14px,3vw,32px) 80px;max-width:1240px;margin:0 auto}
+.page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:30px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:34px 0 16px;flex-wrap:wrap}
+.back{display:inline-block;color:var(--muted);font-size:14px;margin-bottom:16px}
+.back:hover{color:var(--text)}
+.empty{border:1px dashed var(--line);border-radius:12px;padding:34px 22px;text-align:center;color:var(--muted);background:var(--surface2)}
+.empty strong{display:block;color:var(--text);font-family:var(--serif);font-size:19px;margin-bottom:4px}
+.loading{padding:80px 0;text-align:center;color:var(--muted);font-family:var(--serif);font-size:20px}
+
+/* estante */
+.shelf{display:flex;flex-wrap:wrap;align-items:flex-end;padding:0 4px;border-radius:6px}
+.spine-slot{height:318px;display:flex;align-items:flex-end;padding:0 5px;border-bottom:14px solid var(--plank);box-shadow:0 6px 0 var(--plank-edge);margin-bottom:34px}
+.spine-slot:first-child{padding-left:14px}
+.spine-slot:last-child{padding-right:14px;flex:1 0 auto}
+.spine{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:space-between;width:var(--w);height:var(--h);padding:14px 0;border-radius:4px 4px 2px 2px;background:
+  linear-gradient(90deg,rgba(0,0,0,.28),rgba(255,255,255,.08) 18%,rgba(255,255,255,0) 40%,rgba(0,0,0,.18) 88%,rgba(0,0,0,.35)),var(--c);color:var(--t);box-shadow:inset 0 0 0 1px rgba(0,0,0,.25),2px 0 6px rgba(0,0,0,.25);transition:transform .25s ease;cursor:pointer}
+.spine:hover,.spine:focus-visible{transform:translateY(-14px)}
+.band{width:78%;height:9px;border-top:2px solid color-mix(in srgb,var(--t) 55%,transparent);border-bottom:2px solid color-mix(in srgb,var(--t) 55%,transparent)}
+.spine-title{writing-mode:vertical-rl;font-family:var(--serif);font-weight:700;font-size:19px;letter-spacing:.02em;flex:1;display:flex;align-items:center;padding:12px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-height:calc(var(--h) - 90px)}
+.spine-count{font-size:12px;opacity:.8;font-weight:600}
+.spine.add{background:transparent;border:2px dashed var(--muted);color:var(--muted);box-shadow:none;justify-content:center;gap:10px}
+.spine.add:hover{color:var(--brass);border-color:var(--brass)}
+.spine.add svg{width:22px;height:22px}
+.spine.add .spine-title{flex:none;max-height:none;font-size:16px;padding:0}
+
+/* biblioteca */
+.lib-hero{display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:start}
+.lib-mark{width:54px;height:128px;border-radius:4px;background:linear-gradient(90deg,rgba(0,0,0,.28),rgba(255,255,255,.1) 25%,rgba(0,0,0,.3)),var(--c);box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
+.lib-meta{margin-top:12px;font-size:14px;color:var(--muted)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tag{font-size:13px;padding:2px 10px;border-radius:999px;background:var(--surface2);border:1px solid var(--line)}
+@media (max-width:760px){.lib-hero{grid-template-columns:auto 1fr}.lib-hero .row{grid-column:1/-1}.lib-mark{height:90px;width:40px}}
+.camp-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.camp-card{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:border-color .2s}
+.camp-card:hover{border-color:var(--brass)}
+.camp-cover{aspect-ratio:16/8;background:var(--bg2);position:relative;overflow:hidden}
+.camp-cover img{width:100%;height:100%;object-fit:cover}
+.cover-fallback{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);font-size:54px;font-weight:700;color:color-mix(in srgb,var(--c,var(--brass)) 70%,var(--text));background:radial-gradient(circle at 30% 20%,color-mix(in srgb,var(--c,var(--brass)) 35%,transparent),transparent 70%),var(--bg2)}
+.camp-body{padding:16px 18px 18px}
+.camp-body p{margin:6px 0 0;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.camp-stats{margin-top:12px;font-size:13px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap}
+
+/* campanha */
+.camp-hero{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--surface);margin-bottom:22px}
+.camp-hero .hero-img{height:clamp(140px,24vw,240px);overflow:hidden;background:var(--bg2)}
+.camp-hero .hero-img img{width:100%;height:100%;object-fit:cover}
+.camp-hero-text{padding:20px 22px;display:flex;justify-content:space-between;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.camp-hero-text p{margin:6px 0 0;color:var(--muted);max-width:70ch;white-space:pre-wrap}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:24px;overflow-x:auto}
+.tab{padding:11px 16px;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--muted);font-weight:500;white-space:nowrap;display:flex;gap:8px;align-items:center}
+.tab:hover{color:var(--text)}
+.tab.on{color:var(--text);border-bottom-color:var(--brass)}
+.tab .n{font-size:12px;background:var(--surface2);border:1px solid var(--line);border-radius:999px;padding:0 7px}
+
+/* cards de personagem / monstro */
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.char-card,.mon-card{position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:border-color .2s}
+.char-card:hover{border-color:var(--brass)}
+.char-card.mine{border-color:color-mix(in srgb,var(--brass) 60%,var(--line))}
+.portrait{aspect-ratio:4/5;background:var(--bg2);position:relative;overflow:hidden}
+.portrait img{width:100%;height:100%;object-fit:cover}
+.initial{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--serif);font-size:64px;font-weight:700;color:var(--muted);background:radial-gradient(circle at 50% 30%,var(--surface2),var(--bg2))}
+.cc-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.cc-body h3{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cc-sub{font-size:14px;color:var(--muted);margin-top:-4px}
+.owner{position:absolute;top:10px;left:10px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(4px);border:1px solid var(--line)}
+.owner.you{background:var(--brass);color:var(--on-brass);border-color:var(--brass)}
+.mon-card.off{opacity:.78}
+.mon-card.off .portrait img{filter:grayscale(.7)}
+.vis{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface2);cursor:pointer;align-self:flex-start}
+.vis svg{width:15px;height:15px}
+.vis.on{background:color-mix(in srgb,var(--ok) 18%,transparent);border-color:color-mix(in srgb,var(--ok) 60%,transparent);color:var(--ok)}
+.unknown{font-style:italic;color:var(--muted)}
+
+/* barras */
+.stat{display:flex;flex-direction:column;gap:5px}
+.stat-top{display:flex;justify-content:space-between;font-size:13px;font-weight:600}
+.stat-top .v{font-variant-numeric:tabular-nums;color:var(--muted)}
+.bar{height:8px;border-radius:99px;background:var(--bg2);overflow:hidden;border:1px solid var(--line)}
+.bar i{display:block;height:100%;border-radius:99px;transition:width .35s ease}
+.stat.hp .bar i{background:var(--hp)}
+.stat.mana .bar i{background:var(--mana)}
+.adj{display:flex;gap:4px;margin-top:2px}
+.adj button{flex:1;padding:4px 0;border-radius:6px;border:1px solid var(--line);background:var(--surface2);cursor:pointer;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
+.adj button:hover{border-color:var(--brass)}
+
+/* ficha */
+.sheet-grid{display:grid;grid-template-columns:300px 1fr;gap:28px;align-items:start}
+@media (max-width:860px){.sheet-grid{grid-template-columns:1fr}}
+.sheet-side{display:flex;flex-direction:column;gap:16px;position:sticky;top:84px}
+@media (max-width:860px){.sheet-side{position:static}}
+.sheet-side .portrait{border-radius:14px;border:1px solid var(--line);cursor:zoom-in}
+.stat-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:14px}
+.sheet-head{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start;margin-bottom:8px}
+.sheet-head .cc-sub{margin-top:6px;font-size:16px}
+.block{margin-top:30px}
+.block h2{font-size:20px;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.block h2::after{content:"";flex:1;height:1px;background:var(--line)}
+.attrs{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px}
+.attr{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 10px;text-align:center}
+.attr .av{font-family:var(--serif);font-size:28px;font-weight:700;line-height:1.1;word-break:break-word}
+.attr .an{font-size:13px;color:var(--muted);margin-top:4px;word-break:break-word}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--muted);background:var(--surface2);font-size:13px}
+tr:last-child td{border-bottom:0}
+td.dmg{font-weight:600;color:var(--hp);white-space:nowrap}
+.fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.field{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.field .fl{font-size:13px;color:var(--muted)}
+.field .fv{white-space:pre-wrap;word-break:break-word}
+.notes{white-space:pre-wrap;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;max-width:75ch}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.gallery .g{aspect-ratio:1;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:var(--bg2);cursor:zoom-in;padding:0}
+.gallery .g img{width:100%;height:100%;object-fit:cover}
+
+/* mapa */
+.map-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.map-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.map-tabs .chip.on{background:var(--brass);color:var(--on-brass);border-color:var(--brass)}
+.chip{padding:6px 13px;border-radius:999px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-size:14px;font-weight:500}
+.chip:hover{border-color:var(--brass)}
+.map-tools{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.btn.toggle-on{background:var(--brass-soft);border-color:var(--brass);color:var(--text)}
+.map-hint{margin:0 0 10px;font-size:14px;color:var(--muted)}
+.map-vp{position:relative;height:min(72vh,760px);border-radius:14px;border:1px solid var(--line);background:
+  radial-gradient(circle,var(--line) 1px,transparent 1.5px) 0 0/22px 22px,var(--bg2);overflow:hidden;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+.map-vp.panning{cursor:grabbing}
+.map-vp.editing{cursor:crosshair}
+.map-inner{position:absolute;left:0;top:0;width:100%;transform-origin:0 0;--inv:1}
+.map-inner img{width:100%;height:auto;pointer-events:none;-webkit-user-drag:none}
+.wp{position:absolute;transform:translate(-50%,-100%) scale(var(--inv));transform-origin:50% 100%;background:none;border:0;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center}
+.wp-pin{width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--pc);border:3px solid #fff;box-shadow:0 3px 10px rgba(0,0,0,.45);display:grid;place-items:center}
+.wp-pin::after{content:"";width:9px;height:9px;border-radius:50%;background:#fff;opacity:.9}
+.wp-label{order:-1;margin-bottom:6px;font-size:13px;font-weight:600;padding:2px 9px;border-radius:6px;background:rgba(20,18,34,.82);color:#f3eee2;white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis;opacity:0;transition:opacity .15s}
+.wp:hover .wp-label,.wp:focus-visible .wp-label,.map-vp.labels .wp-label{opacity:1}
+.map-vp.editing .wp{cursor:move}
+.wp-list{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.wp-list .chip{display:inline-flex;align-items:center;gap:7px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--pc);flex:none;box-shadow:0 0 0 2px var(--surface)}
+
+/* modal */
+#overlay:empty,#confirm:empty,#lightbox:empty{display:none}
+.scrim{position:fixed;inset:0;z-index:50;background:rgba(12,10,24,.6);display:flex;align-items:center;justify-content:center;padding:18px;animation:fade .15s ease}
+#confirm .scrim{z-index:70}
+@keyframes fade{from{opacity:0}}
+.modal{width:min(620px,100%);max-height:min(88vh,900px);display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+.modal.wide{width:min(900px,100%)}
+.modal.small{width:min(420px,100%)}
+.modal header{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.modal header h2{flex:1;font-size:21px}
+.modal-scroll{overflow-y:auto;padding:20px;flex:1}
+.modal footer{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--line);background:var(--surface2);flex-wrap:wrap}
+.modal footer .spacer{flex:1}
+@media (max-width:600px){.scrim{padding:0;align-items:stretch}.modal,.modal.wide,.modal.small{max-height:100vh;height:100%;border-radius:0;width:100%}}
+label.f{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:500;margin-bottom:14px}
+label.f small{font-weight:400;color:var(--muted)}
+.inp{width:100%;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:var(--bg);min-width:0}
+.inp:focus{outline:none;border-color:var(--brass);box-shadow:0 0 0 3px color-mix(in srgb,var(--brass) 25%,transparent)}
+textarea.inp{resize:vertical;min-height:90px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ed-sec{border-top:1px solid var(--line);padding-top:18px;margin-top:6px;margin-bottom:18px}
+.ed-sec h3{font-size:17px;margin-bottom:4px}
+.ed-sec .hint{font-size:13px;color:var(--muted);margin:0 0 12px}
+.ed-top{display:grid;grid-template-columns:150px 1fr;gap:18px;margin-bottom:12px}
+@media (max-width:600px){.ed-top{grid-template-columns:1fr}.ed-top .pick{max-width:170px}}
+.pick{aspect-ratio:4/5;border-radius:12px;border:2px dashed var(--line);background:var(--bg2);display:grid;place-items:center;cursor:pointer;overflow:hidden;position:relative;color:var(--muted);font-size:13px;text-align:center;padding:0}
+.pick:hover{border-color:var(--brass)}
+.pick img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pick.wide{aspect-ratio:16/7;width:100%}
+.lines{display:flex;flex-direction:column;gap:8px}
+.line{display:grid;gap:8px;align-items:center}
+.line.attr-l{grid-template-columns:1fr 110px 36px}
+.line.item-l{grid-template-columns:1.4fr 70px 110px 1.4fr 36px}
+.line.field-l{grid-template-columns:1fr 1.6fr 36px}
+.line-head{font-size:12px;color:var(--muted);font-weight:600}
+@media (max-width:600px){.line.item-l{grid-template-columns:1fr 70px 36px}.line.item-l .i-dmg,.line.item-l .i-notes{grid-column:1/3}.line-head.item-l{display:none}}
+.x{width:36px;height:36px;border-radius:8px;border:1px solid var(--line);background:transparent;cursor:pointer;display:grid;place-items:center;color:var(--muted)}
+.x:hover{color:var(--danger);border-color:var(--danger)}
+.x svg{width:16px;height:16px}
+.add-line{margin-top:10px}
+.cs{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px;background:var(--surface2)}
+.cs-head{display:grid;grid-template-columns:1fr 36px;gap:8px;margin-bottom:10px}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.thumb{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:var(--bg2)}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb .x{position:absolute;top:4px;right:4px;width:28px;height:28px;background:rgba(20,18,34,.75);color:#fff;border:0}
+.thumb.add{display:grid;place-items:center;border-style:dashed;cursor:pointer;color:var(--muted);font-size:13px;background:transparent}
+.thumb.add:hover{border-color:var(--brass);color:var(--brass)}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.sw{width:34px;height:34px;border-radius:8px;border:2px solid transparent;background:var(--c);cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+.sw.round{border-radius:50%}
+.sw.on{border-color:var(--text);box-shadow:0 0 0 2px var(--surface) inset}
+.switch{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;margin-bottom:10px}
+.switch input{width:40px;height:22px;appearance:none;-webkit-appearance:none;border-radius:99px;background:var(--line);position:relative;cursor:pointer;transition:background .2s;flex:none}
+.switch input::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s}
+.switch input:checked{background:var(--ok)}
+.switch input:checked::after{left:21px}
+.wp-desc{white-space:pre-wrap;margin:0 0 16px}
+.uploading{font-size:13px;color:var(--brass);margin-top:6px}
+
+/* login */
+.login{min-height:100vh;display:grid;place-items:center;padding:24px;background:
+  radial-gradient(ellipse at 20% 0%,color-mix(in srgb,var(--brass) 18%,transparent),transparent 55%),
+  radial-gradient(ellipse at 100% 100%,color-mix(in srgb,var(--mana) 14%,transparent),transparent 50%),var(--bg)}
+.login-card{width:min(420px,100%);background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:32px 28px;box-shadow:var(--shadow)}
+.login-mark svg{width:46px;height:46px;color:var(--brass)}
+.login-card h1{margin-top:12px}
+.login-card form{margin-top:24px}
+.login-err{color:var(--danger);font-size:14px;margin:-4px 0 12px}
+.quick{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.quick p{margin:0 0 10px;font-size:13px;color:var(--muted)}
+.quick .row{gap:6px}
+
+/* lightbox e toast */
+.lb{position:fixed;inset:0;z-index:80;background:rgba(8,6,16,.92);display:grid;place-items:center;padding:24px;cursor:zoom-out}
+.lb img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:90;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{background:var(--text);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;font-weight:500;box-shadow:var(--shadow);animation:fade .2s ease;max-width:90vw}
+.toast.err{background:var(--danger);color:#fff}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="overlay"></div>
+<div id="confirm"></div>
+<div id="lightbox"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+'use strict';
+/* =========================================================
+   Usuários fixos da mesa
+   ========================================================= */
+const USERS = [
+  { id: 'jogador1', name: 'Jogador 1', pass: '12341', role: 'player' },
+  { id: 'jogador2', name: 'Jogador 2', pass: '12342', role: 'player' },
+  { id: 'jogador3', name: 'Jogador 3', pass: '12343', role: 'player' },
+  { id: 'jogador4', name: 'Jogador 4', pass: '12344', role: 'player' },
+  { id: 'mestre',   name: 'Mestre',    pass: 'mestre123', role: 'master' }
+];
+const COLS = ['libraries', 'campaigns', 'characters', 'monsters', 'maps'];
+const LIB_COLORS = [['#7a2630','Sangue'],['#2f5a3f','Musgo'],['#243f6b','Abismo'],['#4f2f6e','Arcano'],['#1f5a5e','Maré'],['#8a6320','Ocre'],['#3a3a44','Carvão'],['#cfc3a6','Osso']];
+const PIN_COLORS = ['#d8b060','#d4564d','#4f86ea','#4fae78','#a877e0','#f2efe6'];
+
+/* =========================================================
+   Ícones
+   ========================================================= */
+const I = {
+  d20: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 2 21 7v10l-9 5-9-5V7z"/><path d="M12 2 7.5 9.5h9zM3 7l4.5 2.5L3 17M21 7l-4.5 2.5L21 17M7.5 9.5 12 17l4.5-7.5M12 17v5M3 17l9 0 9 0"/></svg>',
+  plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+  trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>',
+  edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>',
+  eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+  eyeOff: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.1 6.2C3.5 8 2 12 2 12s3.5 7 10 7c1.7 0 3.2-.5 4.5-1.2M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>',
+  zin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.5-4.5M11 8v6M8 11h6"/></svg>',
+  zout: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.5-4.5M8 11h6"/></svg>',
+  fit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
+  pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
+  tag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.3"/></svg>',
+  moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  img: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.8"/><path d="M21 16l-5-5-9 9"/></svg>'
+};
+
+/* =========================================================
+   Utilidades
+   ========================================================= */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const clone = o => JSON.parse(JSON.stringify(o ?? null));
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const byCreated = (a, b) => (a.createdAt || 0) - (b.createdAt || 0);
+const num = v => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
+function ls(k, v) {
+  try {
+    if (v === undefined) return localStorage.getItem(k);
+    if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v);
+  } catch (e) { return null; }
+}
+function hash(s) { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) | 0; return Math.abs(h); }
+function textOn(hex) {
+  const n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+  return (r * 299 + g * 587 + b * 114) / 1000 > 150 ? '#231f1a' : '#f4ecd8';
+}
+function toast(msg, kind) {
+  const el = document.createElement('div');
+  el.className = 'toast' + (kind === 'err' ? ' err' : '');
+  el.textContent = msg;
+  $('#toast').appendChild(el);
+  setTimeout(() => el.remove(), kind === 'err' ? 5200 : 2600);
+}
+
+/* =========================================================
+   Estado
+   ========================================================= */
+const S = {
+  user: null, ready: false, mode: 'connecting', assets: null,
+  data: { libraries: [], campaigns: [], characters: [], monsters: [], maps: [] },
+  adj: {}, adjT: {},
+  modal: null,
+  mapId: null, mapEdit: false, mapLabels: false, mapView: { s: 1, x: 0, y: 0 },
+  drag: false, renderAfterDrag: false
+};
+const get = (col, id) => S.data[col].find(x => x.id === id);
+const isMaster = () => S.user?.role === 'master';
+const canEditChar = c => isMaster() || c.owner === S.user?.id;
+const userName = id => USERS.find(u => u.id === id)?.name || 'Mestre';
+function labelsFor(campId) {
+  const camp = get('campaigns', campId); const lib = camp && get('libraries', camp.libraryId);
+  return { hp: lib?.hpLabel || 'Vida', mana: lib?.manaLabel || 'Mana' };
+}
+
+/* =========================================================
+   Armazenamento: banco compartilhado (db) ou modo local
+   ========================================================= */
+let store = null;
+function makeDbStore(db) {
+  return {
+    watch(col, cb, onErr) {
+      return db.collection(col).onSnapshot(s => cb(s.docs.map(d => ({ id: d.id, ...d.data() }))), onErr);
+    },
+    set: (col, id, data) => db.doc(col + '/' + id).set(data),
+    update: (col, id, data) => db.doc(col + '/' + id).update(data),
+    remove: (col, id) => db.doc(col + '/' + id).delete(),
+    async getImage(id) { const s = await db.doc('images/' + id).get(); return s.exists ? s.data().data : null; },
+    putImage: (id, data) => db.doc('images/' + id).set({ data, createdAt: Date.now() }),
+    delImage: id => db.doc('images/' + id).delete()
+  };
+}
+function makeLocalStore() {
+  let mem = {};
+  try { mem = JSON.parse(ls('grimorio-local') || '{}') || {}; } catch (e) { mem = {}; }
+  COLS.concat('images').forEach(c => { mem[c] = mem[c] || {}; });
+  const L = {};
+  let warned = false;
+  const persist = () => {
+    try { localStorage.setItem('grimorio-local', JSON.stringify(mem)); }
+    catch (e) { if (!warned) { warned = true; toast('O navegador ficou sem espaço para guardar tudo. As mudanças valem até recarregar.', 'err'); } }
+  };
+  const emit = c => (L[c] || []).forEach(cb => cb(Object.entries(mem[c]).map(([id, d]) => ({ id, ...d }))));
+  return {
+    watch(c, cb) { (L[c] = L[c] || []).push(cb); setTimeout(() => emit(c)); return () => {}; },
+    async set(c, id, d) { mem[c][id] = clone(d); persist(); emit(c); },
+    async update(c, id, d) { mem[c][id] = { ...mem[c][id], ...clone(d) }; persist(); emit(c); },
+    async remove(c, id) { delete mem[c][id]; persist(); emit(c); },
+    async getImage(id) { return mem.images[id]?.data || null; },
+    async putImage(id, data) { mem.images[id] = { data }; persist(); },
+    async delImage(id) { delete mem.images[id]; persist(); }
+  };
+}
+
+/* =========================================================
+   Imagens
+   'a:<id>' = arquivo no armazenamento de arquivos
+   'd:<id>' = imagem comprimida guardada no banco
+   ========================================================= */
+const imgCache = new Map();
+function refSrc(ref) {
+  if (!ref) return '';
+  if (ref.startsWith('a:')) return '/_blob/' + ref.slice(2);
+  const c = imgCache.get(ref);
+  return typeof c === 'string' ? c : '';
+}
+function imgTag(ref, alt = '', cls = '') {
+  if (!ref) return '';
+  const src = refSrc(ref);
+  return `<img ${cls ? `class="${cls}"` : ''} data-ref="${esc(ref)}" ${src ? `src="${esc(src)}"` : ''} alt="${esc(alt)}" loading="lazy" draggable="false">`;
+}
+function hydrateImages(root) {
+  root.querySelectorAll('img[data-ref^="d:"]').forEach(img => {
+    if (img.getAttribute('src')) return;
+    const ref = img.dataset.ref;
+    let p = imgCache.get(ref);
+    if (!p) {
+      p = store.getImage(ref.slice(2)).then(d => { imgCache.set(ref, d || ''); return d; }).catch(() => { imgCache.delete(ref); return null; });
+      imgCache.set(ref, p);
+    }
+    Promise.resolve(p).then(d => { if (d) img.src = d; });
+  });
+}
+function loadImage(file) {
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file);
+    const im = new Image();
+    im.onload = () => { res(im); setTimeout(() => URL.revokeObjectURL(url), 1000); };
+    im.onerror = () => { URL.revokeObjectURL(url); rej(new Error('Não consegui abrir essa imagem.')); };
+    im.src = url;
+  });
+}
+let webpOk = null;
+function canWebp() {
+  if (webpOk === null) { const c = document.createElement('canvas'); c.width = c.height = 1; webpOk = c.toDataURL('image/webp').startsWith('data:image/webp'); }
+  return webpOk;
+}
+function drawScaled(im, maxDim) {
+  const k = Math.min(1, maxDim / Math.max(im.naturalWidth, im.naturalHeight));
+  const c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(im.naturalWidth * k));
+  c.height = Math.max(1, Math.round(im.naturalHeight * k));
+  const g = c.getContext('2d');
+  if (!canWebp()) { g.fillStyle = '#1d1b30'; g.fillRect(0, 0, c.width, c.height); }
+  g.drawImage(im, 0, 0, c.width, c.height);
+  return c;
+}
+async function saveImage(file, kind) {
+  if (!file.type.startsWith('image/')) throw new Error('Escolha um arquivo de imagem (PNG, JPG, WEBP ou GIF).');
+  const im = await loadImage(file);
+  const type = canWebp() ? 'image/webp' : 'image/jpeg';
+  if (S.assets) {
+    try {
+      const c = drawScaled(im, kind === 'map' ? 3200 : 1600);
+      const isPng = file.type === 'image/png' && kind === 'map';
+      const blob = await new Promise(r => c.toBlob(r, isPng ? 'image/png' : type, 0.9));
+      let finalBlob = blob;
+      if (isPng && blob.size > 15e6) finalBlob = await new Promise(r => c.toBlob(r, type, 0.9));
+      const up = await S.assets.upload(finalBlob, { type: finalBlob.type });
+      return 'a:' + up.id;
+    } catch (e) { console.warn('Upload de arquivo falhou, usando o banco', e); }
+  }
+  let dim = kind === 'map' ? 2000 : 1100, q = 0.86, data = '';
+  for (let i = 0; i < 12; i++) {
+    data = drawScaled(im, dim).toDataURL(type, q);
+    if (data.length < 235000) break;
+    if (q > 0.6) q -= 0.08; else dim = Math.round(dim * 0.82);
+  }
+  if (data.length >= 250000) throw new Error('A imagem ficou grande demais mesmo comprimida. Tente uma menor.');
+  const id = uid();
+  await store.putImage(id, data);
+  imgCache.set('d:' + id, data);
+  return 'd:' + id;
+}
+function deleteImageRef(ref) {
+  if (!ref) return;
+  if (ref.startsWith('d:')) store.delImage(ref.slice(2)).catch(() => {});
+  else if (ref.startsWith('a:') && S.assets) S.assets.delete(ref.slice(2)).catch(() => {});
+}
+function pickFiles(multiple) {
+  return new Promise(res => {
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = 'image/*'; inp.multiple = !!multiple;
+    inp.style.display = 'none';
+    inp.onchange = () => { res([...inp.files]); inp.remove(); };
+    document.body.appendChild(inp);
+    inp.click();
+  });
+}
+function sheetRefs(o) { return [o?.portrait, ...(o?.gallery || [])].filter(Boolean); }
+function mapRefs(m) { return [m?.image, ...(m?.waypoints || []).flatMap(w => w.images || [])].filter(Boolean); }
+
+/* =========================================================
+   Rotas
+   ========================================================= */
+function route() {
+  const h = location.hash.replace(/^#\/?/, '').split('/');
+  return { view: h[0] || '', id: h[1] ? decodeURIComponent(h[1]) : '', tab: h[2] || '' };
+}
+function go(h) { if (location.hash === h) render(); else location.hash = h; }
+window.addEventListener('hashchange', () => { closeLightbox(); window.scrollTo(0, 0); render(); });
+
+let raf = 0;
+function scheduleRender() { if (raf) return; raf = requestAnimationFrame(() => { raf = 0; render(); }); }
+
+function render() {
+  const app = $('#app');
+  if (S.drag) { S.renderAfterDrag = true; return; }
+  if (!S.user) { if (!app.querySelector('.login')) { app.innerHTML = loginView(); setTimeout(() => $('#lu')?.focus()); } return; }
+  if (!S.ready) { app.innerHTML = shell('<div class="loading">Abrindo o grimório…</div>', []); return; }
+  const r = route();
+  let v;
+  if (r.view === 'b') v = libraryView(r.id);
+  else if (r.view === 'c') v = campaignView(r.id, r.tab || 'fichas');
+  else if (r.view === 'p') v = characterView(r.id);
+  else if (r.view === 'm') v = monsterView(r.id);
+  else v = shelfView();
+  app.innerHTML = shell(v.html, v.crumbs || []);
+  hydrateImages(app);
+  if (v.after) v.after();
+}
+
+function shell(content, crumbs) {
+  const u = S.user;
+  return `
+  <header class="topbar">
+    <a class="brand" href="#/" aria-label="Grimório, voltar à estante">${I.d20}<span>Grimório</span></a>
+    <nav class="crumbs" aria-label="Caminho">
+      <a href="#/">Estante</a>
+      ${crumbs.map(([t, h]) => `<span class="sep">/</span>${h ? `<a href="${h}">${esc(t)}</a>` : `<span>${esc(t)}</span>`}`).join('')}
+    </nav>
+    <div class="top-right">
+      ${S.mode === 'local' ? '<span class="mode-badge" title="Sem banco compartilhado: os dados ficam só neste navegador.">Modo local</span>' : ''}
+      <button class="icon-btn" data-action="theme" aria-label="Alternar tema claro/escuro">${I.moon}</button>
+      <div class="user-chip"><span class="role ${u.role}">${u.role === 'master' ? 'Mestre' : 'Jogador'}</span>${u.role === 'master' ? '' : `<span class="uname">${esc(u.name)}</span>`}</div>
+      <button class="btn ghost sm" data-action="logout">Sair</button>
+    </div>
+  </header>
+  <main class="main">${content}</main>`;
+}
+function notFound(msg) {
+  return { html: `<div class="empty"><strong>${esc(msg)}</strong>Pode ter sido excluído pelo mestre.<div style="margin-top:14px"><a class="btn" href="#/">Voltar à estante</a></div></div>` };
+}
+
+/* =========================================================
+   Login
+   ========================================================= */
+function loginView() {
+  return `<div class="login"><div class="login-card">
+    <div class="login-mark">${I.d20}</div>
+    <h1 class="display">Grimório</h1>
+    <p class="lede">A mesa do seu grupo: livros, campanhas, fichas, criaturas e mapas.</p>
+    <form id="login-form" autocomplete="off" novalidate>
+      <label class="f">Usuário<input class="inp" id="lu" autocomplete="username" placeholder="Ex.: Jogador 1"></label>
+      <label class="f">Senha<input class="inp" id="lp" type="password" autocomplete="current-password"></label>
+      <p class="login-err hidden" id="lerr">Usuário ou senha incorretos. Confira e tente de novo.</p>
+      <button class="btn primary block" type="submit">Entrar</button>
+    </form>
+    <div class="quick"><p>Escolha quem vai sentar à mesa</p><div class="row">
+      ${USERS.map(u => `<button type="button" class="chip" data-action="pick-user" data-u="${esc(u.name)}">${esc(u.name)}</button>`).join('')}
+    </div></div>
+  </div></div>`;
+}
+function doLogin() {
+  const norm = s => String(s || '').toLowerCase().replace(/\s+/g, ' ').trim();
+  const name = norm($('#lu').value), pass = $('#lp').value;
+  const u = USERS.find(x => (norm(x.name) === name || x.id === name.replace(/\s/g, '')) && x.pass === pass);
+  if (!u) { $('#lerr').classList.remove('hidden'); $('#lp').select(); return; }
+  S.user = u; ls('grimorio-user', u.id);
+  render();
+}
+
+/* =========================================================
+   Estante (bibliotecas)
+   ========================================================= */
+function shelfView() {
+  const libs = [...S.data.libraries].sort(byCreated);
+  const spines = libs.map(l => {
+    const hh = hash(l.id);
+    const n = S.data.campaigns.filter(c => c.libraryId === l.id).length;
+    const color = l.color || LIB_COLORS[0][0];
+    return `<div class="spine-slot"><a class="spine" href="#/b/${encodeURIComponent(l.id)}" title="${esc(l.description || l.name)}" aria-label="${esc(l.name)}, ${n} campanha${n === 1 ? '' : 's'}"
+      style="--c:${esc(color)};--t:${textOn(color)};--h:${238 + (hh % 6) * 10}px;--w:${68 + (hh % 4) * 7}px">
+      <span class="band"></span><span class="spine-title">${esc(l.name)}</span><span class="spine-count">${n}</span><span class="band"></span></a></div>`;
+  }).join('');
+  const add = isMaster() ? `<div class="spine-slot"><button class="spine add" data-action="new-library" style="--h:250px;--w:78px">${I.plus}<span class="spine-title">Novo livro</span></button></div>` : '';
+  const empty = !libs.length ? (isMaster()
+    ? `<p class="muted" style="margin-top:-10px">Sua estante está vazia. Crie o primeiro livro, por exemplo “Call of Cthulhu” ou “Ordem Paranormal”.</p>`
+    : `<div class="empty"><strong>A estante está vazia</strong>Quando o mestre adicionar um livro, ele aparece aqui.</div>`) : '';
+  return {
+    html: `<section>
+      <div class="page-head"><div><h1 class="display">Estante</h1>
+        <p class="lede">${isMaster() ? 'Cada livro é um sistema de RPG. Abra um para organizar as campanhas dele.' : 'Cada livro é um sistema de RPG. Abra um para ver as campanhas.'}</p></div></div>
+      ${libs.length || isMaster() ? `<div class="shelf">${spines}${add}</div>` : ''}
+      ${empty}
+    </section>`,
+    crumbs: []
+  };
+}
+
+/* =========================================================
+   Biblioteca → campanhas
+   ========================================================= */
+function libraryView(id) {
+  const lib = get('libraries', id);
+  if (!lib) return notFound('Livro não encontrado');
+  const camps = S.data.campaigns.filter(c => c.libraryId === id).sort(byCreated);
+  const color = lib.color || LIB_COLORS[0][0];
+  const cards = camps.map(c => {
+    const nc = S.data.characters.filter(x => x.campaignId === c.id).length;
+    const nm = S.data.maps.filter(x => x.campaignId === c.id).length;
+    return `<a class="camp-card" href="#/c/${encodeURIComponent(c.id)}/fichas" style="--c:${esc(color)}">
+      <div class="camp-cover">${c.cover ? imgTag(c.cover, '') : `<div class="cover-fallback">${esc((c.name || '?').trim()[0] || '?')}</div>`}</div>
+      <div class="camp-body"><h3>${esc(c.name)}</h3>${c.synopsis ? `<p>${esc(c.synopsis)}</p>` : ''}
+        <div class="camp-stats"><span>${nc} personage${nc === 1 ? 'm' : 'ns'}</span><span>${nm} mapa${nm === 1 ? '' : 's'}</span></div></div></a>`;
+  }).join('');
+  const defaults = (lib.defaultAttrs || []).filter(Boolean);
+  return {
+    html: `<section>
+      <a class="back" href="#/">Voltar à estante</a>
+      <div class="lib-hero" style="--c:${esc(color)}">
+        <div class="lib-mark"></div>
+        <div><h1 class="display">${esc(lib.name)}</h1>
+          ${lib.description ? `<p class="lede">${esc(lib.description)}</p>` : ''}
+          <div class="lib-meta">Barras de ${esc(lib.hpLabel || 'Vida')} e ${esc(lib.manaLabel || 'Mana')}${defaults.length ? '. Atributos iniciais das fichas:' : ''}
+            ${defaults.length ? `<div class="tags">${defaults.map(a => `<span class="tag">${esc(a)}</span>`).join('')}</div>` : ''}</div>
+        </div>
+        ${isMaster() ? `<div class="row"><button class="btn sm" data-action="edit-library" data-id="${esc(id)}">${I.edit}Editar livro</button>
+          <button class="btn sm danger" data-action="del-library" data-id="${esc(id)}">${I.trash}Excluir</button></div>` : ''}
+      </div>
+      <div class="section-head"><h2>Campanhas</h2>
+        ${isMaster() ? `<button class="btn primary" data-action="new-campaign" data-lib="${esc(id)}">${I.plus}Nova campanha</button>` : ''}</div>
+      ${camps.length ? `<div class="camp-list">${cards}</div>` : `<div class="empty"><strong>Nenhuma campanha ainda</strong>${isMaster() ? 'Crie a primeira campanha deste livro.' : 'O mestre ainda não abriu campanhas neste livro.'}</div>`}
+    </section>`,
+    crumbs: [[lib.name, '']]
+  };
+}
+
+/* =========================================================
+   Campanha
+   ========================================================= */
+function campaignView(id, tab) {
+  const camp = get('campaigns', id);
+  if (!camp) return notFound('Campanha não encontrada');
+  const lib = get('libraries', camp.libraryId);
+  const nChars = S.data.characters.filter(c => c.campaignId === id).length;
+  const nMons = S.data.monsters.filter(m => m.campaignId === id && (isMaster() || m.visible)).length;
+  const nMaps = S.data.maps.filter(m => m.campaignId === id).length;
+  const t = ['fichas', 'monstros', 'mapa'].includes(tab) ? tab : 'fichas';
+  const tabBody = t === 'monstros' ? monstersTab(camp) : t === 'mapa' ? mapTab(camp) : charactersTab(camp);
+  const base = '#/c/' + encodeURIComponent(id) + '/';
+  return {
+    html: `<section>
+      <div class="camp-hero">
+        ${camp.cover ? `<div class="hero-img">${imgTag(camp.cover, '')}</div>` : ''}
+        <div class="camp-hero-text"><div><h1 class="display">${esc(camp.name)}</h1>${camp.synopsis ? `<p>${esc(camp.synopsis)}</p>` : ''}</div>
+          ${isMaster() ? `<div class="row"><button class="btn sm" data-action="edit-campaign" data-id="${esc(id)}">${I.edit}Editar</button>
+            <button class="btn sm danger" data-action="del-campaign" data-id="${esc(id)}">${I.trash}Excluir</button></div>` : ''}</div>
+      </div>
+      <nav class="tabs" role="tablist">
+        <a class="tab ${t === 'fichas' ? 'on' : ''}" href="${base}fichas" role="tab" aria-selected="${t === 'fichas'}">Fichas <span class="n">${nChars}</span></a>
+        <a class="tab ${t === 'monstros' ? 'on' : ''}" href="${base}monstros" role="tab" aria-selected="${t === 'monstros'}">Monstros <span class="n">${nMons}</span></a>
+        <a class="tab ${t === 'mapa' ? 'on' : ''}" href="${base}mapa" role="tab" aria-selected="${t === 'mapa'}">Mapa <span class="n">${nMaps}</span></a>
+      </nav>
+      ${tabBody.html}
+    </section>`,
+    crumbs: [[lib?.name || 'Livro', lib ? '#/b/' + encodeURIComponent(lib.id) : ''], [camp.name, '']],
+    after: tabBody.after
+  };
+}
+
+function getStat(col, o, stat) {
+  const base = o[stat] || { cur: 0, max: 0 };
+  const k = `${col}:${o.id}:${stat}`;
+  return k in S.adj ? { cur: S.adj[k], max: base.max } : { cur: num(base.cur), max: num(base.max) };
+}
+function statBar(col, o, stat, label, opts = {}) {
+  const st = getStat(col, o, stat);
+  const pct = st.max > 0 ? clamp(st.cur / st.max * 100, 0, 100) : (st.cur > 0 ? 100 : 0);
+  const steps = opts.big ? [-5, -1, 1, 5] : [-1, 1];
+  return `<div class="stat ${stat}">
+    <div class="stat-top"><span>${esc(label)}</span><span class="v">${st.cur}${st.max ? ' / ' + st.max : ''}</span></div>
+    <div class="bar" role="meter" aria-label="${esc(label)}" aria-valuemin="0" aria-valuemax="${st.max}" aria-valuenow="${st.cur}"><i style="width:${pct}%"></i></div>
+    ${opts.adj ? `<div class="adj">${steps.map(d => `<button data-action="adj" data-col="${col}" data-id="${esc(o.id)}" data-stat="${stat}" data-d="${d}" aria-label="${esc(label)} ${d > 0 ? '+' : ''}${d}">${d > 0 ? '+' : '−'}${Math.abs(d)}</button>`).join('')}</div>` : ''}
+  </div>`;
+}
+function adjust(col, id, stat, d) {
+  const o = get(col, id); if (!o) return;
+  const st = getStat(col, o, stat);
+  let cur = Math.max(0, st.cur + d);
+  if (st.max > 0) cur = Math.min(cur, st.max);
+  const k = `${col}:${id}:${stat}`;
+  S.adj[k] = cur; scheduleRender();
+  clearTimeout(S.adjT[k]);
+  S.adjT[k] = setTimeout(async () => {
+    try { await store.update(col, id, { [stat]: { cur, max: st.max } }); }
+    catch (e) { toast('Não foi possível salvar o valor. Tente de novo.', 'err'); }
+    finally { if (S.adj[k] === cur) delete S.adj[k]; scheduleRender(); }
+  }, 450);
+}
+
+function portraitBlock(o) {
+  return `<div class="portrait">${o.portrait ? imgTag(o.portrait, o.name) : `<div class="initial">${esc((o.name || '?').trim()[0] || '?')}</div>`}</div>`;
+}
+
+function charactersTab(camp) {
+  const L = labelsFor(camp.id);
+  const chars = S.data.characters.filter(c => c.campaignId === camp.id).sort((a, b) => {
+    const ma = a.owner === S.user.id ? 0 : 1, mb = b.owner === S.user.id ? 0 : 1;
+    return ma - mb || byCreated(a, b);
+  });
+  const cards = chars.map(c => {
+    const mine = c.owner === S.user.id;
+    return `<a class="char-card ${mine ? 'mine' : ''}" href="#/p/${encodeURIComponent(c.id)}">
+      ${portraitBlock(c)}
+      <span class="owner ${mine ? 'you' : ''}">${mine ? 'Seu personagem' : esc(userName(c.owner))}</span>
+      <div class="cc-body"><h3>${esc(c.name || 'Sem nome')}</h3>${c.subtitle ? `<div class="cc-sub">${esc(c.subtitle)}</div>` : ''}
+        ${statBar('characters', c, 'hp', L.hp)}${statBar('characters', c, 'mana', L.mana)}</div></a>`;
+  }).join('');
+  return {
+    html: `<div class="section-head" style="margin-top:0"><p class="muted" style="margin:0;max-width:60ch">${isMaster() ? 'Todas as fichas da mesa. Você pode editar qualquer uma.' : 'Todos veem os personagens da mesa. Só o dono de cada ficha pode alterá-la.'}</p>
+      <button class="btn primary" data-action="new-char" data-camp="${esc(camp.id)}">${I.plus}Criar personagem</button></div>
+      ${chars.length ? `<div class="grid-cards">${cards}</div>` : `<div class="empty"><strong>Nenhum personagem ainda</strong>Crie o primeiro e monte a ficha do jeito que o sistema pede.</div>`}`
+  };
+}
+
+function monstersTab(camp) {
+  const L = labelsFor(camp.id);
+  const all = S.data.monsters.filter(m => m.campaignId === camp.id).sort(byCreated);
+  if (isMaster()) {
+    const cards = all.map(m => `<article class="mon-card ${m.visible ? '' : 'off'}">
+      <a href="#/m/${encodeURIComponent(m.id)}">${portraitBlock(m)}</a>
+      <div class="cc-body">
+        <a href="#/m/${encodeURIComponent(m.id)}"><h3>${esc(m.name || 'Sem nome')}</h3></a>
+        <button class="vis ${m.visible ? 'on' : ''}" data-action="toggle-vis" data-id="${esc(m.id)}" aria-pressed="${!!m.visible}">${m.visible ? I.eye + 'Visível' : I.eyeOff + 'Não visível'}</button>
+        ${statBar('monsters', m, 'hp', L.hp, { adj: true })}${statBar('monsters', m, 'mana', L.mana, { adj: true })}
+      </div></article>`).join('');
+    return {
+      html: `<div class="section-head" style="margin-top:0"><p class="muted" style="margin:0;max-width:62ch">Criaturas começam ocultas. Ao deixar uma visível, os jogadores veem só a imagem, ${esc(L.hp.toLowerCase())} e ${esc(L.mana.toLowerCase())}.</p>
+        <button class="btn primary" data-action="new-monster" data-camp="${esc(camp.id)}">${I.plus}Novo monstro</button></div>
+        ${all.length ? `<div class="grid-cards">${cards}</div>` : `<div class="empty"><strong>Nenhum monstro criado</strong>Monte o bestiário da campanha com atributos, itens e dano.</div>`}`
+    };
+  }
+  const vis = all.filter(m => m.visible);
+  const cards = vis.map(m => `<article class="mon-card">
+    <div class="portrait" ${m.portrait ? `data-action="zoom" data-ref="${esc(m.portrait)}" style="cursor:zoom-in"` : ''}>${m.portrait ? imgTag(m.portrait, '') : '<div class="initial">?</div>'}</div>
+    <div class="cc-body"><h3 class="${m.revealName ? '' : 'unknown'}">${m.revealName ? esc(m.name) : 'Criatura desconhecida'}</h3>
+      ${statBar('monsters', m, 'hp', L.hp)}${statBar('monsters', m, 'mana', L.mana)}</div></article>`).join('');
+  return {
+    html: vis.length ? `<div class="grid-cards">${cards}</div>` : `<div class="empty"><strong>Nada à vista… por enquanto</strong>As criaturas aparecem aqui quando o mestre revelar.</div>`
+  };
+}
+
+/* =========================================================
+   Ficha (leitura)
+   ========================================================= */
+function sheetBody(o) {
+  const attrs = (o.attrs || []).filter(a => a.name || a.value);
+  const items = (o.items || []).filter(i => i.name);
+  const secs = (o.sections || []).filter(s => s.title || (s.fields || []).length);
+  const gal = o.gallery || [];
+  let h = '';
+  h += `<div class="block"><h2>Atributos</h2>${attrs.length ? `<div class="attrs">${attrs.map(a => `<div class="attr"><div class="av">${esc(String(a.value ?? '').trim() || '—')}</div><div class="an">${esc(a.name)}</div></div>`).join('')}</div>` : '<p class="muted">Nenhum atributo.</p>'}</div>`;
+  h += `<div class="block"><h2>Itens</h2>${items.length ? `<div class="table-wrap"><table><thead><tr><th>Item</th><th>Qtd</th><th>Dano</th><th>Observações</th></tr></thead><tbody>
+    ${items.map(i => `<tr><td>${esc(i.name)}</td><td>${esc(i.qty)}</td><td class="dmg">${esc(i.damage || '—')}</td><td>${esc(i.notes)}</td></tr>`).join('')}</tbody></table></div>` : '<p class="muted">Nenhum item.</p>'}</div>`;
+  secs.forEach(s => {
+    const fs = (s.fields || []).filter(f => f.label || f.value);
+    h += `<div class="block"><h2>${esc(s.title || 'Campos')}</h2>${fs.length ? `<div class="fields">${fs.map(f => `<div class="field"><div class="fl">${esc(f.label)}</div><div class="fv">${esc(f.value)}</div></div>`).join('')}</div>` : '<p class="muted">Seção vazia.</p>'}</div>`;
+  });
+  if (o.notes) h += `<div class="block"><h2>Anotações</h2><div class="notes">${esc(o.notes)}</div></div>`;
+  if (gal.length) h += `<div class="block"><h2>Galeria</h2><div class="gallery">${gal.map(r => `<button class="g" data-action="zoom" data-ref="${esc(r)}" aria-label="Ampliar imagem">${imgTag(r, '')}</button>`).join('')}</div></div>`;
+  return h;
+}
+function characterView(id) {
+  const c = get('characters', id);
+  if (!c) return notFound('Personagem não encontrado');
+  const camp = get('campaigns', c.campaignId); const lib = camp && get('libraries', camp.libraryId);
+  const L = labelsFor(c.campaignId); const edit = canEditChar(c);
+  return {
+    html: `<section>
+      <a class="back" href="#/c/${encodeURIComponent(c.campaignId)}/fichas">Voltar para ${esc(camp?.name || 'a campanha')}</a>
+      <div class="sheet-grid">
+        <aside class="sheet-side">
+          <div ${c.portrait ? `data-action="zoom" data-ref="${esc(c.portrait)}"` : ''}>${portraitBlock(c)}</div>
+          <div class="stat-box">${statBar('characters', c, 'hp', L.hp, { adj: edit, big: true })}${statBar('characters', c, 'mana', L.mana, { adj: edit, big: true })}</div>
+        </aside>
+        <div>
+          <div class="sheet-head"><div><h1 class="display">${esc(c.name || 'Sem nome')}</h1>
+            <div class="cc-sub">${[c.subtitle, 'Jogado por ' + (c.owner === S.user.id ? 'você' : userName(c.owner))].filter(Boolean).map(esc).join('. ')}</div></div>
+            ${edit ? `<div class="row"><button class="btn primary" data-action="edit-char" data-id="${esc(id)}">${I.edit}Editar ficha</button>
+              <button class="btn danger" data-action="del-char" data-id="${esc(id)}">${I.trash}Excluir</button></div>` : ''}</div>
+          ${sheetBody(c)}
+        </div>
+      </div></section>`,
+    crumbs: [[lib?.name || 'Livro', lib ? '#/b/' + encodeURIComponent(lib.id) : ''], [camp?.name || 'Campanha', camp ? '#/c/' + encodeURIComponent(camp.id) + '/fichas' : ''], [c.name || 'Personagem', '']]
+  };
+}
+function monsterView(id) {
+  const m = get('monsters', id);
+  if (!m || !isMaster()) return notFound('Monstro não encontrado');
+  const camp = get('campaigns', m.campaignId); const lib = camp && get('libraries', camp.libraryId);
+  const L = labelsFor(m.campaignId);
+  return {
+    html: `<section>
+      <a class="back" href="#/c/${encodeURIComponent(m.campaignId)}/monstros">Voltar para os monstros</a>
+      <div class="sheet-grid">
+        <aside class="sheet-side">
+          <div ${m.portrait ? `data-action="zoom" data-ref="${esc(m.portrait)}"` : ''}>${portraitBlock(m)}</div>
+          <button class="vis ${m.visible ? 'on' : ''}" data-action="toggle-vis" data-id="${esc(m.id)}" aria-pressed="${!!m.visible}">${m.visible ? I.eye + 'Visível para os jogadores' : I.eyeOff + 'Não visível para os jogadores'}</button>
+          <div class="stat-box">${statBar('monsters', m, 'hp', L.hp, { adj: true, big: true })}${statBar('monsters', m, 'mana', L.mana, { adj: true, big: true })}</div>
+          <p class="muted" style="font-size:13px;margin:0">${m.visible ? `Os jogadores veem a imagem, as barras e ${m.revealName ? 'o nome' : '“Criatura desconhecida” no lugar do nome'}.` : 'Os jogadores não veem esta criatura.'}</p>
+        </aside>
+        <div>
+          <div class="sheet-head"><div><h1 class="display">${esc(m.name || 'Sem nome')}</h1>${m.subtitle ? `<div class="cc-sub">${esc(m.subtitle)}</div>` : ''}</div>
+            <div class="row"><button class="btn primary" data-action="edit-monster" data-id="${esc(id)}">${I.edit}Editar monstro</button>
+            <button class="btn danger" data-action="del-monster" data-id="${esc(id)}">${I.trash}Excluir</button></div></div>
+          ${sheetBody(m)}
+        </div>
+      </div></section>`,
+    crumbs: [[lib?.name || 'Livro', lib ? '#/b/' + encodeURIComponent(lib.id) : ''], [camp?.name || 'Campanha', camp ? '#/c/' + encodeURIComponent(camp.id) + '/monstros' : ''], [m.name || 'Monstro', '']]
+  };
+}
+
+/* =========================================================
+   Mapa com waypoints
+   ========================================================= */
+function mapTab(camp) {
+  const maps = S.data.maps.filter(m => m.campaignId === camp.id).sort(byCreated);
+  if (!maps.length) {
+    return { html: `<div class="empty"><strong>Nenhum mapa ainda</strong>${isMaster() ? 'Envie uma imagem (PNG ou JPG) para ser o mapa da campanha.' : 'O mestre ainda não enviou o mapa desta campanha.'}
+      ${isMaster() ? `<div style="margin-top:16px"><button class="btn primary" data-action="new-map" data-camp="${esc(camp.id)}">${I.img}Enviar mapa</button></div>` : ''}</div>` };
+  }
+  let cur = maps.find(m => m.id === S.mapId) || maps[0];
+  if (S.mapId !== cur.id) { S.mapId = cur.id; S.mapView = { s: 1, x: 0, y: 0 }; S.mapFitted = false; S.mapEdit = false; }
+  const wps = cur.waypoints || [];
+  const master = isMaster();
+  return {
+    html: `<div class="map-bar">
+        <div class="map-tabs">${maps.length > 1 ? maps.map(m => `<button class="chip ${m.id === cur.id ? 'on' : ''}" data-action="pick-map" data-id="${esc(m.id)}">${esc(m.name)}</button>`).join('') : `<h2>${esc(cur.name)}</h2>`}</div>
+        <div class="map-tools">
+          <button class="icon-btn" data-action="zoom-map" data-z="in" aria-label="Aproximar">${I.zin}</button>
+          <button class="icon-btn" data-action="zoom-map" data-z="out" aria-label="Afastar">${I.zout}</button>
+          <button class="icon-btn" data-action="zoom-map" data-z="fit" aria-label="Enquadrar mapa">${I.fit}</button>
+          <button class="icon-btn ${S.mapLabels ? 'toggle-on' : ''}" data-action="map-labels" aria-label="Mostrar nomes dos pontos" aria-pressed="${S.mapLabels}">${I.tag}</button>
+          ${master ? `<button class="btn sm ${S.mapEdit ? 'toggle-on' : ''}" data-action="map-edit" aria-pressed="${S.mapEdit}">${I.pin}${S.mapEdit ? 'Concluir pontos' : 'Editar pontos'}</button>
+            <button class="btn sm" data-action="edit-map" data-id="${esc(cur.id)}">${I.edit}Mapa</button>
+            <button class="btn sm" data-action="new-map" data-camp="${esc(camp.id)}">${I.plus}Novo mapa</button>` : ''}
+        </div>
+      </div>
+      ${master && S.mapEdit ? '<p class="map-hint">Clique em um lugar do mapa para criar um ponto. Arraste um ponto para mudá-lo de lugar; clique nele para editar.</p>' : '<p class="map-hint">Arraste para mover, use a roda do mouse ou o gesto de pinça para zoom. Clique em um ponto para ver as imagens do local.</p>'}
+      <div class="map-vp ${master && S.mapEdit ? 'editing' : ''} ${S.mapLabels ? 'labels' : ''}" id="mapvp">
+        <div class="map-inner" id="mapinner">
+          ${imgTag(cur.image, cur.name).replace('<img ', '<img id="mapimg" ').replace(' loading="lazy"', '')}
+          ${wps.map(w => `<button class="wp" data-wp="${esc(w.id)}" style="left:${num(w.x)}%;top:${num(w.y)}%;--pc:${esc(w.color || PIN_COLORS[0])}" aria-label="${esc(w.title || 'Ponto')}"><span class="wp-pin"></span><span class="wp-label">${esc(w.title || 'Ponto')}</span></button>`).join('')}
+        </div>
+      </div>
+      ${wps.length ? `<div class="wp-list">${wps.map(w => `<button class="chip" data-action="open-wp" data-id="${esc(w.id)}"><span class="dot" style="--pc:${esc(w.color || PIN_COLORS[0])}"></span>${esc(w.title || 'Ponto')}${(w.images || []).length ? ` <span class="muted">(${w.images.length})</span>` : ''}</button>`).join('')}</div>` : ''}`,
+    after: setupMap
+  };
+}
+function curMap() { return get('maps', S.mapId); }
+function setupMap() {
+  const vp = $('#mapvp'), inner = $('#mapinner'); if (!vp) return;
+  const v = S.mapView;
+  const apply = () => { inner.style.transform = `translate(${v.x}px,${v.y}px) scale(${v.s})`; inner.style.setProperty('--inv', (1 / v.s).toFixed(4)); };
+  const fit = () => {
+    const img = $('#mapimg'); if (!img || !img.naturalWidth) return;
+    const r = vp.getBoundingClientRect(); const h = r.width * img.naturalHeight / img.naturalWidth;
+    const s = Math.min(1, r.height / h);
+    v.s = s; v.x = (r.width - r.width * s) / 2; v.y = Math.max(0, (r.height - h * s) / 2); apply();
+  };
+  const zoomAt = (ns, cx, cy, b) => {
+    const r = vp.getBoundingClientRect(); const px = cx - r.left, py = cy - r.top;
+    b = b || { s: v.s, vx: v.x, vy: v.y };
+    const ix = (px - b.vx) / b.s, iy = (py - b.vy) / b.s;
+    v.s = ns; v.x = px - ix * ns; v.y = py - iy * ns; apply();
+  };
+  S.mapZoom = z => {
+    const r = vp.getBoundingClientRect();
+    if (z === 'fit') return fit();
+    zoomAt(clamp(v.s * (z === 'in' ? 1.3 : 1 / 1.3), .3, 8), r.left + r.width / 2, r.top + r.height / 2);
+  };
+  const img = $('#mapimg');
+  if (!S.mapFitted) {
+    const doFit = () => { if (v.s === 1 && v.x === 0 && v.y === 0) fit(); S.mapFitted = true; };
+    if (img && img.complete && img.naturalWidth) doFit(); else img?.addEventListener('load', doFit, { once: true });
+  }
+  apply();
+  const pctFromClient = (cx, cy) => {
+    const r = $('#mapimg').getBoundingClientRect();
+    return { x: +clamp((cx - r.left) / r.width * 100, 0, 100).toFixed(2), y: +clamp((cy - r.top) / r.height * 100, 0, 100).toFixed(2), inside: cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom };
+  };
+  const pts = new Map();
+  let start = null, moved = false, pinch = null, dragWp = null;
+  const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+  vp.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    vp.setPointerCapture(e.pointerId);
+    pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    const wpEl = e.target.closest('.wp');
+    if (pts.size === 1) {
+      start = { x: e.clientX, y: e.clientY, vx: v.x, vy: v.y, wp: wpEl ? wpEl.dataset.wp : null };
+      moved = false;
+      if (wpEl && isMaster() && S.mapEdit) { dragWp = { id: wpEl.dataset.wp, el: wpEl, p: null }; S.drag = true; }
+    } else if (pts.size === 2) {
+      const [a, b] = [...pts.values()];
+      pinch = { d: dist(a, b) || 1, s: v.s, cx: (a.x + b.x) / 2, cy: (a.y + b.y) / 2, vx: v.x, vy: v.y };
+      start = null; if (dragWp) { dragWp = null; S.drag = false; }
+    }
+  });
+  vp.addEventListener('pointermove', e => {
+    if (!pts.has(e.pointerId)) return;
+    pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pinch && pts.size === 2) {
+      const [a, b] = [...pts.values()];
+      zoomAt(clamp(pinch.s * dist(a, b) / pinch.d, .3, 8), pinch.cx, pinch.cy, pinch); moved = true; return;
+    }
+    if (!start) return;
+    const dx = e.clientX - start.x, dy = e.clientY - start.y;
+    if (Math.abs(dx) + Math.abs(dy) > 4) moved = true;
+    if (!moved) return;
+    if (dragWp) { const p = pctFromClient(e.clientX, e.clientY); dragWp.el.style.left = p.x + '%'; dragWp.el.style.top = p.y + '%'; dragWp.p = p; }
+    else { v.x = start.vx + dx; v.y = start.vy + dy; apply(); vp.classList.add('panning'); }
+  });
+  const end = e => {
+    if (!pts.has(e.pointerId)) return;
+    pts.delete(e.pointerId); vp.classList.remove('panning');
+    if (pinch) { if (pts.size < 2) pinch = null; start = null; return; }
+    if (!start) return;
+    const s = start; start = null;
+    if (dragWp) {
+      const d = dragWp; dragWp = null; S.drag = false;
+      if (e.type === 'pointercancel') { if (S.renderAfterDrag) { S.renderAfterDrag = false; scheduleRender(); } return; }
+      if (moved && d.p) moveWaypoint(d.id, d.p); else openWaypoint(d.id);
+      if (S.renderAfterDrag) { S.renderAfterDrag = false; scheduleRender(); }
+      return;
+    }
+    if (moved || e.type === 'pointercancel') return;
+    if (s.wp) { openWaypoint(s.wp); return; }
+    if (S.mapEdit && isMaster()) { const p = pctFromClient(e.clientX, e.clientY); if (p.inside) newWaypoint(p); }
+  };
+  vp.addEventListener('pointerup', end);
+  vp.addEventListener('pointercancel', end);
+  vp.addEventListener('wheel', e => { e.preventDefault(); zoomAt(clamp(v.s * (e.deltaY < 0 ? 1.15 : 1 / 1.15), .3, 8), e.clientX, e.clientY); }, { passive: false });
+  vp.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.closest('.wp')) { e.preventDefault(); openWaypoint(e.target.closest('.wp').dataset.wp); } });
+}
+async function saveMapWaypoints(mapId, wps) {
+  try { await store.update('maps', mapId, { waypoints: wps, updatedAt: Date.now() }); }
+  catch (e) { toast('Não foi possível salvar o ponto. Tente de novo.', 'err'); throw e; }
+}
+function moveWaypoint(id, p) {
+  const m = curMap(); if (!m) return;
+  const wps = clone(m.waypoints || []); const w = wps.find(x => x.id === id); if (!w) return;
+  w.x = p.x; w.y = p.y;
+  saveMapWaypoints(m.id, wps).then(() => toast('Ponto movido.')).catch(() => {});
+}
+function newWaypoint(p) {
+  openModal({ type: 'wp-edit', mapId: S.mapId, isNew: true, draft: { id: uid(), x: p.x, y: p.y, title: '', description: '', color: PIN_COLORS[0], images: [] }, orig: [] });
+}
+function openWaypoint(id) {
+  const m = curMap(); const w = m && (m.waypoints || []).find(x => x.id === id); if (!w) return;
+  openModal({ type: 'wp-view', mapId: m.id, wpId: id });
+}
+
+/* =========================================================
+   Modais
+   ========================================================= */
+function openModal(m) {
+  m.uploaded = m.uploaded || []; m.busy = 0;
+  S.modal = m; renderModal(true);
+}
+function closeModal(saved) {
+  const m = S.modal; if (!m) return;
+  if (!saved && m.uploaded?.length) m.uploaded.forEach(deleteImageRef);
+  S.modal = null; $('#overlay').innerHTML = '';
+}
+function renderModal(first) {
+  const m = S.modal; if (!m) return;
+  const sc = $('#overlay .modal-scroll'); const top = sc ? sc.scrollTop : 0;
+  let html = '';
+  if (m.type === 'sheet') html = sheetEditor(m);
+  else if (m.type === 'library') html = libraryEditor(m);
+  else if (m.type === 'campaign') html = campaignEditor(m);
+  else if (m.type === 'map') html = mapEditor(m);
+  else if (m.type === 'wp-edit') html = wpEditor(m);
+  else if (m.type === 'wp-view') html = wpViewer(m);
+  $('#overlay').innerHTML = `<div class="scrim" data-scrim="overlay">${html}</div>`;
+  hydrateImages($('#overlay'));
+  const ns = $('#overlay .modal-scroll'); if (ns) ns.scrollTop = top;
+  if (first) setTimeout(() => { const f = $('#overlay [data-autofocus]') || $('#overlay .modal-scroll input, #overlay .modal-scroll textarea') || $('#overlay [data-action="close"]'); f?.focus(); });
+}
+function modalFrame(title, body, footer, cls = '') {
+  return `<div class="modal ${cls}" role="dialog" aria-modal="true" aria-label="${esc(title)}">
+    <header><h2>${esc(title)}</h2><button class="icon-btn" data-action="close" aria-label="Fechar">${I.x}</button></header>
+    <div class="modal-scroll">${body}</div>
+    <footer>${footer}</footer></div>`;
+}
+const busyNote = m => m.busy ? '<div class="uploading">Enviando imagem…</div>' : '';
+const saveBtns = (m, label) => `<button class="btn ghost" data-action="close">Cancelar</button><button class="btn primary" data-action="save-modal" ${m.busy ? 'disabled' : ''}>${esc(label)}</button>`;
+function setPath(obj, path, val) {
+  const ks = path.split('.'); let o = obj;
+  for (let i = 0; i < ks.length - 1; i++) { const k = ks[i]; o = o[k]; if (o == null) return; }
+  o[ks[ks.length - 1]] = val;
+}
+async function uploadInto(files, kind, onRef) {
+  const m = S.modal; if (!m || !files.length) return;
+  m.busy++; renderModal();
+  for (const f of files) {
+    try { const ref = await saveImage(f, kind); if (S.modal !== m) { deleteImageRef(ref); break; } m.uploaded.push(ref); onRef(ref); }
+    catch (e) { toast(e.message || 'Falha ao enviar a imagem.', 'err'); }
+  }
+  m.busy--; if (S.modal === m) renderModal();
+}
+function cleanupRefs(m, newRefs) {
+  const keep = new Set(newRefs);
+  [...(m.orig || []), ...(m.uploaded || [])].forEach(r => { if (!keep.has(r)) deleteImageRef(r); });
+}
+
+/* ---- ficha (personagem e monstro) ---- */
+function newSheet(campId, kind) {
+  const camp = get('campaigns', campId); const lib = camp && get('libraries', camp.libraryId);
+  const attrs = (lib?.defaultAttrs || []).filter(Boolean).map(n => ({ id: uid(), name: n, value: '' }));
+  const d = { campaignId: campId, name: '', subtitle: '', portrait: null, hp: { cur: 10, max: 10 }, mana: { cur: 5, max: 5 },
+    attrs: attrs.length ? attrs : [{ id: uid(), name: '', value: '' }], items: [], sections: [], gallery: [], notes: '' };
+  if (kind === 'monster') { d.visible = false; d.revealName = false; } else d.owner = S.user.id;
+  return d;
+}
+function sheetEditor(m) {
+  const d = m.draft; const L = labelsFor(d.campaignId); const mon = m.col === 'monsters';
+  const title = m.isNew ? (mon ? 'Novo monstro' : 'Novo personagem') : (mon ? 'Editar monstro' : 'Editar ficha');
+  const body = `
+    <div class="ed-top">
+      <button class="pick" data-action="pick-portrait" aria-label="Escolher imagem">${d.portrait ? imgTag(d.portrait, '') : `${I.img}<span>Adicionar imagem</span>`}</button>
+      <div>
+        <label class="f">Nome<input class="inp" data-bind="name" value="${esc(d.name)}" data-autofocus placeholder="${mon ? 'Ex.: Cria do Espaço Sideral' : 'Ex.: Dra. Helena Voss'}"></label>
+        <label class="f">${mon ? 'Tipo ou descrição curta' : 'Classe, ocupação ou conceito'}<input class="inp" data-bind="subtitle" value="${esc(d.subtitle)}"></label>
+        ${d.portrait ? `<button class="btn sm ghost" data-action="rm-portrait">${I.trash}Remover imagem</button>` : ''}
+        ${busyNote(m)}
+      </div>
+    </div>
+    ${mon ? `<label class="switch"><input type="checkbox" data-bind="visible" ${d.visible ? 'checked' : ''}>Visível para os jogadores</label>
+      <label class="switch"><input type="checkbox" data-bind="revealName" ${d.revealName ? 'checked' : ''}>Mostrar o nome aos jogadores (senão aparece “Criatura desconhecida”)</label>` : ''}
+    <div class="ed-sec"><h3>${esc(L.hp)} e ${esc(L.mana)}</h3>
+      <div class="two"><label class="f">${esc(L.hp)} atual<input class="inp" type="number" data-bind="hp.cur" data-num value="${esc(d.hp.cur)}"></label><label class="f">${esc(L.hp)} máxima<input class="inp" type="number" data-bind="hp.max" data-num value="${esc(d.hp.max)}"></label></div>
+      <div class="two"><label class="f">${esc(L.mana)} atual<input class="inp" type="number" data-bind="mana.cur" data-num value="${esc(d.mana.cur)}"></label><label class="f">${esc(L.mana)} máxima<input class="inp" type="number" data-bind="mana.max" data-num value="${esc(d.mana.max)}"></label></div>
+    </div>
+    <div class="ed-sec"><h3>Atributos</h3><p class="hint">Crie quantos quiser: força, sanidade, agilidade, o que o sistema pedir.</p>
+      <div class="lines">${d.attrs.length ? `<div class="line attr-l line-head"><span>Nome</span><span>Valor</span><span></span></div>` : ''}
+      ${d.attrs.map((a, i) => `<div class="line attr-l"><input class="inp" data-bind="attrs.${i}.name" value="${esc(a.name)}" placeholder="Ex.: Força" aria-label="Nome do atributo"><input class="inp" data-bind="attrs.${i}.value" value="${esc(a.value)}" placeholder="Ex.: 14" aria-label="Valor"><button class="x" data-action="rm-row" data-list="attrs" data-i="${i}" aria-label="Remover atributo">${I.x}</button></div>`).join('')}</div>
+      <button class="btn sm add-line" data-action="add-row" data-list="attrs">${I.plus}Adicionar atributo</button>
+    </div>
+    <div class="ed-sec"><h3>Itens</h3><p class="hint">Armas, equipamentos e objetos. O dano pode ser um valor ou uma rolagem, como 1d8+2.</p>
+      <div class="lines">${d.items.length ? `<div class="line item-l line-head"><span>Item</span><span>Qtd</span><span>Dano</span><span>Observações</span><span></span></div>` : ''}
+      ${d.items.map((it, i) => `<div class="line item-l"><input class="inp" data-bind="items.${i}.name" value="${esc(it.name)}" placeholder="Ex.: Revólver .38" aria-label="Item"><input class="inp" data-bind="items.${i}.qty" value="${esc(it.qty)}" aria-label="Quantidade"><input class="inp i-dmg" data-bind="items.${i}.damage" value="${esc(it.damage)}" placeholder="1d10" aria-label="Dano"><input class="inp i-notes" data-bind="items.${i}.notes" value="${esc(it.notes)}" placeholder="Munição, alcance…" aria-label="Observações"><button class="x" data-action="rm-row" data-list="items" data-i="${i}" aria-label="Remover item">${I.x}</button></div>`).join('')}</div>
+      <button class="btn sm add-line" data-action="add-row" data-list="items">${I.plus}Adicionar item</button>
+    </div>
+    <div class="ed-sec"><h3>Campos personalizados</h3><p class="hint">Crie seções próprias, como Perícias, Rituais ou Histórico, cada uma com os campos que quiser.</p>
+      ${d.sections.map((s, si) => `<div class="cs"><div class="cs-head"><input class="inp" data-bind="sections.${si}.title" value="${esc(s.title)}" placeholder="Nome da seção (ex.: Perícias)" aria-label="Nome da seção"><button class="x" data-action="rm-row" data-list="sections" data-i="${si}" aria-label="Remover seção">${I.trash}</button></div>
+        <div class="lines">${s.fields.map((f, fi) => `<div class="line field-l"><input class="inp" data-bind="sections.${si}.fields.${fi}.label" value="${esc(f.label)}" placeholder="Campo" aria-label="Nome do campo"><input class="inp" data-bind="sections.${si}.fields.${fi}.value" value="${esc(f.value)}" placeholder="Valor" aria-label="Valor do campo"><button class="x" data-action="rm-field" data-si="${si}" data-i="${fi}" aria-label="Remover campo">${I.x}</button></div>`).join('')}</div>
+        <button class="btn sm add-line" data-action="add-field" data-si="${si}">${I.plus}Adicionar campo</button></div>`).join('')}
+      <button class="btn sm" data-action="add-row" data-list="sections">${I.plus}Nova seção</button>
+    </div>
+    <div class="ed-sec"><h3>Galeria</h3><p class="hint">${mon ? 'Imagens extras da criatura. Só você vê.' : 'Imagens do personagem que todos da mesa podem ver.'}</p>
+      <div class="thumbs">${d.gallery.map((r, i) => `<div class="thumb">${imgTag(r, '')}<button class="x" data-action="rm-row" data-list="gallery" data-i="${i}" aria-label="Remover imagem">${I.x}</button></div>`).join('')}
+        <button class="thumb add" data-action="add-gallery">${I.plus}</button></div>${busyNote(m)}
+    </div>
+    <div class="ed-sec"><h3>Anotações</h3><textarea class="inp" data-bind="notes" rows="5" placeholder="${mon ? 'Comportamento, fraquezas, táticas…' : 'História, aparência, ligações…'}">${esc(d.notes)}</textarea></div>`;
+  return modalFrame(title, body, saveBtns(m, m.isNew ? 'Criar' : 'Salvar ficha'), 'wide');
+}
+async function saveSheet(m) {
+  const d = clone(m.draft);
+  if (!d.name.trim()) { toast('Dê um nome antes de salvar.', 'err'); $('#overlay [data-bind="name"]')?.focus(); return; }
+  d.name = d.name.trim();
+  d.hp = { cur: num(d.hp.cur), max: num(d.hp.max) }; d.mana = { cur: num(d.mana.cur), max: num(d.mana.max) };
+  d.attrs = d.attrs.filter(a => String(a.name).trim() || String(a.value).trim());
+  d.items = d.items.filter(i => String(i.name).trim());
+  d.sections = d.sections.filter(s => String(s.title).trim() || s.fields.length).map(s => ({ ...s, fields: s.fields.filter(f => String(f.label).trim() || String(f.value).trim()) }));
+  const id = m.id || uid(); const now = Date.now();
+  if (m.isNew) d.createdAt = now; else { const prev = get(m.col, id); d.createdAt = prev?.createdAt || now; if (m.col === 'characters') d.owner = prev?.owner || d.owner; }
+  d.updatedAt = now;
+  try {
+    await store.set(m.col, id, d);
+    cleanupRefs(m, sheetRefs(d));
+    closeModal(true);
+    toast(m.isNew ? 'Criado.' : 'Ficha salva.');
+    if (m.isNew) go((m.col === 'monsters' ? '#/m/' : '#/p/') + encodeURIComponent(id));
+  } catch (e) { toast('Não foi possível salvar. Verifique a conexão e tente de novo.', 'err'); }
+}
+
+/* ---- biblioteca ---- */
+function libraryEditor(m) {
+  const d = m.draft;
+  return modalFrame(m.isNew ? 'Novo livro' : 'Editar livro', `
+    <label class="f">Nome do sistema<input class="inp" data-bind="name" value="${esc(d.name)}" data-autofocus placeholder="Ex.: Call of Cthulhu"></label>
+    <label class="f">Descrição<textarea class="inp" data-bind="description" rows="3" placeholder="Sobre o que é este sistema">${esc(d.description)}</textarea></label>
+    <div class="f" style="display:block;margin-bottom:16px"><div style="font-size:14px;font-weight:500;margin-bottom:8px">Cor da lombada</div>
+      <div class="swatches">${LIB_COLORS.map(([c, n]) => `<button class="sw ${d.color === c ? 'on' : ''}" style="--c:${c}" data-action="set-color" data-c="${c}" aria-label="${n}" title="${n}"></button>`).join('')}</div></div>
+    <div class="two"><label class="f">Nome da barra de vida<input class="inp" data-bind="hpLabel" value="${esc(d.hpLabel)}" placeholder="Vida"><small>Ex.: PV, Pontos de Vida</small></label>
+      <label class="f">Nome da barra de mana<input class="inp" data-bind="manaLabel" value="${esc(d.manaLabel)}" placeholder="Mana"><small>Ex.: PE, Sanidade, Magia</small></label></div>
+    <label class="f">Atributos iniciais das fichas<input class="inp" data-bind="attrsText" value="${esc(d.attrsText)}" placeholder="Ex.: FOR, CON, DES, INT, POD"><small>Separe por vírgula. Toda ficha nova deste livro já começa com eles.</small></label>`,
+    saveBtns(m, m.isNew ? 'Criar livro' : 'Salvar'));
+}
+async function saveLibrary(m) {
+  const d = m.draft;
+  if (!d.name.trim()) { toast('Dê um nome ao livro.', 'err'); return; }
+  const id = m.id || uid(); const prev = m.id ? get('libraries', id) : null;
+  const doc = { name: d.name.trim(), description: d.description.trim(), color: d.color, hpLabel: d.hpLabel.trim(), manaLabel: d.manaLabel.trim(),
+    defaultAttrs: d.attrsText.split(',').map(s => s.trim()).filter(Boolean), createdAt: prev?.createdAt || Date.now(), updatedAt: Date.now() };
+  try { await store.set('libraries', id, doc); closeModal(true); toast(m.isNew ? 'Livro colocado na estante.' : 'Livro salvo.'); if (m.isNew) go('#/b/' + encodeURIComponent(id)); }
+  catch (e) { toast('Não foi possível salvar o livro.', 'err'); }
+}
+
+/* ---- campanha ---- */
+function campaignEditor(m) {
+  const d = m.draft;
+  return modalFrame(m.isNew ? 'Nova campanha' : 'Editar campanha', `
+    <label class="f">Nome<input class="inp" data-bind="name" value="${esc(d.name)}" data-autofocus placeholder="Ex.: Ecos de Sangue"></label>
+    <label class="f">Sinopse<textarea class="inp" data-bind="synopsis" rows="4" placeholder="O gancho da campanha">${esc(d.synopsis)}</textarea></label>
+    <div style="font-size:14px;font-weight:500;margin-bottom:8px">Capa</div>
+    <button class="pick wide" data-action="pick-cover">${d.cover ? imgTag(d.cover, '') : `${I.img}<span>Adicionar capa</span>`}</button>
+    ${d.cover ? `<button class="btn sm ghost" style="margin-top:8px" data-action="rm-cover">${I.trash}Remover capa</button>` : ''}${busyNote(m)}`,
+    saveBtns(m, m.isNew ? 'Criar campanha' : 'Salvar'));
+}
+async function saveCampaign(m) {
+  const d = m.draft;
+  if (!d.name.trim()) { toast('Dê um nome à campanha.', 'err'); return; }
+  const id = m.id || uid(); const prev = m.id ? get('campaigns', id) : null;
+  const doc = { libraryId: d.libraryId, name: d.name.trim(), synopsis: d.synopsis.trim(), cover: d.cover || null, createdAt: prev?.createdAt || Date.now(), updatedAt: Date.now() };
+  try { await store.set('campaigns', id, doc); cleanupRefs(m, [doc.cover]); closeModal(true); toast(m.isNew ? 'Campanha criada.' : 'Campanha salva.'); if (m.isNew) go('#/c/' + encodeURIComponent(id) + '/fichas'); }
+  catch (e) { toast('Não foi possível salvar a campanha.', 'err'); }
+}
+
+/* ---- mapa ---- */
+function mapEditor(m) {
+  const d = m.draft;
+  return modalFrame(m.isNew ? 'Novo mapa' : 'Editar mapa', `
+    <label class="f">Nome do mapa<input class="inp" data-bind="name" value="${esc(d.name)}" data-autofocus placeholder="Ex.: Arkham, 1923"></label>
+    <div style="font-size:14px;font-weight:500;margin-bottom:8px">Imagem do mapa</div>
+    <button class="pick wide" data-action="pick-mapimg">${d.image ? imgTag(d.image, '') : `${I.img}<span>Escolher imagem (PNG ou JPG)</span>`}</button>
+    ${d.image && !m.isNew ? '<p class="hint muted" style="font-size:13px">Os pontos ficam na mesma posição relativa se você trocar a imagem.</p>' : ''}${busyNote(m)}`,
+    `${!m.isNew ? `<button class="btn danger" data-action="del-map" data-id="${esc(m.id)}">${I.trash}Excluir mapa</button><span class="spacer"></span>` : ''}${saveBtns(m, m.isNew ? 'Criar mapa' : 'Salvar')}`);
+}
+async function saveMap(m) {
+  const d = m.draft;
+  if (!d.image) { toast('Escolha a imagem do mapa.', 'err'); return; }
+  const id = m.id || uid(); const prev = m.id ? get('maps', id) : null;
+  const doc = { campaignId: d.campaignId, name: d.name.trim() || 'Mapa', image: d.image, waypoints: prev?.waypoints || [], createdAt: prev?.createdAt || Date.now(), updatedAt: Date.now() };
+  try {
+    await store.set('maps', id, doc); cleanupRefs(m, [doc.image]); closeModal(true);
+    S.mapId = id; S.mapView = { s: 1, x: 0, y: 0 }; S.mapFitted = false;
+    toast(m.isNew ? 'Mapa criado.' : 'Mapa salvo.'); scheduleRender();
+  } catch (e) { toast('Não foi possível salvar o mapa.', 'err'); }
+}
+
+/* ---- waypoint ---- */
+function wpEditor(m) {
+  const d = m.draft;
+  return modalFrame(m.isNew ? 'Novo ponto no mapa' : 'Editar ponto', `
+    <label class="f">Nome do local<input class="inp" data-bind="title" value="${esc(d.title)}" data-autofocus placeholder="Ex.: Mansão Corbitt"></label>
+    <label class="f">Descrição<textarea class="inp" data-bind="description" rows="3" placeholder="O que os jogadores sabem sobre este lugar">${esc(d.description)}</textarea></label>
+    <div style="font-size:14px;font-weight:500;margin-bottom:8px">Cor do marcador</div>
+    <div class="swatches" style="margin-bottom:18px">${PIN_COLORS.map(c => `<button class="sw round ${d.color === c ? 'on' : ''}" style="--c:${c}" data-action="set-color" data-c="${c}" aria-label="Cor ${c}"></button>`).join('')}</div>
+    <div style="font-size:14px;font-weight:500;margin-bottom:8px">Imagens do local</div>
+    <div class="thumbs">${d.images.map((r, i) => `<div class="thumb">${imgTag(r, '')}<button class="x" data-action="rm-row" data-list="images" data-i="${i}" aria-label="Remover imagem">${I.x}</button></div>`).join('')}
+      <button class="thumb add" data-action="add-wpimg">${I.plus}</button></div>${busyNote(m)}`,
+    `${!m.isNew ? `<button class="btn danger" data-action="del-wp">${I.trash}Excluir ponto</button><span class="spacer"></span>` : ''}${saveBtns(m, m.isNew ? 'Criar ponto' : 'Salvar ponto')}`);
+}
+async function saveWp(m) {
+  const map = get('maps', m.mapId); if (!map) { closeModal(); return; }
+  const d = clone(m.draft); d.title = d.title.trim() || 'Local sem nome'; d.description = d.description.trim();
+  const wps = clone(map.waypoints || []);
+  const i = wps.findIndex(w => w.id === d.id);
+  if (i >= 0) { d.x = wps[i].x; d.y = wps[i].y; wps[i] = d; } else wps.push(d);
+  try { await saveMapWaypoints(map.id, wps); cleanupRefs(m, d.images); closeModal(true); toast(m.isNew ? 'Ponto criado.' : 'Ponto salvo.'); } catch (e) {}
+}
+function wpViewer(m) {
+  const map = get('maps', m.mapId); const w = map && (map.waypoints || []).find(x => x.id === m.wpId);
+  if (!w) return modalFrame('Ponto removido', '<p class="muted">Este ponto não existe mais.</p>', '<button class="btn" data-action="close">Fechar</button>', 'small');
+  const imgs = w.images || [];
+  return modalFrame(w.title || 'Local', `
+    ${w.description ? `<p class="wp-desc">${esc(w.description)}</p>` : ''}
+    ${imgs.length ? `<div class="gallery">${imgs.map(r => `<button class="g" data-action="zoom" data-ref="${esc(r)}" aria-label="Ampliar imagem">${imgTag(r, '')}</button>`).join('')}</div>` : '<p class="muted">Nenhuma imagem deste local ainda.</p>'}`,
+    isMaster() ? `<button class="btn" data-action="close">Fechar</button><button class="btn primary" data-action="edit-wp">${I.edit}Editar ponto</button>` : '<button class="btn" data-action="close">Fechar</button>', 'wide');
+}
+
+/* =========================================================
+   Confirmação e lightbox
+   ========================================================= */
+let confirmResolve = null;
+function confirmDialog(title, text, okLabel) {
+  return new Promise(res => {
+    confirmResolve = res;
+    $('#confirm').innerHTML = `<div class="scrim" data-scrim="confirm"><div class="modal small" role="alertdialog" aria-modal="true" aria-label="${esc(title)}">
+      <header><h2>${esc(title)}</h2></header><div class="modal-scroll"><p style="margin:0">${esc(text)}</p></div>
+      <footer><button class="btn ghost" data-action="confirm-no">Cancelar</button><button class="btn primary" data-action="confirm-yes" style="background:var(--danger);border-color:var(--danger);color:#fff">${esc(okLabel)}</button></footer></div></div>`;
+    setTimeout(() => $('#confirm [data-action="confirm-no"]')?.focus());
+  });
+}
+function endConfirm(v) { $('#confirm').innerHTML = ''; const r = confirmResolve; confirmResolve = null; r && r(v); }
+function openLightbox(ref) {
+  $('#lightbox').innerHTML = `<div class="lb" data-action="close-lb" role="dialog" aria-label="Imagem ampliada">${imgTag(ref, '')}</div>`;
+  hydrateImages($('#lightbox'));
+}
+function closeLightbox() { $('#lightbox').innerHTML = ''; }
+
+/* =========================================================
+   Exclusões em cascata
+   ========================================================= */
+async function removeChar(col, o) { await store.remove(col, o.id); sheetRefs(o).forEach(deleteImageRef); }
+async function removeMap(m) { await store.remove('maps', m.id); mapRefs(m).forEach(deleteImageRef); }
+async function removeCampaign(c) {
+  for (const x of S.data.characters.filter(z => z.campaignId === c.id)) await removeChar('characters', x);
+  for (const x of S.data.monsters.filter(z => z.campaignId === c.id)) await removeChar('monsters', x);
+  for (const x of S.data.maps.filter(z => z.campaignId === c.id)) await removeMap(x);
+  await store.remove('campaigns', c.id); deleteImageRef(c.cover);
+}
+
+/* =========================================================
+   Eventos
+   ========================================================= */
+document.addEventListener('submit', e => { if (e.target.id === 'login-form') { e.preventDefault(); doLogin(); } });
+document.addEventListener('input', e => {
+  const t = e.target; const m = S.modal;
+  if (!m || !t.dataset.bind || !t.closest('#overlay')) return;
+  let v = t.type === 'checkbox' ? t.checked : t.value;
+  if (t.dataset.num !== undefined) v = t.value === '' ? '' : num(t.value);
+  setPath(m.draft, t.dataset.bind, v);
+});
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if ($('#lightbox').innerHTML) return closeLightbox();
+  if ($('#confirm').innerHTML) return endConfirm(false);
+  if (S.modal && !S.modal.busy) closeModal();
+});
+document.addEventListener('pointerdown', e => { S.scrimDown = e.target.dataset?.scrim || null; });
+document.addEventListener('click', async e => {
+  const scrim = e.target.dataset?.scrim;
+  if (scrim && S.scrimDown === scrim) {
+    if (scrim === 'confirm') endConfirm(false);
+    else if (scrim === 'overlay' && S.modal && !S.modal.busy) closeModal();
+    return;
+  }
+  const el = e.target.closest('[data-action]'); if (!el) return;
+  const a = el.dataset.action; const m = S.modal; const ds = el.dataset;
+  switch (a) {
+    case 'pick-user': $('#lu').value = ds.u; $('#lerr').classList.add('hidden'); $('#lp').value = ''; $('#lp').focus(); break;
+    case 'logout': closeModal(); S.user = null; ls('grimorio-user', null); S.mapEdit = false; location.hash = ''; $('#app').innerHTML = ''; render(); break;
+    case 'theme': {
+      const root = document.documentElement;
+      const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+      root.dataset.theme = dark ? 'light' : 'dark'; ls('grimorio-theme', root.dataset.theme); break;
+    }
+    case 'close': if (!m?.busy) closeModal(); break;
+    case 'close-lb': closeLightbox(); break;
+    case 'zoom': openLightbox(ds.ref); break;
+    case 'confirm-yes': endConfirm(true); break;
+    case 'confirm-no': endConfirm(false); break;
+    case 'adj': adjust(ds.col, ds.id, ds.stat, num(ds.d)); break;
+    case 'toggle-vis': {
+      const mo = get('monsters', ds.id); if (!mo) break;
+      try { await store.update('monsters', mo.id, { visible: !mo.visible }); toast(!mo.visible ? 'Agora os jogadores veem esta criatura.' : 'Criatura oculta dos jogadores.'); }
+      catch (err) { toast('Não foi possível mudar a visibilidade.', 'err'); }
+      break;
+    }
+
+    /* biblioteca */
+    case 'new-library': openModal({ type: 'library', isNew: true, draft: { name: '', description: '', color: LIB_COLORS[S.data.libraries.length % LIB_COLORS.length][0], hpLabel: '', manaLabel: '', attrsText: '' } }); break;
+    case 'edit-library': { const l = get('libraries', ds.id); if (!l) break;
+      openModal({ type: 'library', id: l.id, draft: { name: l.name || '', description: l.description || '', color: l.color || LIB_COLORS[0][0], hpLabel: l.hpLabel || '', manaLabel: l.manaLabel || '', attrsText: (l.defaultAttrs || []).join(', ') } }); break; }
+    case 'del-library': { const l = get('libraries', ds.id); if (!l) break;
+      const camps = S.data.campaigns.filter(c => c.libraryId === l.id);
+      if (!await confirmDialog('Excluir livro?', `“${l.name}” e ${camps.length ? `suas ${camps.length} campanha(s), com todas as fichas, monstros e mapas,` : 'tudo que estiver nele'} serão apagados para todos. Não dá para desfazer.`, 'Excluir livro')) break;
+      try { for (const c of camps) await removeCampaign(c); await store.remove('libraries', l.id); toast('Livro excluído.'); go('#/'); } catch (err) { toast('Não foi possível excluir tudo. Tente de novo.', 'err'); }
+      break; }
+    case 'set-color': if (m) { m.draft.color = ds.c; renderModal(); } break;
+
+    /* campanha */
+    case 'new-campaign': openModal({ type: 'campaign', isNew: true, draft: { libraryId: ds.lib, name: '', synopsis: '', cover: null }, orig: [] }); break;
+    case 'edit-campaign': { const c = get('campaigns', ds.id); if (!c) break;
+      openModal({ type: 'campaign', id: c.id, draft: { libraryId: c.libraryId, name: c.name || '', synopsis: c.synopsis || '', cover: c.cover || null }, orig: [c.cover].filter(Boolean) }); break; }
+    case 'del-campaign': { const c = get('campaigns', ds.id); if (!c) break;
+      if (!await confirmDialog('Excluir campanha?', `“${c.name}” será apagada com todas as fichas, monstros e mapas dela, para todos da mesa. Não dá para desfazer.`, 'Excluir campanha')) break;
+      try { await removeCampaign(c); toast('Campanha excluída.'); go('#/b/' + encodeURIComponent(c.libraryId)); } catch (err) { toast('Não foi possível excluir. Tente de novo.', 'err'); }
+      break; }
+    case 'pick-cover': { const f = await pickFiles(false); uploadInto(f, 'cover', r => { S.modal.draft.cover = r; }); break; }
+    case 'rm-cover': if (m) { m.draft.cover = null; renderModal(); } break;
+
+    /* fichas */
+    case 'new-char': openModal({ type: 'sheet', col: 'characters', isNew: true, draft: newSheet(ds.camp, 'char'), orig: [] }); break;
+    case 'new-monster': openModal({ type: 'sheet', col: 'monsters', isNew: true, draft: newSheet(ds.camp, 'monster'), orig: [] }); break;
+    case 'edit-char': case 'edit-monster': {
+      const col = a === 'edit-char' ? 'characters' : 'monsters'; const o = get(col, ds.id); if (!o) break;
+      if (col === 'characters' && !canEditChar(o)) break;
+      const d = clone(o); delete d.id;
+      d.attrs = d.attrs || []; d.items = d.items || []; d.sections = (d.sections || []).map(s => ({ ...s, fields: s.fields || [] })); d.gallery = d.gallery || [];
+      d.hp = d.hp || { cur: 0, max: 0 }; d.mana = d.mana || { cur: 0, max: 0 }; d.notes = d.notes || ''; d.subtitle = d.subtitle || '';
+      openModal({ type: 'sheet', col, id: o.id, draft: d, orig: sheetRefs(o) }); break;
+    }
+    case 'del-char': case 'del-monster': {
+      const col = a === 'del-char' ? 'characters' : 'monsters'; const o = get(col, ds.id); if (!o) break;
+      if (col === 'characters' && !canEditChar(o)) break;
+      if (!await confirmDialog(col === 'characters' ? 'Excluir personagem?' : 'Excluir monstro?', `“${o.name}” será apagado para todos. Não dá para desfazer.`, 'Excluir')) break;
+      try { await removeChar(col, o); toast('Excluído.'); go('#/c/' + encodeURIComponent(o.campaignId) + (col === 'characters' ? '/fichas' : '/monstros')); } catch (err) { toast('Não foi possível excluir.', 'err'); }
+      break; }
+    case 'pick-portrait': { const f = await pickFiles(false); uploadInto(f, 'portrait', r => { S.modal.draft.portrait = r; }); break; }
+    case 'rm-portrait': if (m) { m.draft.portrait = null; renderModal(); } break;
+    case 'add-gallery': { const f = await pickFiles(true); uploadInto(f, 'photo', r => { S.modal.draft.gallery.push(r); }); break; }
+    case 'add-row': if (m) {
+      const L = ds.list;
+      if (L === 'attrs') m.draft.attrs.push({ id: uid(), name: '', value: '' });
+      if (L === 'items') m.draft.items.push({ id: uid(), name: '', qty: '1', damage: '', notes: '' });
+      if (L === 'sections') m.draft.sections.push({ id: uid(), title: '', fields: [{ id: uid(), label: '', value: '' }] });
+      renderModal();
+      const inputs = $('#overlay').querySelectorAll(`[data-bind^="${L}."]`);
+      if (L !== 'sections') inputs[inputs.length - (L === 'items' ? 4 : 2)]?.focus();
+      else [...inputs].filter(i => i.dataset.bind.endsWith('.title')).pop()?.focus();
+    } break;
+    case 'rm-row': if (m) { m.draft[ds.list].splice(num(ds.i), 1); renderModal(); } break;
+    case 'add-field': if (m) { const s = m.draft.sections[num(ds.si)]; s.fields.push({ id: uid(), label: '', value: '' }); renderModal();
+      $(`#overlay [data-bind="sections.${ds.si}.fields.${s.fields.length - 1}.label"]`)?.focus(); } break;
+    case 'rm-field': if (m) { m.draft.sections[num(ds.si)].fields.splice(num(ds.i), 1); renderModal(); } break;
+
+    /* mapa */
+    case 'new-map': openModal({ type: 'map', isNew: true, draft: { campaignId: ds.camp, name: '', image: null }, orig: [] }); break;
+    case 'edit-map': { const mp = get('maps', ds.id); if (!mp) break; openModal({ type: 'map', id: mp.id, draft: { campaignId: mp.campaignId, name: mp.name || '', image: mp.image }, orig: [mp.image] }); break; }
+    case 'pick-mapimg': { const f = await pickFiles(false); uploadInto(f, 'map', r => { S.modal.draft.image = r; }); break; }
+    case 'del-map': { const mp = get('maps', ds.id); if (!mp) break;
+      if (!await confirmDialog('Excluir mapa?', `“${mp.name}” e todos os pontos dele serão apagados para todos.`, 'Excluir mapa')) break;
+      closeModal(); try { await removeMap(mp); S.mapId = null; toast('Mapa excluído.'); } catch (err) { toast('Não foi possível excluir o mapa.', 'err'); } break; }
+    case 'pick-map': S.mapId = ds.id; S.mapView = { s: 1, x: 0, y: 0 }; S.mapFitted = false; S.mapEdit = false; render(); break;
+    case 'map-edit': S.mapEdit = !S.mapEdit; render(); break;
+    case 'map-labels': S.mapLabels = !S.mapLabels; render(); break;
+    case 'zoom-map': S.mapZoom && S.mapZoom(ds.z); break;
+    case 'open-wp': openWaypoint(ds.id); break;
+    case 'edit-wp': { const mp = get('maps', m?.mapId); const w = mp && (mp.waypoints || []).find(x => x.id === m.wpId); if (!w) break;
+      const d = clone(w); d.images = d.images || []; d.description = d.description || ''; d.title = d.title || '';
+      openModal({ type: 'wp-edit', mapId: mp.id, draft: d, orig: [...d.images] }); break; }
+    case 'add-wpimg': { const f = await pickFiles(true); uploadInto(f, 'photo', r => { S.modal.draft.images.push(r); }); break; }
+    case 'del-wp': { const mp = get('maps', m?.mapId); if (!mp) break;
+      if (!await confirmDialog('Excluir ponto?', 'O ponto e as imagens dele serão apagados para todos.', 'Excluir ponto')) break;
+      const wps = clone(mp.waypoints || []).filter(w => w.id !== m.draft.id);
+      try { await saveMapWaypoints(mp.id, wps); [...(m.orig || []), ...(m.uploaded || [])].forEach(deleteImageRef); S.modal = null; $('#overlay').innerHTML = ''; toast('Ponto excluído.'); } catch (err) {}
+      break; }
+
+    case 'save-modal':
+      if (!m || m.busy) break;
+      el.disabled = true;
+      if (m.type === 'sheet') await saveSheet(m);
+      else if (m.type === 'library') await saveLibrary(m);
+      else if (m.type === 'campaign') await saveCampaign(m);
+      else if (m.type === 'map') await saveMap(m);
+      else if (m.type === 'wp-edit') await saveWp(m);
+      if (S.modal === m) el.disabled = false;
+      break;
+  }
+});
+
+/* =========================================================
+   Início
+   ========================================================= */
+(function init() {
+  const t = ls('grimorio-theme'); if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t;
+  const saved = ls('grimorio-user'); S.user = USERS.find(u => u.id === saved) || null;
+  render();
+  boot();
+})();
+async function boot() {
+  let db = null;
+  try { if (window.claude && typeof window.claude.use === 'function') db = await window.claude.use('db'); } catch (e) { db = null; }
+  if (db) {
+    store = makeDbStore(db); S.mode = 'online';
+    window.claude.use('assets').then(a => { S.assets = a || null; }).catch(() => {});
+  } else {
+    store = makeLocalStore(); S.mode = 'local';
+  }
+  const pending = new Set(COLS);
+  COLS.forEach(c => {
+    store.watch(c, list => {
+      S.data[c] = list; pending.delete(c);
+      if (!pending.size) S.ready = true;
+      if (S.ready) {
+        scheduleRender();
+        if (S.modal && S.modal.type === 'wp-view') renderModal();
+      }
+    }, err => {
+      pending.delete(c); if (!pending.size) S.ready = true; scheduleRender();
+      if (err && err.code !== 'revoked') toast('A conexão com os dados da mesa caiu. Recarregue a página.', 'err');
+    });
+  });
+}
+</script>
+</body>
+</html>
