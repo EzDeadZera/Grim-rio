@@ -674,6 +674,7 @@ function render() {
   else if (r.view === 'c') v = campaignView(r.id, r.tab || 'fichas');
   else if (r.view === 'p') v = characterView(r.id);
   else if (r.view === 'm') v = monsterView(r.id);
+  else if (r.view === 'jogo') v = gameView();
   else v = shelfView();
   app.innerHTML = shell(v.html, v.crumbs || []);
   hydrateImages(app);
