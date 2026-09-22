@@ -1312,6 +1312,9 @@ document.addEventListener('input', e => {
   if (t.dataset.num !== undefined) v = t.value === '' ? '' : num(t.value);
   setPath(m.draft, t.dataset.bind, v);
 });
+document.addEventListener('change', e => {
+  if (e.target.id === 'game-camp') { S.gameCamp = e.target.value; ls('grimorio-gamecamp', S.gameCamp); render(); }
+});
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
   if ($('#lightbox').innerHTML) return closeLightbox();
@@ -1447,6 +1450,8 @@ document.addEventListener('click', async e => {
 (function init() {
   const t = ls('grimorio-theme'); if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t;
   const saved = ls('grimorio-user'); S.user = USERS.find(u => u.id === saved) || null;
+  if (S.user) S.gameChar = ls('grimorio-gamechar-' + S.user.id);
+  S.gameCamp = ls('grimorio-gamecamp');
   render();
   boot();
 })();
