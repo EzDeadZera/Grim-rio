@@ -285,6 +285,80 @@ textarea.inp{resize:vertical;min-height:90px}
 .wp-desc{white-space:pre-wrap;margin:0 0 16px}
 .uploading{font-size:13px;color:var(--brass);margin-top:6px}
 
+/* modo jogo */
+.modes{display:flex;gap:2px;padding:3px;border:1px solid var(--line);border-radius:10px;background:var(--surface);flex:none}
+.mode{padding:5px 12px;border-radius:7px;font-size:14px;font-weight:500;color:var(--muted);white-space:nowrap}
+.mode:hover{color:var(--text)}
+.mode.on{background:var(--brass);color:var(--on-brass)}
+@media (max-width:760px){.mode-badge{display:none}.mode{padding:5px 9px}.topbar{gap:8px}.top-right{gap:6px}}
+@media (max-width:480px){.user-chip{display:none}.brand{display:none}}
+@media (max-width:600px){.arena-grid:not(.one){grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.fc-body{padding:10px}}
+.game-head{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:22px}
+.camp-select{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500}
+.camp-select select{width:auto;min-width:210px}
+.game-picker{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.pick-char{display:flex;align-items:center;gap:10px;padding:6px 14px 6px 6px;border-radius:12px;border:1px solid var(--line);background:var(--surface);cursor:pointer;text-align:left}
+.pick-char:hover{border-color:var(--brass)}
+.pick-char.on{border-color:var(--brass);box-shadow:0 0 0 2px color-mix(in srgb,var(--brass) 35%,transparent)}
+.pick-char strong{display:block;font-size:15px}
+.pick-char small{color:var(--muted);font-size:12px}
+.pc-thumb,.bst-thumb{width:44px;height:44px;border-radius:9px;overflow:hidden;background:var(--bg2);display:grid;place-items:center;flex:none;font-family:var(--serif);font-weight:700;color:var(--muted)}
+.pc-thumb img,.bst-thumb img{width:100%;height:100%;object-fit:cover}
+.arena{border-radius:16px;margin-bottom:26px}
+.empty-arena{border:1px dashed var(--line);padding:16px 20px;color:var(--muted);background:var(--surface2)}
+.empty-arena p{margin:0}
+.arena.live{border:1px solid color-mix(in srgb,var(--hp) 55%,var(--line));background:linear-gradient(180deg,color-mix(in srgb,var(--hp) 11%,var(--surface)),var(--surface));padding:16px}
+.arena-head{display:flex;align-items:center;gap:9px;font-weight:600;font-size:14px;color:var(--hp);margin-bottom:12px}
+.live-dot{width:9px;height:9px;border-radius:50%;background:var(--hp);animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.3}}
+.arena-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.arena-grid.one{grid-template-columns:1fr}
+.field-card{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.fc-img{aspect-ratio:1;background:var(--bg2);position:relative;cursor:zoom-in}
+.fc-img img{width:100%;height:100%;object-fit:cover}
+.fc-body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:9px}
+.fc-note{margin:-4px 0 0;font-size:12px;color:var(--muted)}
+.field-card.solo{flex-direction:row}
+.field-card.solo .fc-img{width:min(320px,42%);aspect-ratio:4/5;flex:none}
+.field-card.solo .fc-body{flex:1;padding:22px;gap:14px;justify-content:center}
+.field-card.solo h3{font-size:clamp(24px,3.4vw,38px)}
+.field-card.solo .bar{height:14px}
+.field-card.solo .stat-top{font-size:15px}
+@media (max-width:600px){.field-card.solo{flex-direction:column}.field-card.solo .fc-img{width:100%;aspect-ratio:4/3}}
+.game-sheet{display:grid;grid-template-columns:minmax(220px,340px) 1fr;gap:26px;align-items:start}
+@media (max-width:760px){.game-sheet{grid-template-columns:1fr}.gs-portrait{max-width:300px}}
+.gs-portrait .portrait{border-radius:16px;border:1px solid var(--line)}
+.gs-portrait[data-action] .portrait{cursor:zoom-in}
+.gs-name{font-size:clamp(30px,4.4vw,48px);font-weight:700}
+.gs-title .cc-sub{margin-top:6px;font-size:17px}
+.gs-stats{display:flex;flex-direction:column;gap:16px;margin:20px 0 24px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+.gs-stats .stat-top{font-size:16px}
+.gs-stats .bar{height:16px}
+.gs-stats .adj button{padding:8px 0;font-size:15px}
+.gs-attrs{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.gs-attrs .av{font-size:34px}
+.gm-layout{display:grid;grid-template-columns:320px 1fr;gap:24px;align-items:start}
+@media (max-width:900px){.gm-layout{grid-template-columns:1fr}}
+.gm-bestiary{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;position:sticky;top:84px;max-height:calc(100vh - 110px);overflow-y:auto}
+@media (max-width:900px){.gm-bestiary{position:static;max-height:none}}
+.gm-panel-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+.gm-panel-head h2{font-size:19px}
+.bst-row{display:grid;grid-template-columns:44px 1fr;gap:8px 10px;align-items:center;padding:8px;border-radius:10px;border:1px solid transparent}
+.bst-row+.bst-row{margin-top:4px}
+.bst-row.on{border-color:color-mix(in srgb,var(--hp) 50%,var(--line));background:color-mix(in srgb,var(--hp) 8%,transparent)}
+.bst-name{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.bst-name small{display:block;font-weight:400;font-size:12px;color:var(--muted)}
+.field-toggle{grid-column:1/-1;padding:7px;border-radius:8px;border:1px solid var(--line);background:var(--surface2);cursor:pointer;font-weight:600;font-size:13px}
+.field-toggle:hover{border-color:var(--hp)}
+.field-toggle.on{background:var(--hp);border-color:var(--hp);color:#fff}
+.party{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.party-card{display:grid;grid-template-columns:52px 1fr;gap:12px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.party-card:hover{border-color:var(--brass)}
+.party-card .bst-thumb{width:52px;height:64px}
+.party-card strong{display:block}
+.party-card small{display:block;color:var(--muted);font-size:12px;margin-bottom:4px}
+.party-card .stat{margin-top:6px}
+
 /* login */
 .login{min-height:100vh;display:grid;place-items:center;padding:24px;background:
   radial-gradient(ellipse at 20% 0%,color-mix(in srgb,var(--brass) 18%,transparent),transparent 55%),
@@ -611,6 +685,10 @@ function shell(content, crumbs) {
   return `
   <header class="topbar">
     <a class="brand" href="#/" aria-label="Grimório, voltar à estante">${I.d20}<span>Grimório</span></a>
+    <nav class="modes" aria-label="Seções">
+      <a class="mode ${route().view === 'jogo' ? '' : 'on'}" href="#/">Biblioteca</a>
+      <a class="mode ${route().view === 'jogo' ? 'on' : ''}" href="#/jogo">Modo Jogo</a>
+    </nav>
     <nav class="crumbs" aria-label="Caminho">
       <a href="#/">Estante</a>
       ${crumbs.map(([t, h]) => `<span class="sep">/</span>${h ? `<a href="${h}">${esc(t)}</a>` : `<span>${esc(t)}</span>`}`).join('')}
@@ -1047,6 +1125,20 @@ function openWaypoint(id) {
   const m = curMap(); const w = m && (m.waypoints || []).find(x => x.id === id); if (!w) return;
   openModal({ type: 'wp-view', mapId: m.id, wpId: id });
 }
+
+/* =========================================================
+   Modo Jogo
+   ========================================================= */
+function gameView() { return { html: isMaster() ? masterGame() : playerGame(), crumbs: null }; }
+function thumb(o) { return o.portrait ? imgTag(o.portrait, '') : esc(((o.name || '?').trim()[0]) || '?'); }
+function fieldCard(m, L, master, solo) {
+  const known = master || m.revealName;
+  return `<article class="field-card ${solo ? 'solo' : ''}"><div class="fc-img" ${m.portrait ? `data-action="zoom" data-ref="${esc(m.portrait)}"` : ''}>${m.portrait ? imgTag(m.portrait, '') : '<div class="initial">?</div>'}</div><div class="fc-body"><h3 class="${known ? '' : 'unknown'}">${known ? esc(m.name || 'Sem nome') : 'Criatura desconhecida'}</h3>${statBar('monsters', m, 'hp', L.hp, { adj: master, big: master && solo })}${statBar('monsters', m, 'mana', L.mana, { adj: master, big: master && solo })}${master ? `<button class="btn sm" data-action="toggle-field" data-id="${esc(m.id)}">Tirar de campo</button>` : ''}</div></article>`;
+}
+function arena(campId, master) { const L = labelsFor(campId); const act = S.data.monsters.filter(m => m.campaignId === campId && m.inField).sort(byCreated); if (!act.length) return `<div class="arena empty-arena"><p>${master ? 'Nenhuma criatura em campo.' : 'Nenhuma criatura em campo agora.'}</p></div>`; return `<section class="arena live" aria-live="polite"><div class="arena-head"><span class="live-dot"></span>Em campo agora</div><div class="arena-grid ${act.length === 1 ? 'one' : ''}">${act.map(m => fieldCard(m, L, master, act.length === 1)).join('')}</div></section>`; }
+function gameSheet(c) { const L = labelsFor(c.campaignId); const attrs = (c.attrs || []).filter(a => a.name || a.value); const edit = canEditChar(c); return `<div class="game-sheet"><div class="gs-portrait">${portraitBlock(c)}</div><div><h2 class="gs-name">${esc(c.name || 'Sem nome')}</h2><div class="gs-stats">${statBar('characters', c, 'hp', L.hp, { adj: edit, big: true })}${statBar('characters', c, 'mana', L.mana, { adj: edit, big: true })}</div>${attrs.length ? `<div class="gs-attrs">${attrs.map(a => `<div class="attr"><div class="av">${esc(a.value || '—')}</div><div class="an">${esc(a.name)}</div></div>`).join('')}</div>` : ''}</div></div>`; }
+function playerGame() { const mine = S.data.characters.filter(c => c.owner === S.user.id).sort(byCreated); if (!mine.length) return '<div class="game-head"><h1 class="display">Modo Jogo</h1></div><div class="empty"><strong>Você ainda não tem personagem</strong>Crie um na aba Fichas de uma campanha.</div>'; const sel = mine.find(c => c.id === S.gameChar) || (mine.length === 1 ? mine[0] : null); S.playerGameCamp = sel?.campaignId || null; const picker = `<div class="game-picker">${mine.map(c => `<button class="pick-char ${sel?.id === c.id ? 'on' : ''}" data-action="pick-gamechar" data-id="${esc(c.id)}"><span class="pc-thumb">${thumb(c)}</span><span><strong>${esc(c.name || 'Sem nome')}</strong></span></button>`).join('')}</div>`; return `<div class="game-head"><h1 class="display">Modo Jogo</h1><button class="btn" data-action="fullscreen">${I.fit}Tela cheia</button></div>${mine.length > 1 ? picker : ''}${sel ? arena(sel.campaignId, false) + gameSheet(sel) : picker}`; }
+function masterGame() { const camps = [...S.data.campaigns].sort(byCreated); if (!camps.length) return '<div class="game-head"><h1 class="display">Modo Jogo</h1></div><div class="empty"><strong>Nenhuma campanha ainda</strong></div>'; const camp = camps.find(c => c.id === S.gameCamp) || camps[0]; S.gameCamp = camp.id; const mons = S.data.monsters.filter(m => m.campaignId === camp.id).sort(byCreated); return `<div class="game-head"><h1 class="display">Modo Jogo</h1><label class="camp-select">Campanha<select class="inp" id="game-camp">${camps.map(c => `<option value="${esc(c.id)}" ${c.id === camp.id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></label></div><div class="gm-layout"><aside class="gm-bestiary"><div class="gm-panel-head"><h2>Bestiário</h2></div>${mons.map(m => `<div class="bst-row ${m.inField ? 'on' : ''}"><span class="bst-thumb">${thumb(m)}</span><span class="bst-name">${esc(m.name || 'Sem nome')}</span><button class="field-toggle ${m.inField ? 'on' : ''}" data-action="toggle-field" data-id="${esc(m.id)}">${m.inField ? 'Ativo em campo' : 'Colocar em campo'}</button></div>`).join('')}</aside><div>${arena(camp.id, true)}</div></div>`; }
 
 /* =========================================================
    Modais
