@@ -6,9 +6,7 @@
 <title>Grimório — mesa de RPG</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./supabase-config.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=Rye&family=Oswald:wght@500;600&family=Metal+Mania&family=MedievalSharp&family=Press+Start+2P&family=Luckiest+Guy&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#f1eff7; --bg2:#e7e3f1; --surface:#ffffff; --surface2:#f6f4fb; --line:#d6d1e6;
@@ -35,8 +33,534 @@
   --plank:#5a4128; --plank-edge:#3b2a19; --shadow:0 16px 44px rgba(6,4,18,.55);
   color-scheme:dark;
 }
+/* ===== TEMAS (data-skin) — vêm depois do claro/escuro, então prevalecem ===== */
+:root[data-skin="cores"]{
+  --bg:#101a17; --bg2:#16241f; --surface:#1a2b25; --surface2:#21362e; --line:#2e4c40;
+  --text:#e7f0e9; --muted:#9bb5a8; --brass:#d9a441; --brass-soft:#2a4238; --on-brass:#12201a;
+  --hp:#e0655b; --mana:#4fb0c6; --ok:#69c58f; --danger:#e88079;
+  --plank:#4a3a25; --plank-edge:#31251a; --shadow:0 16px 44px rgba(2,12,8,.55); color-scheme:dark;
+}
+:root[data-skin="oeste"]{
+  --bg:#e8dcc0; --bg2:#dccdaa; --surface:#f4ecd8; --surface2:#e6d9bb; --line:#b9a179;
+  --text:#2a1f14; --muted:#6b573c; --brass:#8a3b1e; --brass-soft:#ecd9b4; --on-brass:#f7f0dd;
+  --hp:#9b2d1f; --mana:#3d5a80; --ok:#4b6b35; --danger:#8f2418;
+  --plank:#a87a48; --plank-edge:#6d4a27; --shadow:0 14px 40px rgba(60,40,15,.3);
+  --serif:'Rye', Georgia, serif; color-scheme:light;
+}
+:root[data-skin="oeste"] .display,:root[data-skin="oeste"] h2{letter-spacing:.01em}
+:root[data-skin="oeste"] .btn,:root[data-skin="oeste"] .icon-btn,:root[data-skin="oeste"] .inp{border-width:2px}
+:root[data-skin="ordem"]{
+  --bg:#0d0a14; --bg2:#141020; --surface:#1a1526; --surface2:#231c33; --line:#342a4a;
+  --text:#ece9f5; --muted:#a49bc0; --brass:#8b5cf6; --brass-soft:#2a1f45; --on-brass:#0d0a14;
+  --hp:#e03e3e; --mana:#a855f7; --ok:#3ecf8e; --danger:#ff5d5d;
+  --plank:#2a2140; --plank-edge:#180f2c; --shadow:0 18px 50px rgba(0,0,0,.7);
+  --serif:'Oswald', Impact, sans-serif; color-scheme:dark;
+}
+:root[data-skin="ordem"] h1,:root[data-skin="ordem"] h2,:root[data-skin="ordem"] h3{letter-spacing:.03em;text-transform:uppercase}
+:root[data-skin="ordem"] .lede,:root[data-skin="ordem"] .cc-sub{text-transform:none}
+:root[data-skin="hexatombe"]{
+  --bg:#12060a; --bg2:#1b090d; --surface:#250a10; --surface2:#340e15; --line:#5c1a22;
+  --text:#f3dede; --muted:#c08b8b; --brass:#a51219; --brass-soft:#3a0d12; --on-brass:#ffeaea;
+  --hp:#e5484d; --mana:#e08b2e; --ok:#7fb069; --danger:#ff6b6b;
+  --plank:#3a0d12; --plank-edge:#210408; --shadow:0 18px 50px rgba(0,0,0,.75);
+  --serif:'Metal Mania', Impact, serif; color-scheme:dark;
+}
+:root[data-skin="hexatombe"] .display,:root[data-skin="hexatombe"] .gs-name{text-shadow:0 2px 14px rgba(229,72,77,.4)}
+:root[data-skin="fantasy"]{
+  --bg:#141210; --bg2:#1c1916; --surface:#221e1a; --surface2:#2b2621; --line:#4a3f33;
+  --text:#e6d9bf; --muted:#a8967a; --brass:#c9a227; --brass-soft:#332b20; --on-brass:#1a1610;
+  --hp:#b03a34; --mana:#4573a8; --ok:#7d9c52; --danger:#d15c53;
+  --plank:#3a2c1d; --plank-edge:#241a10; --shadow:0 18px 46px rgba(0,0,0,.65);
+  --serif:'MedievalSharp', Georgia, serif; color-scheme:dark;
+}
+:root[data-skin="fantasy"] .btn,:root[data-skin="fantasy"] .modal,:root[data-skin="fantasy"] .camp-card,
+:root[data-skin="fantasy"] .char-card,:root[data-skin="fantasy"] .mon-card,:root[data-skin="fantasy"] .field-card{
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--brass) 22%,transparent)}
+:root[data-skin="minecraft"]{
+  --bg:#191410; --bg2:#221a14; --surface:#2a211a; --surface2:#33291f; --line:#54412c;
+  --text:#e9d7b0; --muted:#b09a74; --brass:#c8a24a; --brass-soft:#3a2e1e; --on-brass:#1a1410;
+  --hp:#b23a3a; --mana:#4a7fb2; --ok:#6aa84f; --danger:#d16060;
+  --plank:#6b4a2a; --plank-edge:#412c18; --shadow:0 12px 0 rgba(0,0,0,.45);
+  --serif:'Press Start 2P', 'Courier New', monospace; color-scheme:dark;
+}
+:root[data-skin="minecraft"] *{border-radius:0!important}
+:root[data-skin="minecraft"] .display{font-size:clamp(18px,2.6vw,28px);line-height:1.5;letter-spacing:0}
+:root[data-skin="minecraft"] .gs-name{font-size:clamp(17px,2.4vw,26px);line-height:1.5}
+:root[data-skin="minecraft"] h2{font-size:16px;line-height:1.5}
+:root[data-skin="minecraft"] h3{font-size:13px;line-height:1.6}
+:root[data-skin="minecraft"] .attr .av{font-size:19px}
+:root[data-skin="minecraft"] .gs-attrs .av{font-size:22px}
+:root[data-skin="minecraft"] .initial{font-size:34px}
+:root[data-skin="minecraft"] .spine-title{font-size:12px;letter-spacing:0}
+:root[data-skin="minecraft"] .brand{font-size:14px}
+:root[data-skin="minecraft"] .field-card.solo h3{font-size:clamp(15px,2.2vw,24px)}
+:root[data-skin="minecraft"] .btn,:root[data-skin="minecraft"] .icon-btn,:root[data-skin="minecraft"] .field-toggle,
+:root[data-skin="minecraft"] .inp,:root[data-skin="minecraft"] .chip{border-width:2px}
+:root[data-skin="minecraft"] .cover-fallback{font-size:34px}
+
+:root[data-skin="aventura"]{
+  --bg:#2e2016; --bg2:#3b2a1c; --surface:#4a3524; --surface2:#5a4129; --line:#80603c;
+  --text:#f8ecd4; --muted:#c3a87e; --brass:#d1482f; --brass-soft:#5e2a1c; --on-brass:#fff4e0;
+  --hp:#d1482f; --mana:#2fa3a0; --ok:#8fbf3f; --danger:#e0604a;
+  --plank:#8a5a30; --plank-edge:#56351a; --shadow:0 14px 36px rgba(12,6,2,.6);
+  --serif:'Luckiest Guy', 'Fraunces', Georgia, serif; color-scheme:dark;
+}
+:root[data-skin="aventura"] .display{font-size:clamp(25px,3.9vw,39px);letter-spacing:.01em}
+:root[data-skin="aventura"] .gs-name{font-size:clamp(25px,3.7vw,39px)}
+:root[data-skin="aventura"] h2{font-size:20px}
+:root[data-skin="aventura"] .spine-title{letter-spacing:0}
+/* tábuas de madeira ao fundo */
+:root[data-skin="aventura"] .bg-layer{background-image:
+  repeating-linear-gradient(90deg,rgba(0,0,0,.13) 0 3px,transparent 3px 430px),
+  repeating-linear-gradient(0deg,rgba(0,0,0,.34) 0 4px,rgba(255,225,170,.05) 4px 6px,transparent 6px 94px),
+  repeating-linear-gradient(0deg,rgba(255,220,160,.03) 0 1px,transparent 1px 9px),
+  radial-gradient(ellipse 70% 50% at 50% -6%,rgba(255,205,135,.12),transparent 62%);
+  box-shadow:inset 0 0 200px rgba(0,0,0,.6)}
+:root[data-skin="aventura"] .theme-art{opacity:.26;color:#7a4e27;height:min(26vh,240px)}
+:root[data-skin="aventura"] .theme-mark{opacity:.15;color:#b03a26;right:2vw;top:12vh;width:min(30vw,340px)}
+/* molduras com borda creme, como as peças do kit */
+:root[data-skin="aventura"] .frame{border-radius:14px}
+:root[data-skin="aventura"] .frame::after{
+  box-shadow:inset 0 0 0 3px #f0e0bd,inset 0 0 0 6px #4a3524,inset 0 0 0 8px rgba(0,0,0,.45)}
+/* botões com relevo de madeira */
+:root[data-skin="aventura"] .btn,:root[data-skin="aventura"] .icon-btn,
+:root[data-skin="aventura"] .chip,:root[data-skin="aventura"] .field-toggle{
+  border-width:2px;border-radius:10px;box-shadow:0 3px 0 rgba(0,0,0,.38)}
+:root[data-skin="aventura"] .btn:active,:root[data-skin="aventura"] .icon-btn:active,
+:root[data-skin="aventura"] .chip:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.38)}
+:root[data-skin="aventura"] .inp{border-width:2px;border-radius:10px}
+:root[data-skin="aventura"] .topbar{border-bottom:3px solid var(--plank-edge)}
+:root[data-skin="aventura"] .modal header{background:var(--surface2);border-bottom-width:3px}
+/* títulos de seção viram fitas */
+:root[data-skin="aventura"] .block h2{display:inline-flex;align-self:flex-start;background:var(--brass);
+  color:var(--on-brass);padding:7px 22px;letter-spacing:.02em;
+  clip-path:polygon(11px 0,calc(100% - 11px) 0,100% 50%,calc(100% - 11px) 100%,11px 100%,0 50%)}
+:root[data-skin="aventura"] .block h2::after{display:none}
+/* anotações em pergaminho */
+:root[data-skin="aventura"] .notes{background:#f3e5c6;color:#402e1c;border:2px solid #c0a473;
+  box-shadow:inset 0 0 36px rgba(150,110,55,.22)}
+:root[data-skin="aventura"] .empty{border-width:2px}
+
+/* ===== abertura ao entrar ===== */
+.splash{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:var(--bg);text-align:center}
+.splash.out{animation:splashOut .55s ease forwards}
+.splash-inner{position:relative;display:grid;place-items:center;gap:26px}
+.splash-ring{position:absolute;top:-34px;width:190px;height:190px;border-radius:50%;
+  border:2px solid color-mix(in srgb,var(--brass) 22%,transparent);
+  border-top-color:var(--brass);border-right-color:color-mix(in srgb,var(--brass) 60%,transparent);
+  animation:spin 1.5s linear infinite}
+.splash-ring.inner{width:142px;height:142px;top:-10px;border-color:color-mix(in srgb,var(--text) 10%,transparent);
+  border-bottom-color:var(--brass);animation:spin 2.2s linear infinite reverse}
+.splash-mark{width:104px;color:var(--brass);animation:markIn .9s cubic-bezier(.2,.8,.2,1) both}
+.splash-mark svg{width:100%;height:auto;filter:drop-shadow(0 0 16px color-mix(in srgb,var(--brass) 45%,transparent))}
+.splash-mark.master{animation:markIn .9s cubic-bezier(.2,.8,.2,1) both, markPulse 1.8s ease-in-out .9s infinite}
+.splash-txt{font-family:var(--serif);font-size:19px;margin:0;animation:fadeUp .7s ease .35s both}
+.splash-sub{margin:6px 0 0;font-size:14px;color:var(--muted);animation:fadeUp .7s ease .55s both}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes spinC{to{transform:translate(-50%,-50%) rotate(394deg)}}
+@keyframes markIn{0%{opacity:0;transform:scale(.55) rotate(-24deg)}60%{opacity:1}100%{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes markPulse{50%{opacity:.6;transform:scale(1.05)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes splashOut{to{opacity:0;visibility:hidden}}
+
+/* ===== morte e derrota ===== */
+.fx{position:fixed;inset:0;z-index:95;display:grid;place-items:center;padding:24px;cursor:pointer;
+  background:radial-gradient(ellipse at 50% 50%,rgba(6,4,10,.7),rgba(4,3,8,.94));animation:fxIn .45s ease both}
+.fx.out{animation:fxOut .7s ease forwards}
+.fx-card{position:relative;display:grid;justify-items:center;gap:12px;max-width:min(440px,86vw)}
+.fx-img{position:relative;width:min(260px,62vw);aspect-ratio:4/5;border-radius:14px;overflow:hidden;background:#15121c}
+.fx-img img{width:100%;height:100%;object-fit:cover}
+.fx-name{font-family:var(--serif);font-size:clamp(24px,4vw,34px);margin:0;color:#f1ebdd;text-align:center}
+.fx-sub{margin:0;color:#b9b0c4;font-size:15px}
+@keyframes fxIn{from{opacity:0}to{opacity:1}}
+@keyframes fxOut{to{opacity:0;visibility:hidden}}
+.fx-death .fx-img{animation:fall 2.6s cubic-bezier(.3,0,.2,1) both}
+.fx-death .fx-img img{filter:grayscale(1) brightness(.72) contrast(1.08)}
+.fx-death .fx-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(120,18,18,.5))}
+.fx-death .fx-name{animation:fadeUp .9s ease .5s both;letter-spacing:.06em}
+.fx-death .fx-sub{animation:fadeUp .9s ease .75s both}
+@keyframes fall{0%{opacity:0;transform:scale(1.06) translateY(-14px)}25%{opacity:1;transform:none}
+  100%{opacity:.75;transform:translateY(26px) rotate(-2deg)}}
+.fx-boss .fx-img{position:relative;animation:bossShake .5s ease .25s 2 both}
+.fx-boss .fx-img img{filter:grayscale(.7) brightness(.82)}
+/* raios do chefe derrotado */
+.fx-rays{position:absolute;top:44%;left:50%;width:min(620px,130vw);aspect-ratio:1;border-radius:50%;z-index:-1;
+  transform:translate(-50%,-50%);
+  background:
+    radial-gradient(circle,color-mix(in srgb,var(--brass) 45%,transparent) 0,transparent 42%),
+    repeating-conic-gradient(from 0deg,transparent 0 5deg,color-mix(in srgb,var(--brass) 95%,transparent) 5deg 8.5deg,transparent 8.5deg 22deg);
+  -webkit-mask-image:radial-gradient(circle,#000 14%,rgba(0,0,0,.55) 42%,transparent 70%);
+  mask-image:radial-gradient(circle,#000 14%,rgba(0,0,0,.55) 42%,transparent 70%);
+  animation:raysIn 1.2s ease .25s both,spinC 26s linear 1.5s infinite}
+.fx-stamp{font-family:var(--serif);font-size:clamp(30px,7vw,58px);margin:0;color:var(--brass);
+  letter-spacing:.08em;text-shadow:0 4px 26px color-mix(in srgb,var(--brass) 55%,transparent);
+  animation:stamp .6s cubic-bezier(.2,1.3,.4,1) .55s both}
+@keyframes bossShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+@keyframes raysIn{from{opacity:0;transform:translate(-50%,-50%) scale(.35) rotate(0)}to{opacity:.38;transform:translate(-50%,-50%) scale(1) rotate(34deg)}}
+@keyframes stamp{0%{opacity:0;transform:scale(2.6);filter:blur(7px)}70%{opacity:1;filter:blur(0)}100%{opacity:1;transform:scale(1)}}
+.is-dead .portrait img,.is-dead .fc-img img,.is-dead .bst-thumb img{filter:grayscale(1) brightness(.62)}
+.is-dead .cc-body h3,.is-dead .bst-name{opacity:.72;text-decoration:line-through;text-decoration-thickness:1px}
+.dead-badge{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);z-index:2;
+  font-size:12px;font-weight:700;letter-spacing:.06em;padding:3px 12px;border-radius:999px;
+  background:rgba(14,10,18,.85);color:#f0d9d9;border:1px solid color-mix(in srgb,var(--hp) 70%,transparent)}
+@media (prefers-reduced-motion: reduce){
+  .splash-ring,.splash-mark,.splash-txt,.splash-sub,.fx-rays,.fx-stamp,.fx-death .fx-img{animation:none!important}
+  .fx-rays{opacity:.3}
+}
+
+/* ===== fundo, emblema e molduras por tema ===== */
+.bg-layer{position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background-image:
+    radial-gradient(ellipse 60% 50% at 10% -8%,color-mix(in srgb,var(--brass) 16%,transparent),transparent 70%),
+    radial-gradient(ellipse 50% 45% at 100% 105%,color-mix(in srgb,var(--mana) 14%,transparent),transparent 70%),
+    repeating-linear-gradient(135deg,color-mix(in srgb,var(--text) 4%,transparent) 0 1px,transparent 1px 8px)}
+.theme-art{position:fixed;left:0;right:0;bottom:0;height:min(40vh,400px);z-index:-1;pointer-events:none;opacity:.17;color:var(--text)}
+.theme-art svg{width:100%;height:100%;display:block}
+:root[data-skin="oeste"] .theme-art{opacity:.3;color:#6b4a28}
+:root[data-skin="ordem"] .theme-art{opacity:.22;color:#8b5cf6}
+:root[data-skin="hexatombe"] .theme-art{opacity:.3;color:#7d1219}
+:root[data-skin="fantasy"] .theme-art{opacity:.22;color:#c9a227}
+:root[data-skin="minecraft"] .theme-art{opacity:.26;color:#6b4a2a}
+.scene-art{position:absolute;inset:0;z-index:0}
+.scene-art svg{width:100%;height:100%;display:block}
+.theme-mark{position:fixed;right:-3vw;top:14vh;width:min(34vw,400px);z-index:-1;pointer-events:none;opacity:.07;color:var(--brass)}
+.theme-mark svg{width:100%;height:auto}
+@media (max-width:760px){.theme-mark{width:78vw;opacity:.05}}
+.frame{position:relative}
+.frame::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--text) 12%,transparent)}
+
+:root[data-skin="cores"] .bg-layer{background-image:
+  radial-gradient(ellipse 55% 45% at 0% 0%,rgba(217,164,65,.14),transparent 62%),
+  radial-gradient(ellipse 50% 40% at 100% 100%,rgba(79,176,198,.13),transparent 62%),
+  repeating-linear-gradient(135deg,rgba(231,240,233,.035) 0 1px,transparent 1px 9px)}
+
+:root[data-skin="oeste"] .bg-layer{background-image:
+  repeating-linear-gradient(90deg,rgba(120,85,40,.06) 0 1px,transparent 1px 4px),
+  repeating-linear-gradient(0deg,rgba(120,85,40,.05) 0 1px,transparent 1px 7px),
+  radial-gradient(ellipse at 50% 25%,rgba(255,244,218,.55),transparent 62%);
+  box-shadow:inset 0 0 240px rgba(85,55,20,.4),inset 0 0 70px rgba(85,55,20,.2)}
+:root[data-skin="oeste"] .theme-mark{opacity:.12;color:#5a3d21}
+:root[data-skin="oeste"] .frame::after{box-shadow:inset 0 0 0 4px #f4ecd8,inset 0 0 0 7px #6d4a27,inset 0 0 44px rgba(85,55,20,.35)}
+:root[data-skin="oeste"] .frame img{filter:sepia(.5) contrast(1.06) saturate(.92)}
+:root[data-skin="oeste"] .login-card,:root[data-skin="oeste"] .modal{border-width:2px;border-color:#6d4a27}
+
+:root[data-skin="ordem"] .bg-layer{background-image:
+  radial-gradient(ellipse 65% 45% at 78% -5%,rgba(139,92,246,.24),transparent 65%),
+  repeating-linear-gradient(0deg,rgba(255,255,255,.028) 0 1px,transparent 1px 46px),
+  repeating-linear-gradient(90deg,rgba(255,255,255,.028) 0 1px,transparent 1px 46px);
+  box-shadow:inset 0 0 240px rgba(0,0,0,.75)}
+:root[data-skin="ordem"] .theme-mark{opacity:.12;color:#8b5cf6;right:auto;left:50%;transform:translateX(-50%);top:13vh;width:min(46vw,520px)}
+:root[data-skin="ordem"] .frame{clip-path:polygon(15px 0,100% 0,100% calc(100% - 15px),calc(100% - 15px) 100%,0 100%,0 15px)}
+:root[data-skin="ordem"] .frame::after{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--brass) 60%,transparent),inset 0 0 30px rgba(139,92,246,.3)}
+
+:root[data-skin="hexatombe"] .bg-layer{background-image:
+  radial-gradient(ellipse 72% 55% at 50% -12%,rgba(200,25,30,.4),transparent 66%),
+  radial-gradient(circle at 12% 88%,rgba(150,12,18,.32),transparent 55%),
+  repeating-linear-gradient(115deg,rgba(255,90,90,.055) 0 1px,transparent 1px 10px),
+  repeating-linear-gradient(64deg,rgba(0,0,0,.4) 0 2px,transparent 2px 15px);
+  box-shadow:inset 0 0 260px rgba(0,0,0,.85)}
+:root[data-skin="hexatombe"] .theme-mark{opacity:.14;color:#7d1219;right:2vw;top:12vh;width:min(32vw,380px)}
+:root[data-skin="hexatombe"] .frame{clip-path:polygon(0 0,100% 0,100% calc(100% - 11px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 13px))}
+:root[data-skin="hexatombe"] .frame::after{box-shadow:inset 0 0 0 2px #7d1219,inset 0 0 44px rgba(130,0,8,.6)}
+:root[data-skin="hexatombe"] .frame img{filter:contrast(1.1) saturate(1.15)}
+
+:root[data-skin="fantasy"] .bg-layer{background-image:
+  radial-gradient(circle at 18% 12%,rgba(201,162,39,.12),transparent 46%),
+  radial-gradient(circle at 80% 72%,rgba(120,80,30,.14),transparent 52%),
+  repeating-linear-gradient(45deg,rgba(255,235,190,.03) 0 2px,transparent 2px 10px),
+  repeating-linear-gradient(-45deg,rgba(0,0,0,.28) 0 2px,transparent 2px 12px);
+  box-shadow:inset 0 0 210px rgba(0,0,0,.62)}
+:root[data-skin="fantasy"] .theme-mark{opacity:.13}
+:root[data-skin="fantasy"] .frame::after{
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--brass) 42%,transparent);
+  background-image:linear-gradient(var(--brass),var(--brass)),linear-gradient(var(--brass),var(--brass)),
+    linear-gradient(var(--brass),var(--brass)),linear-gradient(var(--brass),var(--brass)),
+    linear-gradient(var(--brass),var(--brass)),linear-gradient(var(--brass),var(--brass)),
+    linear-gradient(var(--brass),var(--brass)),linear-gradient(var(--brass),var(--brass));
+  background-repeat:no-repeat;
+  background-size:20px 2px,2px 20px,20px 2px,2px 20px,20px 2px,2px 20px,20px 2px,2px 20px;
+  background-position:left 6px top 6px,left 6px top 6px,right 6px top 6px,right 6px top 6px,
+    left 6px bottom 6px,left 6px bottom 6px,right 6px bottom 6px,right 6px bottom 6px}
+
+:root[data-skin="minecraft"] .bg-layer{background-image:
+  repeating-conic-gradient(rgba(255,255,255,.025) 0 25%,transparent 0 50%),
+  repeating-linear-gradient(0deg,rgba(0,0,0,.2) 0 2px,transparent 2px 32px),
+  repeating-linear-gradient(90deg,rgba(0,0,0,.2) 0 2px,transparent 2px 32px);
+  background-size:32px 32px,auto,auto;
+  box-shadow:inset 0 0 170px rgba(0,0,0,.6)}
+:root[data-skin="minecraft"] .theme-mark{opacity:.12;right:1vw;top:13vh;width:min(30vw,340px)}
+:root[data-skin="minecraft"] .frame::after{box-shadow:inset 0 0 0 3px #17110c,inset 0 0 0 6px #6b4a2a,inset 0 0 0 9px #17110c}
+:root[data-skin="minecraft"] .frame img{image-rendering:pixelated}
+
+/* ===== mensagens e pistas ===== */
+.msg-panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.msg-panel h2{font-size:19px;margin-bottom:4px}
+.msg-panel .hint{font-size:12px;color:var(--muted);margin:0 0 10px}
+.msg-list{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px;max-height:320px;overflow-y:auto}
+.msg-item{width:100%;text-align:left;display:grid;gap:4px;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:var(--surface2);cursor:pointer}
+.msg-item:hover{border-color:var(--brass)}
+.msg-top{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted)}
+.msg-kind{font-size:11px;font-weight:700;letter-spacing:.04em;padding:1px 8px;border-radius:999px;border:1px solid currentColor}
+.msg-kind.pista{color:var(--brass)}
+.msg-kind.mensagem{color:var(--mana)}
+.msg-to{margin-left:auto;font-size:11px}
+.msg-text{font-size:13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.msg-item.unread{border-color:color-mix(in srgb,var(--brass) 60%,var(--line));box-shadow:0 0 0 2px color-mix(in srgb,var(--brass) 18%,transparent)}
+.post{position:fixed;inset:0;z-index:97;display:grid;place-items:center;padding:22px;cursor:pointer;
+  background:radial-gradient(ellipse at 50% 50%,rgba(10,8,16,.72),rgba(5,4,10,.94));animation:fxIn .35s ease both}
+.post.out{animation:fxOut .55s ease forwards}
+.post-card{position:relative;width:min(560px,94vw);max-height:88vh;overflow-y:auto;background:var(--surface);border:1px solid var(--line);
+  border-radius:18px;padding:26px;box-shadow:var(--shadow);cursor:default;animation:postIn .55s cubic-bezier(.2,.9,.25,1) both}
+.post.pista .post-card{border-color:color-mix(in srgb,var(--brass) 60%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--brass) 35%,transparent),0 20px 60px rgba(0,0,0,.6)}
+@keyframes postIn{0%{opacity:0;transform:translateY(26px) scale(.94)}100%{opacity:1;transform:none}}
+.post-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.post-head h2{font-size:22px;flex:1}
+.post-from{font-size:13px;color:var(--muted);margin:-8px 0 14px}
+.post-text{white-space:pre-wrap;font-size:16px;line-height:1.6;margin:0 0 16px}
+.post-img{border-radius:12px;overflow:hidden;border:1px solid var(--line);cursor:zoom-in}
+.post-img img{width:100%;display:block}
+.post-seal{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:var(--on-brass);background:var(--mana);flex:none}
+.post.pista .post-seal{background:var(--brass)}
+.post-seal svg{width:24px;height:24px}
+.post-foot{display:flex;justify-content:flex-end;margin-top:18px}
+
+/* ===== névoa de guerra ===== */
+.fog{position:absolute;inset:0;pointer-events:none;z-index:2}
+.fog i{position:absolute;display:block;background:#0b0a12}
+.map-vp.fogging{cursor:cell}
+.map-vp.fogging .fog i{background:repeating-linear-gradient(45deg,rgba(12,10,20,.72) 0 8px,rgba(30,26,44,.72) 8px 16px);outline:1px solid rgba(255,255,255,.05)}
+.fog-tools{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.fog-tools .btn.sm{padding:5px 10px}
+
+/* ===== dados dos atributos ===== */
+.attr-edit{border:1px solid var(--line);border-radius:11px;padding:10px 11px;background:var(--surface2)}
+.attr-edit+.attr-edit{margin-top:8px}
+.attr-edit .line{margin-bottom:9px}
+.die-pick{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.die-pick .pl{font-size:12px;color:var(--muted);margin-right:2px}
+.die-opt{position:relative;width:36px;height:36px;border:0;padding:0;background:none;cursor:pointer;
+  display:grid;place-items:center;font-size:10px;font-weight:700;color:var(--muted);line-height:1}
+.die-opt::before{content:"";position:absolute;inset:0;background:color-mix(in srgb,var(--text) 14%,transparent);transition:background .15s}
+.die-opt>span{position:relative;z-index:1}
+.die-opt:hover::before{background:color-mix(in srgb,var(--brass) 50%,transparent)}
+.die-opt.on::before{background:var(--brass)}
+.die-opt.on{color:var(--on-brass)}
+.die-opt[data-shape="none"]::before{background:none;border:1px dashed var(--muted);border-radius:50%}
+.die-opt[data-shape="none"].on::before{background:var(--brass);border-color:var(--brass)}
+.die-opt[data-shape="d4"]::before{clip-path:polygon(50% 2%,98% 96%,2% 96%)}
+.die-opt[data-shape="d6"]::before{clip-path:polygon(8% 8%,92% 8%,92% 92%,8% 92%)}
+.die-opt[data-shape="d8"]::before{clip-path:polygon(50% 1%,99% 50%,50% 99%,1% 50%)}
+.die-opt[data-shape="d10"]::before{clip-path:polygon(50% 0,96% 34%,76% 100%,24% 100%,4% 34%)}
+.die-opt[data-shape="d12"]::before{clip-path:polygon(50% 0,95% 33%,78% 97%,22% 97%,5% 33%)}
+.die-opt[data-shape="d20"]::before{clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)}
+.die-opt[data-shape="d100"]::before{clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)}
+.die-chip{position:relative;display:inline-grid;place-items:center;width:26px;height:26px;flex:none;
+  font-size:8px;font-weight:700;color:var(--on-brass);line-height:1}
+.die-chip::before{content:"";position:absolute;inset:0;background:var(--brass);opacity:.9}
+.die-chip>span{position:relative;z-index:1}
+.die-chip[data-shape="d4"]::before{clip-path:polygon(50% 2%,98% 96%,2% 96%)}
+.die-chip[data-shape="d6"]::before{clip-path:polygon(8% 8%,92% 8%,92% 92%,8% 92%)}
+.die-chip[data-shape="d8"]::before{clip-path:polygon(50% 1%,99% 50%,50% 99%,1% 50%)}
+.die-chip[data-shape="d10"]::before{clip-path:polygon(50% 0,96% 34%,76% 100%,24% 100%,4% 34%)}
+.die-chip[data-shape="d12"]::before{clip-path:polygon(50% 0,95% 33%,78% 97%,22% 97%,5% 33%)}
+.die-chip[data-shape="d20"]::before{clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)}
+.die-chip[data-shape="d100"]::before{clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)}
+.die-chip.sm{width:22px;height:22px;font-size:7px}
+.attr .die-chip{box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.attr{position:relative}
+.attr .die-chip{position:absolute;top:6px;right:6px}
+.attr.rollable{cursor:pointer;border:1px solid var(--line);width:100%;font:inherit;color:inherit}
+.attr.rollable:hover{border-color:var(--brass)}
+.attr.rollable:hover .die-chip::before{opacity:1}
+.tag .die-chip{margin-left:4px;vertical-align:middle}
+.tag{display:inline-flex;align-items:center}
+
+/* ===== condições ===== */
+.conds{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.cond{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;
+  border:1px solid color-mix(in srgb,var(--cc) 55%,transparent);background:color-mix(in srgb,var(--cc) 18%,transparent);color:var(--text)}
+.cond .dot{width:8px;height:8px;border-radius:50%;background:var(--cc);flex:none}
+button.cond{cursor:pointer}
+button.cond:hover{border-color:var(--cc)}
+.cond.add{border-style:dashed;border-color:var(--line);background:transparent;color:var(--muted)}
+.cond.add:hover{color:var(--brass);border-color:var(--brass)}
+.cond-pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.cond-opt{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface2);cursor:pointer;text-align:left;font-size:14px}
+.cond-opt .dot{width:11px;height:11px;border-radius:50%;background:var(--cc);flex:none}
+.cond-opt.on{border-color:var(--cc);background:color-mix(in srgb,var(--cc) 20%,transparent);font-weight:600}
+.tk-conds{position:absolute;top:-3px;right:-3px;display:flex;gap:2px;z-index:4}
+.tk-conds span{width:11px;height:11px;border-radius:50%;background:var(--cc);border:2px solid rgba(10,8,14,.8)}
+.cc-conds{margin-top:2px}
+
+/* ===== arena de combate ===== */
+.arena-wrap{margin-bottom:26px}
+.arena-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.arena-bar h2{font-size:20px}
+.arena-hint{font-size:13px;color:var(--muted);margin:0 0 10px}
+.board-scroll{overflow-x:auto;overflow-y:hidden;padding-bottom:2px}
+.arena-board{position:relative;width:100%;min-width:560px;border-radius:16px;border:1px solid var(--line);overflow:hidden;
+  background:linear-gradient(180deg,#2a2b33,#15161c)}
+.arena-board::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(190,40,40,.16),transparent 38%,transparent 62%,color-mix(in srgb,var(--brass) 16%,transparent))}
+.zone-tag{position:absolute;left:12px;z-index:3;font-size:12px;font-weight:700;letter-spacing:.08em;
+  padding:3px 10px;border-radius:999px;background:rgba(10,8,14,.6);color:#f0e9dc;backdrop-filter:blur(3px)}
+.zone-tag.foe{top:10px;border:1px solid color-mix(in srgb,var(--hp) 65%,transparent)}
+.zone-tag.party{bottom:10px;border:1px solid color-mix(in srgb,var(--brass) 65%,transparent)}
+.hex{position:absolute;width:var(--hw,11.7647%);height:var(--hh,25%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:2px}
+.hex::before{content:"";position:absolute;inset:0;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:rgba(255,255,255,.18)}
+.hex-in{position:absolute;inset:2px;z-index:1;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+  background:rgba(255,255,255,.05);transition:background .18s}
+.hex.z-foe .hex-in{background:rgba(190,45,45,.14)}
+.hex.z-party .hex-in{background:color-mix(in srgb,var(--brass) 13%,transparent)}
+.hex.drop{cursor:pointer}
+.hex.drop .hex-in{background:color-mix(in srgb,var(--brass) 32%,transparent);animation:hexPulse 1.6s ease-in-out infinite}
+@keyframes hexPulse{50%{background:color-mix(in srgb,var(--brass) 12%,transparent)}}
+.token{position:relative;z-index:2;width:94%;border:0;padding:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
+.token[disabled]{cursor:default}
+.tk-art{position:relative;width:72%;aspect-ratio:1;border-radius:50%;overflow:hidden;border:3px solid var(--brass);
+  background:var(--surface2);display:grid;place-items:center;box-shadow:0 6px 14px rgba(0,0,0,.5);transition:transform .18s}
+.tk-art img{width:100%;height:100%;object-fit:cover}
+.tk-initial{font-family:var(--serif);font-weight:700;font-size:17px;color:var(--muted)}
+.token:hover .tk-art{transform:translateY(-3px)}
+.token.foe .tk-art{border-color:var(--hp)}
+.token.mine .tk-art{border-color:var(--ok);box-shadow:0 0 0 2px color-mix(in srgb,var(--ok) 35%,transparent),0 7px 16px rgba(0,0,0,.5)}
+.token.boss .tk-art{width:80%}
+.token.boss .tk-art{border-width:4px;box-shadow:0 0 0 3px color-mix(in srgb,var(--hp) 45%,transparent),0 0 22px color-mix(in srgb,var(--hp) 55%,transparent),0 8px 18px rgba(0,0,0,.5)}
+.token.sel .tk-art{box-shadow:0 0 0 5px color-mix(in srgb,var(--brass) 60%,transparent),0 8px 18px rgba(0,0,0,.5)}
+.token.is-dead .tk-art{border-color:var(--muted)}
+.token.is-dead img{filter:grayscale(1) brightness(.55)}
+.tk-hp{position:absolute;left:14%;right:14%;bottom:5px;height:5px;border-radius:99px;background:rgba(8,6,12,.75);overflow:hidden;z-index:3}
+.tk-hp i{display:block;height:100%;background:var(--ok)}
+.token.foe .tk-hp i{background:var(--hp)}
+.tk-name{max-width:100%;font-size:10px;font-weight:600;white-space:nowrap;line-height:1.5;
+  overflow:hidden;text-overflow:ellipsis;padding:0 6px;border-radius:999px;background:rgba(10,8,14,.72);color:#efe7da}
+@media (max-width:760px){.tk-name{font-size:9px;padding:0 4px}}
+.arena-board[data-scene="mansao"]{background:linear-gradient(180deg,#3d2f27,#1a1411)}
+.arena-board[data-scene="cemiterio"]{background:linear-gradient(180deg,#2b3344,#121620)}
+.arena-board[data-scene="deserto"]{background:linear-gradient(180deg,#e8a657,#7d4426)}
+.arena-board[data-scene="esgoto"]{background:linear-gradient(180deg,#2b3330,#121715)}
+.arena-board[data-scene="laboratorio"]{background:linear-gradient(180deg,#2f3a42,#161c21)}
+.arena-board[data-scene="porto"]{background:linear-gradient(180deg,#1d2a3d,#0e141d)}
+.arena-board[data-scene="ruinas"]{background:
+  radial-gradient(ellipse at 50% 0%,#3b3b44,transparent 60%),
+  repeating-linear-gradient(90deg,rgba(0,0,0,.18) 0 2px,transparent 2px 46px),
+  repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 2px,transparent 2px 38px),
+  linear-gradient(180deg,#32323b,#1b1b21)}
+.arena-board[data-scene="floresta"]{background:
+  radial-gradient(circle at 20% 15%,rgba(60,120,70,.5),transparent 45%),
+  radial-gradient(circle at 80% 30%,rgba(40,90,55,.45),transparent 45%),
+  linear-gradient(180deg,#1d3324,#132018)}
+.arena-board[data-scene="caverna"]{background:
+  radial-gradient(ellipse at 50% 110%,rgba(120,70,30,.4),transparent 55%),
+  radial-gradient(ellipse at 50% -10%,rgba(30,25,45,.9),transparent 60%),
+  linear-gradient(180deg,#1b1824,#241d1c)}
+.arena-board[data-scene="rua"]{background:
+  radial-gradient(circle at 25% 20%,rgba(220,190,90,.22),transparent 38%),
+  radial-gradient(circle at 75% 60%,rgba(90,140,200,.18),transparent 42%),
+  linear-gradient(180deg,#17191f,#0f1014)}
+.arena-board[data-scene="ritual"]{background:
+  radial-gradient(circle at 50% 55%,rgba(150,40,180,.35),transparent 48%),
+  radial-gradient(circle at 50% 55%,rgba(200,30,40,.3),transparent 30%),
+  linear-gradient(180deg,#1a0f22,#120a14)}
+.arena-board[data-scene="neve"]{background:
+  radial-gradient(ellipse at 50% 0%,rgba(225,235,245,.35),transparent 55%),
+  repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 2px,transparent 2px 40px),
+  linear-gradient(180deg,#39465a,#1d2530)}
+
+.ctrl-list{display:grid;gap:10px}
+.ctrl-row{display:grid;grid-template-columns:52px 1fr auto;gap:14px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.ctrl-row.is-dead{opacity:.75}
+.ctrl-row .bst-thumb{width:52px;height:52px}
+.ctrl-main small{display:block;font-size:12px;color:var(--muted)}
+.ctrl-bars{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+.ctrl-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+@media (max-width:760px){.ctrl-row{grid-template-columns:52px 1fr}.ctrl-bars{grid-template-columns:1fr}.ctrl-actions{grid-column:1/-1;justify-content:flex-start}}
+
+.play-layout{display:grid;grid-template-columns:240px 1fr 280px;gap:20px;align-items:start}
+@media (max-width:1280px){.play-layout{grid-template-columns:240px 1fr}.play-layout .dice-panel{grid-column:1/-1}}
+@media (max-width:900px){.play-layout{grid-template-columns:1fr}}
+.side-col{display:grid;gap:16px;position:sticky;top:84px}
+@media (max-width:900px){.side-col{position:static}}
+.items-panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.items-panel h2{font-size:19px;margin-bottom:4px}
+.items-panel .hint{font-size:12px;color:var(--muted);margin:0 0 10px}
+.item-list{list-style:none;margin:0;padding:0;display:grid;gap:8px;max-height:340px;overflow-y:auto}
+.item-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:var(--surface2)}
+.item-row strong{font-size:14px;font-weight:600}
+.item-row small{display:block;font-size:12px;color:var(--muted)}
+.item-dmg{font-weight:700;color:var(--hp);font-size:14px;white-space:nowrap}
+.item-owner{font-size:12px;font-weight:600;color:var(--muted);margin:12px 0 6px}
+.item-owner:first-child{margin-top:0}
+.gm-layout.with-dice{grid-template-columns:260px 1fr 280px}
+@media (max-width:1300px){.gm-layout.with-dice{grid-template-columns:270px 1fr}.gm-layout.with-dice .dice-panel{grid-column:1/-1}}
+@media (max-width:900px){.gm-layout.with-dice{grid-template-columns:1fr}}
+.dice-panel{position:sticky;top:84px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+@media (max-width:1080px){.dice-panel{position:static}}
+.dice-panel h2{font-size:19px;margin-bottom:12px}
+.dice-stage{display:grid;place-items:center;gap:8px;min-height:168px;border-radius:12px;background:var(--surface2);border:1px solid var(--line);padding:14px;margin-bottom:14px;text-align:center}
+.die{width:88px;height:88px;display:grid;place-items:center;background:linear-gradient(145deg,color-mix(in srgb,var(--brass) 85%,#fff),var(--brass));color:var(--on-brass);
+  font-family:var(--serif);font-weight:700;font-size:30px;box-shadow:0 8px 18px rgba(0,0,0,.3)}
+.die[data-shape="d4"]{clip-path:polygon(50% 2%,98% 96%,2% 96%)}
+.die[data-shape="d6"]{clip-path:polygon(6% 6%,94% 6%,94% 94%,6% 94%);border-radius:10px}
+.die[data-shape="d8"]{clip-path:polygon(50% 1%,99% 50%,50% 99%,1% 50%)}
+.die[data-shape="d10"]{clip-path:polygon(50% 0,96% 34%,76% 100%,24% 100%,4% 34%)}
+.die[data-shape="d12"]{clip-path:polygon(50% 0,95% 33%,78% 97%,22% 97%,5% 33%)}
+.die[data-shape="d20"]{clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)}
+.die[data-shape="d100"]{clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)}
+.die.rolling{animation:dieRoll .42s ease-in-out infinite}
+@keyframes dieRoll{0%{transform:rotate(-14deg) scale(.94)}50%{transform:rotate(16deg) scale(1.06)}100%{transform:rotate(-14deg) scale(.94)}}
+.die.landed{animation:dieLand .5s cubic-bezier(.2,1.5,.4,1)}
+.dice-fx{position:fixed;inset:0;z-index:96;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 50%,rgba(10,8,16,.72),rgba(6,5,12,.93));text-align:center;animation:fxIn .3s ease both}
+.dice-fx.out{animation:fxOut .5s ease forwards}
+.dice-fx .splash-inner{gap:30px}
+.dice-fx .die{width:150px;height:150px;font-size:54px}
+.dice-fx .dice-total{font-size:52px;color:#f3ecdd}
+.dice-fx .dice-detail{color:#bdb4c6;font-size:15px}
+.dice-fx .splash-txt{color:#efe7da}
+@keyframes dieLand{0%{transform:scale(1.5) rotate(10deg)}100%{transform:scale(1) rotate(0)}}
+.dice-total{font-family:var(--serif);font-size:34px;font-weight:700;line-height:1}
+.dice-detail{font-size:13px;color:var(--muted)}
+.dice-idle{color:var(--muted);font-size:14px;max-width:24ch}
+.dice-row{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:12px}
+.dice-btn{padding:9px 0;border-radius:9px;border:1px solid var(--line);background:var(--surface2);cursor:pointer;font-weight:700;font-size:14px}
+.dice-btn:hover{border-color:var(--brass);color:var(--brass)}
+.dice-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stepper{display:flex;align-items:center;justify-content:space-between;gap:6px;border:1px solid var(--line);border-radius:9px;padding:4px 6px;background:var(--bg)}
+.stepper button{width:26px;height:26px;border-radius:7px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-weight:700;line-height:1}
+.stepper .sv{font-weight:600;font-variant-numeric:tabular-nums;font-size:14px}
+.stepper .sl{font-size:11px;color:var(--muted);display:block;text-align:center;margin-bottom:4px}
+.roll-log{list-style:none;margin:0;padding:0;display:grid;gap:7px;max-height:280px;overflow-y:auto}
+.roll-item{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface2);font-size:13px}
+.roll-item.mine{border-color:color-mix(in srgb,var(--brass) 55%,var(--line))}
+.roll-item.new{animation:rollIn .5s ease}
+@keyframes rollIn{from{opacity:0;transform:translateY(-6px)}}
+.roll-who{font-weight:600}
+.roll-what{color:var(--muted);font-size:12px}
+.roll-total{font-family:var(--serif);font-size:20px;font-weight:700}
+
+/* ===== configurações ===== */
+.skins{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.skin-card{display:flex;flex-direction:column;gap:8px;text-align:left;padding:0 0 14px;border:1px solid var(--line);border-radius:14px;background:var(--surface);cursor:pointer;overflow:hidden}
+.skin-card:hover{border-color:var(--brass)}
+.skin-card.on{border-color:var(--brass);box-shadow:0 0 0 2px color-mix(in srgb,var(--brass) 35%,transparent)}
+.skin-swatch{display:flex;height:74px}
+.skin-swatch span{flex:1}
+.skin-swatch span:nth-child(3){flex:.6}
+.skin-swatch span:nth-child(4){flex:.4}
+.skin-name{font-family:var(--serif);font-weight:600;font-size:17px;padding:0 14px;display:flex;align-items:center;gap:8px}
+.skin-on{font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--brass);color:var(--on-brass)}
+.skin-desc{font-size:13px;color:var(--muted);padding:0 14px;line-height:1.45}
+.cfg-note{font-size:13px;color:var(--muted);margin:14px 0 0;max-width:62ch}
+.cfg-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;max-width:520px}
+.cfg-box dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:15px}
+.cfg-box dt{color:var(--muted)}
+.cfg-box dd{margin:0;font-weight:500}
+
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--text)}
+html{background:var(--bg)}
+html,body{margin:0;color:var(--text)}
+body{background:transparent}
 body{font-family:var(--sans);font-size:15px;line-height:1.55;min-height:100vh;overflow-x:hidden}
 img{max-width:100%;display:block}
 a{color:inherit;text-decoration:none}
@@ -101,7 +625,7 @@ h2{font-size:22px} h3{font-size:18px}
   linear-gradient(90deg,rgba(0,0,0,.28),rgba(255,255,255,.08) 18%,rgba(255,255,255,0) 40%,rgba(0,0,0,.18) 88%,rgba(0,0,0,.35)),var(--c);color:var(--t);box-shadow:inset 0 0 0 1px rgba(0,0,0,.25),2px 0 6px rgba(0,0,0,.25);transition:transform .25s ease;cursor:pointer}
 .spine:hover,.spine:focus-visible{transform:translateY(-14px)}
 .band{width:78%;height:9px;border-top:2px solid color-mix(in srgb,var(--t) 55%,transparent);border-bottom:2px solid color-mix(in srgb,var(--t) 55%,transparent)}
-.spine-title{writing-mode:vertical-rl;font-family:var(--serif);font-weight:700;font-size:19px;letter-spacing:.02em;flex:1;display:flex;align-items:center;padding:12px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-height:calc(var(--h) - 90px)}
+.spine-title{writing-mode:vertical-rl;font-family:var(--serif);font-weight:700;font-size:var(--fs,19px);letter-spacing:.02em;flex:1;display:flex;align-items:center;padding:12px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-height:calc(var(--h) - 90px)}
 .spine-count{font-size:12px;opacity:.8;font-weight:600}
 .spine.add{background:transparent;border:2px dashed var(--muted);color:var(--muted);box-shadow:none;justify-content:center;gap:10px}
 .spine.add:hover{color:var(--brass);border-color:var(--brass)}
@@ -207,6 +731,8 @@ td.dmg{font-weight:600;color:var(--hp);white-space:nowrap}
 .chip{padding:6px 13px;border-radius:999px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-size:14px;font-weight:500}
 .chip:hover{border-color:var(--brass)}
 .map-tools{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.size-ctl .sl{font-size:11px;color:var(--muted);display:block;text-align:center;margin-bottom:3px}
+.size-ctl .stepper{padding:3px 6px}
 .btn.toggle-on{background:var(--brass-soft);border-color:var(--brass);color:var(--text)}
 .map-hint{margin:0 0 10px;font-size:14px;color:var(--muted)}
 .map-vp{position:relative;height:min(72vh,760px);border-radius:14px;border:1px solid var(--line);background:
@@ -290,6 +816,9 @@ textarea.inp{resize:vertical;min-height:90px}
 .mode{padding:5px 12px;border-radius:7px;font-size:14px;font-weight:500;color:var(--muted);white-space:nowrap}
 .mode:hover{color:var(--text)}
 .mode.on{background:var(--brass);color:var(--on-brass)}
+.mode{display:inline-flex;align-items:center;gap:6px}
+.mode svg{width:15px;height:15px}
+@media (max-width:900px){.mode-txt{display:none}}
 @media (max-width:760px){.mode-badge{display:none}.mode{padding:5px 9px}.topbar{gap:8px}.top-right{gap:6px}}
 @media (max-width:480px){.user-chip{display:none}.brand{display:none}}
 @media (max-width:600px){.arena-grid:not(.one){grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.fc-body{padding:10px}}
@@ -362,7 +891,7 @@ textarea.inp{resize:vertical;min-height:90px}
 /* login */
 .login{min-height:100vh;display:grid;place-items:center;padding:24px;background:
   radial-gradient(ellipse at 20% 0%,color-mix(in srgb,var(--brass) 18%,transparent),transparent 55%),
-  radial-gradient(ellipse at 100% 100%,color-mix(in srgb,var(--mana) 14%,transparent),transparent 50%),var(--bg)}
+  radial-gradient(ellipse at 100% 100%,color-mix(in srgb,var(--mana) 14%,transparent),transparent 50%)}
 .login-card{width:min(420px,100%);background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:32px 28px;box-shadow:var(--shadow)}
 .login-mark svg{width:46px;height:46px;color:var(--brass)}
 .login-card h1{margin-top:12px}
@@ -381,14 +910,18 @@ textarea.inp{resize:vertical;min-height:90px}
 </style>
 </head>
 <body>
+<div class="bg-layer" aria-hidden="true"></div>
+<div class="theme-art" id="theme-art" aria-hidden="true"></div>
+<div class="theme-mark" id="theme-mark" aria-hidden="true"></div>
 <div id="app"></div>
 <div id="overlay"></div>
 <div id="confirm"></div>
 <div id="lightbox"></div>
+<div id="fx"></div>
+<div id="splash"></div>
 <div id="toast" role="status" aria-live="polite"></div>
 <script>
 'use strict';
-const SUPABASE_CONFIG = window.GRIMORIO_SUPABASE || { url: '', anonKey: '' };
 /* =========================================================
    Usuários fixos da mesa
    ========================================================= */
@@ -399,8 +932,193 @@ const USERS = [
   { id: 'jogador4', name: 'Jogador 4', pass: '12344', role: 'player' },
   { id: 'mestre',   name: 'Mestre',    pass: 'mestre123', role: 'master' }
 ];
-const COLS = ['libraries', 'campaigns', 'characters', 'monsters', 'maps'];
+const COLS = ['libraries', 'campaigns', 'characters', 'monsters', 'maps', 'rolls', 'messages'];
 const LIB_COLORS = [['#7a2630','Sangue'],['#2f5a3f','Musgo'],['#243f6b','Abismo'],['#4f2f6e','Arcano'],['#1f5a5e','Maré'],['#8a6320','Ocre'],['#3a3a44','Carvão'],['#cfc3a6','Osso']];
+const MARKS = {
+  padrao: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M50 6 92 29v42L50 94 8 71V29z"/><path d="M50 6 31 40h38zM8 29l23 11L8 71M92 29 69 40l23 31M31 40l19 31 19-31M50 71v23M8 71h84"/></svg>',
+  cores: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M50 6 92 29v42L50 94 8 71V29z"/><path d="M50 6 31 40h38zM8 29l23 11L8 71M92 29 69 40l23 31M31 40l19 31 19-31M50 71v23M8 71h84"/></svg>',
+  oeste: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="50" cy="50" r="44"/><circle cx="50" cy="50" r="36"/><path d="M50 18 58 42l25 .3-20 15 7.4 24L50 66.6 29.6 81.3 37 57.3l-20-15L42 42z" stroke-linejoin="round"/><circle cx="50" cy="50" r="7"/></svg>',
+  ordem: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.6"><circle cx="50" cy="50" r="26"/><circle cx="50" cy="50" r="9" fill="currentColor" stroke="none"/><path d="M50 4 58 30H42zM90 73 64 66l8-13zM10 73l26-7-8-13z" fill="currentColor" stroke="none"/><path d="M22 22a40 40 0 0 0 0 56M78 22a40 40 0 0 1 0 56" stroke-linecap="round"/></svg>',
+  hexatombe: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"><circle cx="50" cy="52" r="38"/><path d="M50 16 73 84 15 42h70L27 84z"/><path d="M50 4v10M20 16l7 8M80 16l-7 8M6 60l9 3M94 60l-9 3M50 96v-8" stroke-linecap="round"/></svg>',
+  fantasy: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M50 8 58 26v40l-8 12-8-12V26z"/><path d="M34 70h32M38 78h24M50 78v14"/><path d="M50 92 40 82h20z" fill="currentColor" stroke="none"/><path d="M18 40c10 6 10 20 0 26M82 40c-10 6-10 20 0 26" stroke-linecap="round"/><path d="M26 30 18 40l10 4M74 30l8 10-10 4"/></svg>',
+  aventura: '<svg viewBox="0 0 100 100" fill="currentColor"><path d="M34 62h12v30l-6-7-6 7zM54 62h12v30l-6-7-6 7z" opacity=".75"/><path d="M50 10c6 0 8 5 13 6s9-2 13 2-1 8 1 13 6 7 5 13-6 6-8 11 0 10-4 13-8-1-13 1-6 7-12 7-8-5-13-6-9 2-13-2 1-8-1-13-6-7-5-13 6-6 8-11 0-10 4-13 8 1 13-1 6-7 12-7z"/><g fill="none" stroke="#000" stroke-opacity=".35" stroke-width="2.4"><circle cx="50" cy="47" r="20"/><path d="M50 30l5 12 12 5-12 5-5 12-5-12-12-5 12-5z"/></g></svg>',
+  minecraft: '<svg viewBox="0 0 100 100" shape-rendering="crispEdges" fill="currentColor"><path d="M14 14h30v6H14zM14 20h6v58h-6zM20 20h24v6H20zM44 14h6v66h-6zM50 14h30v6H50zM80 20h6v58h-6zM56 20h24v6H56zM14 78h30v6H14zM50 78h30v6H50zM26 34h12v6H26zM26 46h12v6H26zM62 34h12v6H62zM62 46h12v6H62zM26 58h12v6H26zM62 58h12v6H62z"/></svg>'
+};
+const ENTRY_MARKS = {
+  player: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"><path d="M50 6 92 29v42L50 94 8 71V29z"/><path d="M50 6 31 40h38zM8 29l23 11L8 71M92 29 69 40l23 31M31 40l19 31 19-31M50 71v23M8 71h84"/></svg>',
+  master: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"><path d="M6 50c13-19 27-28 44-28s31 9 44 28c-13 19-27 28-44 28S19 69 6 50z"/><circle cx="50" cy="50" r="13"/><circle cx="50" cy="50" r="4.5" fill="currentColor" stroke="none"/><path d="M50 8v9M20 20l6 7M80 20l-6 7M50 92v-9M20 80l6-7M80 80l-6-7" stroke-linecap="round"/></svg>'
+};
+/* ---------- ilustrações de fundo (desenhos originais em SVG) ---------- */
+const SCENE_ART = {
+  ruinas: `<svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+    <defs><linearGradient id="ru1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4c4c59"/><stop offset=".55" stop-color="#2e2e37"/><stop offset="1" stop-color="#1a1a20"/></linearGradient></defs>
+    <rect width="1200" height="800" fill="url(#ru1)"/>
+    <g fill="#20202a" opacity=".85"><path d="M0 300l120-40 90 30 110-55 130 45 120-35 140 50 130-40 120 35 240-30v510H0z"/></g>
+    <g fill="#39394a"><rect x="86" y="150" width="56" height="200"/><rect x="72" y="128" width="84" height="26"/><rect x="72" y="344" width="84" height="22"/>
+      <rect x="286" y="210" width="44" height="140"/><rect x="274" y="192" width="68" height="22"/>
+      <rect x="1010" y="120" width="60" height="230"/><rect x="996" y="98" width="88" height="26"/><rect x="996" y="344" width="88" height="22"/></g>
+    <path d="M520 352V214a90 90 0 0 1 180 0v138" fill="none" stroke="#3f3f52" stroke-width="30"/>
+    <g fill="#2b2b38"><rect x="408" y="300" width="80" height="52" rx="4"/><rect x="760" y="316" width="104" height="36" rx="4"/><rect x="880" y="292" width="46" height="60" rx="4"/></g>
+    <rect y="352" width="1200" height="448" fill="#15151b" opacity=".55"/></svg>`,
+  mansao: `<svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+    <defs><linearGradient id="ma1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a3a30"/><stop offset=".6" stop-color="#2d231d"/><stop offset="1" stop-color="#1a1411"/></linearGradient></defs>
+    <rect width="1200" height="800" fill="url(#ma1)"/>
+    <g fill="#241b16">${[0,200,400,600,800,1000].map(x => `<rect x="${x + 70}" y="0" width="26" height="560"/>`).join('')}</g>
+    <g><rect x="470" y="90" width="260" height="330" rx="130" fill="#16202e"/><rect x="470" y="90" width="260" height="330" rx="130" fill="none" stroke="#3b2f26" stroke-width="16"/>
+      <path d="M600 90v330M470 250h260" stroke="#3b2f26" stroke-width="12"/>
+      <circle cx="600" cy="190" r="52" fill="#dfe6f2" opacity=".5"/></g>
+    <g fill="#2e241d"><path d="M380 110h40l-20 300h-40z" opacity=".8"/><path d="M780 110h40l20 300h-40z" opacity=".8"/></g>
+    <rect y="560" width="1200" height="240" fill="#241a14"/>
+    <g stroke="#17100c" stroke-width="4">${[0,120,240,360,480,600,720,840,960,1080].map(x => `<path d="M${x} 560v240"/>`).join('')}<path d="M0 640h1200M0 720h1200"/></g>
+    <g fill="#8a1f24" opacity=".55"><path d="M330 560h540l-40 240H370z"/></g>
+    <g fill="#ffcf85"><circle cx="160" cy="300" r="10"/><circle cx="1040" cy="300" r="10"/></g>
+    <g fill="#ffcf85" opacity=".12"><circle cx="160" cy="300" r="90"/><circle cx="1040" cy="300" r="90"/></g></svg>`,
+  cemiterio: `<svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+    <defs><linearGradient id="ce1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b3344"/><stop offset=".55" stop-color="#1b212c"/><stop offset="1" stop-color="#121620"/></linearGradient></defs>
+    <rect width="1200" height="800" fill="url(#ce1)"/>
+    <circle cx="930" cy="150" r="78" fill="#e8eef7" opacity=".55"/><circle cx="900" cy="130" r="78" fill="#1b212c" opacity=".9"/>
+    <path d="M120 420c40-120 60-200 44-300 40 70 40 120 30 180 24-40 56-70 96-84-52 54-72 104-78 204z" fill="#161b24"/>
+    <g fill="#39404f">${[180,320,470,640,790,950,1090].map((x, i) => `<g><rect x="${x}" y="${440 + (i % 3) * 24}" width="54" height="${120 - (i % 3) * 18}" rx="26"/><rect x="${x + 6}" y="${470 + (i % 3) * 24}" width="42" height="6"/></g>`).join('')}</g>
+    <g fill="#333a48">${[260,560,880].map((x, i) => `<g><rect x="${x}" y="${410 + (i % 2) * 30}" width="18" height="150"/><rect x="${x - 26}" y="${450 + (i % 2) * 30}" width="70" height="18"/></g>`).join('')}</g>
+    <path d="M0 540c150-26 260 20 420 10s260-40 400-20 240 36 380 14v256H0z" fill="#10151d"/>
+    <g fill="#9fb4c9" opacity=".12"><ellipse cx="300" cy="600" rx="340" ry="40"/><ellipse cx="900" cy="650" rx="380" ry="46"/></g></svg>`,
+  deserto: `<svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+    <defs><linearGradient id="de1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8a657"/><stop offset=".4" stop-color="#c97a43"/><stop offset="1" stop-color="#7d4426"/></linearGradient></defs>
+    <rect width="1200" height="800" fill="url(#de1)"/>
+    <circle cx="880" cy="210" r="90" fill="#ffe7a8" opacity=".75"/>
+    <path d="M60 330h190v120H60zM250 300h70v150h-70z" fill="#8f4e2c" opacity=".85"/>
+    <path d="M980 360h150v110H980z" fill="#8f4e2c" opacity=".7"/>
+    <path d="M0 470c180-40 300 30 480 16s300-56 440-30 180 44 280 30v314H0z" fill="#b06a39"/>
+    <path d="M0 580c200-36 320 40 500 24s300-50 420-24 180 30 280 18v202H0z" fill="#8c5129"/>
+    <g fill="#3f6b3a" opacity=".85"><path d="M560 620v-110c0-14 8-22 20-22s20 8 20 22v110z"/><path d="M572 560c-22 0-34-14-34-34 0-9 5-14 12-14s12 5 12 14 5 16 10 20z"/><path d="M608 546c19-3 27-17 27-36 0-9 5-14 12-14s12 7 12 15c0 29-20 48-51 50z"/></g></svg>`,
+  esgoto: `<svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+    <defs><linearGradient id="es1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b3330"/><stop offset=".6" stop-color="#1b211f"/><stop offset="1" stop-color="#121715"/></linearGradient></defs>
+    <rect width="1200" height="800" fill="url(#es1)"/>
+    <g fill="none" stroke="#39443f" stroke-width="22">${[180,480,780,1080].map(x => `<path d="M${x - 130} 470V300a130 130 0 0 1 260 0v170"/>`).join('')}</g>
+    <g fill="#222a27">${[180,480,780,1080].map(x => `<path d="M${x - 108} 470V300a108 108 0 0 1 216 0v170z"/>`).join('')}</g>
+    <g stroke="#333d39" stroke-width="12">${[0,160,320,480,640,800,960,1120].map(x => `<path d="M${x} 470h120"/>`).join('')}</g>
+    <rect y="520" width="1200" height="280" fill="#1d2622"/>
+    <path d="M0 560h1200v180H0z" fill="#2f4a3a" opacity=".85"/>
+    <g fill="#6f9a72" opacity=".35"><ellipse cx="300" cy="640" rx="200" ry="22"/><ellipse cx="820" cy="690" rx="240" ry="26"/></g>
+    <g fill="#8fb39a" opacity=".5">${[240,560,900].map((x, i) => `<circle cx="${x}" cy="${300 + (i % 2) * 60}" r="5"/>`).join('')}</g></svg>`,
+  laboratorio: `<svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+    <defs><linearGradient id="la1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f3a42"/><stop offset=".6" stop-color="#1f272d"/><stop offset="1" stop-color="#161c21"/></linearGradient></defs>
+    <rect width="1200" height="800" fill="url(#la1)"/>
+    <g stroke="#38454e" stroke-width="3">${[0,90,180,270,360,450,540,630,720,810,900,990,1080,1170].map(x => `<path d="M${x} 0v520"/>`).join('')}${[90,180,270,360,450].map(y => `<path d="M0 ${y}h1200"/>`).join('')}</g>
+    <g fill="#cfe9f2" opacity=".18">${[150,450,750,1050].map(x => `<rect x="${x}" y="60" width="180" height="22" rx="11"/>`).join('')}</g>
+    <g fill="#263036"><rect x="80" y="300" width="300" height="20"/><rect x="820" y="300" width="300" height="20"/></g>
+    <g>${[120,180,240,300,880,940,1000,1060].map((x, i) => `<g><rect x="${x}" y="${252 + (i % 3) * 8}" width="26" height="${48 - (i % 3) * 8}" fill="#9fd6c8" opacity=".55"/><rect x="${x + 8}" y="${240 + (i % 3) * 8}" width="10" height="16" fill="#9fd6c8" opacity=".4"/></g>`).join('')}</g>
+    <rect y="520" width="1200" height="280" fill="#222a30"/>
+    <g stroke="#2c363d" stroke-width="4">${[0,120,240,360,480,600,720,840,960,1080].map(x => `<path d="M${x} 520v280"/>`).join('')}<path d="M0 640h1200"/></g></svg>`,
+  porto: `<svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+    <defs><linearGradient id="po1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d2a3d"/><stop offset=".5" stop-color="#16202e"/><stop offset="1" stop-color="#0e141d"/></linearGradient></defs>
+    <rect width="1200" height="800" fill="url(#po1)"/>
+    <circle cx="260" cy="150" r="64" fill="#e9eef7" opacity=".5"/>
+    <path d="M0 420h1200v380H0z" fill="#132032"/>
+    <g fill="#0f1a28" opacity=".9"><path d="M700 420l40-180 40 180z"/><path d="M640 420c0-70 60-110 140-110s140 40 140 110z"/>
+      <path d="M736 250h8v170h-8z"/></g>
+    <path d="M620 420c20 40 90 60 160 60s140-20 160-60z" fill="#1b2b40"/>
+    <g fill="#f2dca0" opacity=".8"><circle cx="780" cy="300" r="6"/><circle cx="860" cy="330" r="5"/></g>
+    <g fill="#16222f">${[60,160,260,360].map(x => `<rect x="${x}" y="430" width="18" height="140"/>`).join('')}<rect x="40" y="410" width="390" height="24"/></g>
+    <g stroke="#94b6d8" stroke-width="4" opacity=".25">${[460,520,580,640,700,760].map(y => `<path d="M0 ${y}h1200"/>`).join('')}</g>
+    <g fill="#94b6d8" opacity=".15"><ellipse cx="260" cy="520" rx="180" ry="20"/><ellipse cx="800" cy="600" rx="260" ry="26"/></g></svg>`,
+  floresta: `<svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+    <defs><linearGradient id="fl1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d4a33"/><stop offset=".5" stop-color="#1b3123"/><stop offset="1" stop-color="#101d15"/></linearGradient></defs>
+    <rect width="1200" height="800" fill="url(#fl1)"/>
+    <g fill="#e8f3d8" opacity=".10"><circle cx="300" cy="150" r="140"/><circle cx="900" cy="100" r="170"/></g>
+    <g fill="#1d3526" opacity=".9">${[150,300,450,610,780,940,1100].map(x => `<path d="M${x} 120l62 110h-32l52 92h-40l48 86H${x - 90}l48-86h-40l52-92h-32z"/>`).join('')}</g>
+    <g fill="#142619">${[80,260,440,620,800,980,1160].map(x => `<path d="M${x} 300l70 130h-36l58 104h-44l52 96H${x - 100}l52-96h-44l58-104h-36z"/>`).join('')}</g>
+    <g fill="#0d170f"><rect y="640" width="1200" height="160"/><path d="M0 640c120-26 220 18 330 4s180-40 290-30 190 44 300 32 180-26 280-14v28H0z"/></g></svg>`,
+  caverna: `<svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+    <defs><radialGradient id="ca1" cx=".5" cy=".9" r=".8"><stop offset="0" stop-color="#5a3418"/><stop offset=".5" stop-color="#271d22"/><stop offset="1" stop-color="#15121a"/></radialGradient></defs>
+    <rect width="1200" height="800" fill="url(#ca1)"/>
+    <g fill="#1d1823">${[0,90,170,260,340,430,520,610,700,790,880,970,1060,1150].map((x, i) => `<path d="M${x} 0h78l-39 ${90 + (i % 4) * 46}z"/>`).join('')}</g>
+    <g fill="#201a26">${[40,150,250,370,480,590,700,820,940,1060].map((x, i) => `<path d="M${x} 800h74l-37-${70 + (i % 3) * 52}z"/>`).join('')}</g>
+    <ellipse cx="600" cy="690" rx="420" ry="90" fill="#b4601f" opacity=".22"/>
+    <ellipse cx="600" cy="700" rx="230" ry="46" fill="#ffae4d" opacity=".16"/></svg>`,
+  rua: `<svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+    <defs><linearGradient id="st1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a2230"/><stop offset=".6" stop-color="#121722"/><stop offset="1" stop-color="#0c0f16"/></linearGradient></defs>
+    <rect width="1200" height="800" fill="url(#st1)"/>
+    <g fill="#10141d">${[0,150,260,420,560,700,860,1000,1120].map((x, i) => `<rect x="${x}" y="${150 + (i % 4) * 60}" width="${110 + (i % 3) * 30}" height="${420 - (i % 4) * 40}"/>`).join('')}</g>
+    <g fill="#f5d98a" opacity=".45">${[0,150,260,420,560,700,860,1000,1120].map((x, i) => [0,1,2].map(j => `<rect x="${x + 22 + j * 30}" y="${190 + (i % 4) * 60}" width="14" height="20"/>`).join('')).join('')}</g>
+    <rect y="560" width="1200" height="240" fill="#0a0d13"/>
+    <g stroke="#e8e4d6" stroke-width="7" opacity=".22">${[80,300,520,740,960].map(x => `<path d="M${x} 660h120"/>`).join('')}</g>
+    <rect x="180" y="330" width="10" height="240" fill="#2a3040"/><circle cx="185" cy="326" r="18" fill="#ffd98a" opacity=".85"/><circle cx="185" cy="326" r="80" fill="#ffd98a" opacity=".13"/>
+    <rect x="980" y="360" width="10" height="210" fill="#2a3040"/><circle cx="985" cy="356" r="16" fill="#ffd98a" opacity=".8"/><circle cx="985" cy="356" r="70" fill="#ffd98a" opacity=".11"/></svg>`,
+  ritual: `<svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+    <defs><radialGradient id="ri1" cx=".5" cy=".55" r=".7"><stop offset="0" stop-color="#5a1348"/><stop offset=".45" stop-color="#25102a"/><stop offset="1" stop-color="#120a16"/></radialGradient></defs>
+    <rect width="1200" height="800" fill="url(#ri1)"/>
+    <g fill="none" stroke="#e86a9a" opacity=".35" stroke-width="4" transform="translate(600 430)">
+      <circle r="250"/><circle r="200"/><circle r="110"/>
+      <path d="M0-230 198 71-198 71z"/><path d="M0 230 198-71-198-71z"/>
+      ${[0,60,120,180,240,300].map(a => `<path d="M0-258v-28" transform="rotate(${a})"/>`).join('')}</g>
+    <g fill="#ffb26b" opacity=".7">${[320,470,600,730,880].map((x, i) => `<circle cx="${x}" cy="${620 + (i % 2) * 24}" r="7"/>`).join('')}</g>
+    <g fill="#ff8a5c" opacity=".12">${[320,470,600,730,880].map((x, i) => `<circle cx="${x}" cy="${620 + (i % 2) * 24}" r="58"/>`).join('')}</g>
+    <rect y="700" width="1200" height="100" fill="#0d0710" opacity=".7"/></svg>`,
+  neve: `<svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+    <defs><linearGradient id="sn1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#53647c"/><stop offset=".55" stop-color="#32404f"/><stop offset="1" stop-color="#1d2630"/></linearGradient></defs>
+    <rect width="1200" height="800" fill="url(#sn1)"/>
+    <path d="M-40 420l220-210 150 130 120-90 190 170 150-120 230 200 220-130v430H-40z" fill="#3d4c5e"/>
+    <path d="M140 230l58 54-28 10-30-26-26 22-28-8zM700 250l60 54-30 10-30-26-26 22-28-8z" fill="#e7eef7" opacity=".8"/>
+    <path d="M-40 560c160-40 280 26 430 10s250-56 380-36 240 56 430 26v240H-40z" fill="#5b6c80"/>
+    <path d="M-40 640c190-34 300 30 450 16s240-48 380-30 230 46 410 20v154H-40z" fill="#dfe8f2" opacity=".85"/>
+    <g fill="#ffffff" opacity=".55">${[80,200,320,440,560,680,800,920,1040,1160].map((x, i) => [0,1,2].map(j => `<circle cx="${x + j * 23 - (i % 3) * 14}" cy="${90 + j * 150 + (i % 5) * 26}" r="${2 + (j % 2)}"/>`).join('')).join('')}</g></svg>`
+};
+const THEME_ART = {
+  padrao: `<svg viewBox="0 0 1200 300" preserveAspectRatio="xMidYMax slice" fill="currentColor">
+    <g opacity=".5">${[40,110,168,232,286,352,410,470,528,600,660,718,776,840,900,962,1020,1086,1140].map((x, i) => `<rect x="${x}" y="${120 + (i % 5) * 16}" width="${34 + (i % 3) * 10}" height="${170 - (i % 5) * 16}" rx="3"/>`).join('')}</g>
+    <rect y="286" width="1200" height="14"/></svg>`,
+  oeste: `<svg viewBox="0 0 1200 300" preserveAspectRatio="xMidYMax slice" fill="currentColor">
+    <path d="M60 180h150l26-44h120l26 44h110v120H60z" opacity=".45"/>
+    <path d="M820 150h210v150H820z" opacity=".4"/><path d="M790 150h260l-20-34H810z" opacity=".3"/>
+    <g opacity=".55"><path d="M430 300v-96c0-18 10-28 26-28s26 10 26 28v96z"/><path d="M444 236c-26 0-40-16-40-40 0-10 6-16 14-16s14 6 14 16 6 18 12 22z"/><path d="M482 220c22-4 32-20 32-42 0-10 6-16 14-16s14 8 14 18c0 34-24 56-60 58z"/></g>
+    <g opacity=".3">${[0,120,240,360,480,600,720,840,960,1080].map(x => `<rect x="${x}" y="246" width="10" height="54"/>`).join('')}<rect y="258" width="1200" height="8"/></g></svg>`,
+  ordem: `<svg viewBox="0 0 1200 300" preserveAspectRatio="xMidYMax slice" fill="currentColor">
+    <g opacity=".42">${[20,110,190,280,360,450,540,640,730,820,910,1010,1100].map((x, i) => `<rect x="${x}" y="${120 + (i % 4) * 34}" width="${62 + (i % 3) * 16}" height="${180 - (i % 4) * 34}"/>`).join('')}</g>
+    <g fill="none" stroke="currentColor" stroke-width="5" opacity=".6" transform="translate(600 150)">
+      <circle r="92"/><circle r="40"/><path d="M0-130v26M-120 40l24-8M120 40l-24-8"/></g></svg>`,
+  hexatombe: `<svg viewBox="0 0 1200 300" preserveAspectRatio="xMidYMax slice" fill="currentColor">
+    <g opacity=".5">${[90,260,430,620,790,960,1120].map((x, i) => `<g><rect x="${x}" y="${160 + (i % 3) * 26}" width="14" height="${140 - (i % 3) * 26}"/><rect x="${x - 26}" y="${190 + (i % 3) * 26}" width="66" height="12"/></g>`).join('')}</g>
+    <path d="M0 250c90-30 150 20 240 0s150-40 250-16 180 40 290 10 240-16 420 6v50H0z" opacity=".55"/>
+    <g fill="none" stroke="currentColor" stroke-width="4" opacity=".5">
+      <path d="M-10 90c120 40 190-26 300 6s170 60 280 20 220-50 340-6 200 20 300-10"/>
+      ${[80,220,380,520,690,840,1000,1140].map(x => `<path d="M${x} 96l-16-22M${x} 96l20-18"/>`).join('')}</g></svg>`,
+  fantasy: `<svg viewBox="0 0 1200 300" preserveAspectRatio="xMidYMax slice" fill="currentColor">
+    <g opacity=".5"><rect x="470" y="110" width="80" height="190"/><path d="M460 110h100l-50-46z"/>
+      <rect x="560" y="150" width="120" height="150"/><rect x="690" y="90" width="90" height="210"/><path d="M680 90h110l-55-52z"/>
+      <rect x="360" y="170" width="110" height="130"/><path d="M350 170h130l-65-40z"/></g>
+    <g opacity=".45">${[40,120,200,860,960,1060,1150].map(x => `<path d="M${x} 300l-44-110h26l-22-56h22l-18-48 36 58h-20l26 46h-24l40 110z"/>`).join('')}</g>
+    <path d="M0 282c140-16 260 12 420 6s260-26 420-14 240 18 360 8v18H0z" opacity=".55"/></svg>`,
+  minecraft: `<svg viewBox="0 0 1200 300" preserveAspectRatio="xMidYMax slice" fill="currentColor" shape-rendering="crispEdges">
+    <g opacity=".5">${[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14].map(i => `<rect x="${i * 80}" y="${300 - (2 + (i % 4)) * 40}" width="80" height="${(2 + (i % 4)) * 40}"/>`).join('')}</g>
+    <g opacity=".65"><rect x="200" y="100" width="40" height="80"/><rect x="160" y="60" width="120" height="40"/><rect x="180" y="20" width="80" height="40"/>
+      <rect x="860" y="80" width="40" height="80"/><rect x="820" y="40" width="120" height="40"/><rect x="840" y="0" width="80" height="40"/></g></svg>`
+};
+THEME_ART.aventura = `<svg viewBox="0 0 1200 300" preserveAspectRatio="xMidYMax slice" fill="currentColor">
+    <g opacity=".5">${[0,1,2,3,4,5,6,7,8,9].map(i => `<rect x="${i * 125}" y="250" width="118" height="50"/>`).join('')}</g>
+    <g opacity=".65"><rect x="90" y="150" width="120" height="100"/><path d="M90 150h120v10H90zM90 240h120v10H90zM90 150l120 100h-14L90 164zM210 150L90 250h14l106-86z" fill="#000" fill-opacity=".3"/></g>
+    <g opacity=".6"><rect x="216" y="190" width="86" height="60"/><path d="M216 190h86v8h-86zM216 242h86v8h-86z" fill="#000" fill-opacity=".3"/></g>
+    <g opacity=".65"><path d="M980 160c26 0 40 20 40 46s-14 44-40 44-40-18-40-44 14-46 40-46z"/>
+      <path d="M944 184h72v10h-72zM944 216h72v10h-72z" fill="#000" fill-opacity=".3"/></g>
+    <g opacity=".7"><rect x="622" y="122" width="14" height="128"/>
+      <path d="M548 138h168l18 18-18 18H548z"/><path d="M710 186H558l-18 18 18 18h152z" opacity=".8"/></g>
+    <g opacity=".55"><rect x="360" y="188" width="150" height="62" rx="8"/>
+      <circle cx="360" cy="219" r="31"/><circle cx="510" cy="219" r="31"/>
+      <circle cx="360" cy="219" r="13" fill="#000" fill-opacity=".3"/><circle cx="510" cy="219" r="13" fill="#000" fill-opacity=".3"/></g>
+    <g opacity=".5"><rect x="820" y="206" width="96" height="44"/><path d="M820 206h96v6h-96z" fill="#000" fill-opacity=".3"/>
+      <rect x="1060" y="176" width="100" height="74"/><path d="M1060 176h100v8h-100zM1060 240h100v10h-100z" fill="#000" fill-opacity=".3"/></g>
+  </svg>`;
+THEME_ART.cores = THEME_ART.padrao;
+const SKINS = [
+  { id: 'padrao',    name: 'Grimório',         desc: 'O tema original da mesa, com opção clara e escura.', cols: ['#1d1b30', '#2c2948', '#d8b060', '#efe8d8'] },
+  { id: 'cores',     name: 'Esmeralda',        desc: 'A mesma interface do Grimório, só que em verde e cobre.', cols: ['#101a17', '#1a2b25', '#d9a441', '#e7f0e9'] },
+  { id: 'oeste',     name: 'Velho Oeste',      desc: 'Papel envelhecido e letras de cartaz de procurado.', cols: ['#e8dcc0', '#f4ecd8', '#8a3b1e', '#2a1f14'] },
+  { id: 'ordem',     name: 'Ordem Paranormal', desc: 'Preto e roxo, no clima da ficha de agente.', cols: ['#0d0a14', '#1a1526', '#8b5cf6', '#ece9f5'] },
+  { id: 'hexatombe', name: 'Hexatombe',        desc: 'Vermelho-sangue, fundo sujo e letras góticas.', cols: ['#12060a', '#250a10', '#a51219', '#f3dede'] },
+  { id: 'fantasy',   name: 'Dark Fantasy',     desc: 'Madeira escura, ouro velho e molduras medievais.', cols: ['#141210', '#221e1a', '#c9a227', '#e6d9bf'] },
+  { id: 'minecraft', name: 'Mundo de Blocos',  desc: 'Cantos retos e fonte pixelada, no estilo Minecraft.', cols: ['#191410', '#2a211a', '#c8a24a', '#e9d7b0'] },
+  { id: 'aventura',  name: 'Caça ao Tesouro',  desc: 'Tábuas de madeira, pergaminho e fitas vermelhas, com letra de jogo de aventura.', cols: ['#2e2016', '#4a3524', '#d1482f', '#f8ecd4'] }
+];
 const PIN_COLORS = ['#d8b060','#d4564d','#4f86ea','#4fae78','#a877e0','#f2efe6'];
 
 /* =========================================================
@@ -420,6 +1138,10 @@ const I = {
   pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
   tag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.3"/></svg>',
   moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+  clue: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.5-4.5"/><path d="M11 8v3l2 2"/></svg>',
+  fog: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 9h11a3 3 0 1 0-3-3M3 13h15a3 3 0 1 1-3 3M5 17h9"/></svg>',
+  gear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 13.5a7.7 7.7 0 0 0 0-3l1.8-1.4-1.9-3.3-2.2.9a7.6 7.6 0 0 0-2.6-1.5L14.1 3H9.9l-.4 2.2a7.6 7.6 0 0 0-2.6 1.5l-2.2-.9-1.9 3.3 1.8 1.4a7.7 7.7 0 0 0 0 3l-1.8 1.4 1.9 3.3 2.2-.9a7.6 7.6 0 0 0 2.6 1.5l.4 2.2h4.2l.4-2.2a7.6 7.6 0 0 0 2.6-1.5l2.2.9 1.9-3.3z"/></svg>',
   img: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.8"/><path d="M21 16l-5-5-9 9"/></svg>'
 };
 
@@ -457,12 +1179,22 @@ function toast(msg, kind) {
    ========================================================= */
 const S = {
   user: null, ready: false, mode: 'connecting', assets: null,
-  data: { libraries: [], campaigns: [], characters: [], monsters: [], maps: [] },
-  adj: {}, adjT: {},
+  data: { libraries: [], campaigns: [], characters: [], monsters: [], maps: [], rolls: [], messages: [] },
+  dice: { qty: 1, mod: 0 }, rolling: false, lastRoll: null,
+  adj: {}, adjT: {}, skin: 'padrao', token: null, unread: new Set(), fogMode: false, fogBrush: 'hide', fogDraft: null,
   modal: null,
   mapId: null, mapEdit: false, mapLabels: false, mapView: { s: 1, x: 0, y: 0 },
   drag: false, renderAfterDrag: false
 };
+function applySkin(id) {
+  const root = document.documentElement;
+  if (id && id !== 'padrao' && SKINS.some(s => s.id === id)) { root.dataset.skin = id; S.skin = id; }
+  else { delete root.dataset.skin; S.skin = 'padrao'; }
+  const mark = document.getElementById('theme-mark');
+  if (mark) mark.innerHTML = MARKS[S.skin] || MARKS.padrao;
+  const art = document.getElementById('theme-art');
+  if (art) art.innerHTML = THEME_ART[S.skin] || THEME_ART.padrao;
+}
 const get = (col, id) => S.data[col].find(x => x.id === id);
 const isMaster = () => S.user?.role === 'master';
 const canEditChar = c => isMaster() || c.owner === S.user?.id;
@@ -476,58 +1208,17 @@ function labelsFor(campId) {
    Armazenamento: banco compartilhado (db) ou modo local
    ========================================================= */
 let store = null;
-function makeSupabaseStore(db) {
-  const table = 'grimorio_data';
-  const imageTable = 'grimorio_images';
-  const read = async col => {
-    const { data, error } = await db.from(table).select('id,data').eq('collection', col);
-    if (error) throw error;
-    return (data || []).map(row => ({ id: row.id, ...(row.data || {}) }));
-  };
-  const watch = (col, cb, onErr) => {
-    let closed = false;
-    const refresh = () => read(col).then(rows => { if (!closed) cb(rows); }).catch(err => {
-      if (!closed) { console.error('Supabase: falha ao ler ' + col, err); onErr?.(err); }
-    });
-    refresh();
-    const channel = db.channel('grimorio-' + col)
-      .on('postgres_changes', { event: '*', schema: 'public', table, filter: 'collection=eq.' + col }, refresh)
-      .subscribe(status => {
-        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
-          console.warn('Supabase Realtime indisponível para ' + col + '. O carregamento inicial continua funcionando.');
-        }
-      });
-    return () => { closed = true; db.removeChannel(channel); };
-  };
+function makeDbStore(db) {
   return {
-    watch,
-    async set(col, id, data) {
-      const { error } = await db.from(table).upsert({ collection: col, id, data });
-      if (error) throw error;
+    watch(col, cb, onErr) {
+      return db.collection(col).onSnapshot(s => cb(s.docs.map(d => ({ id: d.id, ...d.data() }))), onErr);
     },
-    async update(col, id, data) {
-      const { data: current, error: readError } = await db.from(table).select('data').eq('collection', col).eq('id', id).single();
-      if (readError) throw readError;
-      const { error } = await db.from(table).update({ data: { ...(current?.data || {}), ...data } }).eq('collection', col).eq('id', id);
-      if (error) throw error;
-    },
-    async remove(col, id) {
-      const { error } = await db.from(table).delete().eq('collection', col).eq('id', id);
-      if (error) throw error;
-    },
-    async getImage(id) {
-      const { data, error } = await db.from(imageTable).select('data').eq('id', id).maybeSingle();
-      if (error) throw error;
-      return data?.data || null;
-    },
-    async putImage(id, data) {
-      const { error } = await db.from(imageTable).upsert({ id, data, created_at: new Date().toISOString() });
-      if (error) throw error;
-    },
-    async delImage(id) {
-      const { error } = await db.from(imageTable).delete().eq('id', id);
-      if (error) throw error;
-    }
+    set: (col, id, data) => db.doc(col + '/' + id).set(data),
+    update: (col, id, data) => db.doc(col + '/' + id).update(data),
+    remove: (col, id) => db.doc(col + '/' + id).delete(),
+    async getImage(id) { const s = await db.doc('images/' + id).get(); return s.exists ? s.data().data : null; },
+    putImage: (id, data) => db.doc('images/' + id).set({ data, createdAt: Date.now() }),
+    delImage: id => db.doc('images/' + id).delete()
   };
 }
 function makeLocalStore() {
@@ -665,7 +1356,7 @@ function scheduleRender() { if (raf) return; raf = requestAnimationFrame(() => {
 
 function render() {
   const app = $('#app');
-  if (S.drag) { S.renderAfterDrag = true; return; }
+  if (S.drag || S.rolling) { S.renderAfterDrag = true; return; }
   if (!S.user) { if (!app.querySelector('.login')) { app.innerHTML = loginView(); setTimeout(() => $('#lu')?.focus()); } return; }
   if (!S.ready) { app.innerHTML = shell('<div class="loading">Abrindo o grimório…</div>', []); return; }
   const r = route();
@@ -675,8 +1366,9 @@ function render() {
   else if (r.view === 'p') v = characterView(r.id);
   else if (r.view === 'm') v = monsterView(r.id);
   else if (r.view === 'jogo') v = gameView();
+  else if (r.view === 'config') v = settingsView(r.id || 'tema');
   else v = shelfView();
-  app.innerHTML = shell(v.html, v.crumbs || []);
+  app.innerHTML = shell(v.html, v.crumbs === null ? null : (v.crumbs || []));
   hydrateImages(app);
   if (v.after) v.after();
 }
@@ -685,18 +1377,19 @@ function shell(content, crumbs) {
   const u = S.user;
   return `
   <header class="topbar">
-    <a class="brand" href="#/" aria-label="Grimório, voltar à estante">${I.d20}<span>Grimório</span></a>
+    <a class="brand" href="#/" aria-label="Grimório, voltar à estante">${MARKS[S.skin] || I.d20}<span>Grimório</span></a>
     <nav class="modes" aria-label="Seções">
       <a class="mode ${route().view === 'jogo' ? '' : 'on'}" href="#/">Biblioteca</a>
       <a class="mode ${route().view === 'jogo' ? 'on' : ''}" href="#/jogo">Modo Jogo</a>
+      <a class="mode ${route().view === 'config' ? 'on' : ''}" href="#/config/tema" aria-label="Configurações">${I.gear}<span class="mode-txt">Config</span></a>
     </nav>
     <nav class="crumbs" aria-label="Caminho">
-      <a href="#/">Estante</a>
-      ${crumbs.map(([t, h]) => `<span class="sep">/</span>${h ? `<a href="${h}">${esc(t)}</a>` : `<span>${esc(t)}</span>`}`).join('')}
+      ${crumbs ? `<a href="#/">Estante</a>
+      ${crumbs.map(([t, h]) => `<span class="sep">/</span>${h ? `<a href="${h}">${esc(t)}</a>` : `<span>${esc(t)}</span>`}`).join('')}` : ''}
     </nav>
     <div class="top-right">
       ${S.mode === 'local' ? '<span class="mode-badge" title="Sem banco compartilhado: os dados ficam só neste navegador.">Modo local</span>' : ''}
-      <button class="icon-btn" data-action="theme" aria-label="Alternar tema claro/escuro">${I.moon}</button>
+      ${S.skin === 'padrao' ? `<button class="icon-btn" data-action="theme" aria-label="Alternar entre claro e escuro">${I.moon}</button>` : ''}
       <div class="user-chip"><span class="role ${u.role}">${u.role === 'master' ? 'Mestre' : 'Jogador'}</span>${u.role === 'master' ? '' : `<span class="uname">${esc(u.name)}</span>`}</div>
       <button class="btn ghost sm" data-action="logout">Sair</button>
     </div>
@@ -711,8 +1404,8 @@ function notFound(msg) {
    Login
    ========================================================= */
 function loginView() {
-  return `<div class="login"><div class="login-card">
-    <div class="login-mark">${I.d20}</div>
+  return `<div class="login"><div class="login-card frame">
+    <div class="login-mark">${MARKS[S.skin] || I.d20}</div>
     <h1 class="display">Grimório</h1>
     <p class="lede">A mesa do seu grupo: livros, campanhas, fichas, criaturas e mapas.</p>
     <form id="login-form" autocomplete="off" novalidate>
@@ -731,8 +1424,24 @@ function doLogin() {
   const name = norm($('#lu').value), pass = $('#lp').value;
   const u = USERS.find(x => (norm(x.name) === name || x.id === name.replace(/\s/g, '')) && x.pass === pass);
   if (!u) { $('#lerr').classList.remove('hidden'); $('#lp').select(); return; }
-  S.user = u; ls('grimorio-user', u.id);
+  S.user = u; ls('grimorio-user', u.id); S.gameChar = ls('grimorio-gamechar-' + u.id);
+  applySkin(ls('grimorio-skin-' + u.id));
   render();
+  showSplash(u);
+}
+
+function showSplash(u) {
+  const host = document.getElementById('splash');
+  const master = u.role === 'master';
+  host.innerHTML = `<div class="splash"><div class="splash-inner">
+      <div class="splash-ring"></div><div class="splash-ring inner"></div>
+      <div class="splash-mark ${master ? 'master' : ''}">${master ? ENTRY_MARKS.master : ENTRY_MARKS.player}</div>
+      <div><p class="splash-txt">${master ? 'Preparando a mesa' : 'Afiando os dados'}</p>
+        <p class="splash-sub">${master ? 'Tudo pronto para conduzir a sessão.' : esc(u.name) + ', sua ficha já está à mão.'}</p></div>
+    </div></div>`;
+  const quick = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  setTimeout(() => host.querySelector('.splash')?.classList.add('out'), quick ? 250 : 1700);
+  setTimeout(() => { host.innerHTML = ''; }, quick ? 700 : 2300);
 }
 
 /* =========================================================
@@ -744,8 +1453,10 @@ function shelfView() {
     const hh = hash(l.id);
     const n = S.data.campaigns.filter(c => c.libraryId === l.id).length;
     const color = l.color || LIB_COLORS[0][0];
+    const h = 238 + (hh % 6) * 10;
+    const fs = clamp(Math.round((h - 96) / Math.max(1, (l.name || '').length * 0.62)), 10, 19);
     return `<div class="spine-slot"><a class="spine" href="#/b/${encodeURIComponent(l.id)}" title="${esc(l.description || l.name)}" aria-label="${esc(l.name)}, ${n} campanha${n === 1 ? '' : 's'}"
-      style="--c:${esc(color)};--t:${textOn(color)};--h:${238 + (hh % 6) * 10}px;--w:${68 + (hh % 4) * 7}px">
+      style="--c:${esc(color)};--t:${textOn(color)};--h:${h}px;--w:${68 + (hh % 4) * 7}px;--fs:${fs}px">
       <span class="band"></span><span class="spine-title">${esc(l.name)}</span><span class="spine-count">${n}</span><span class="band"></span></a></div>`;
   }).join('');
   const add = isMaster() ? `<div class="spine-slot"><button class="spine add" data-action="new-library" style="--h:250px;--w:78px">${I.plus}<span class="spine-title">Novo livro</span></button></div>` : '';
@@ -775,11 +1486,11 @@ function libraryView(id) {
     const nc = S.data.characters.filter(x => x.campaignId === c.id).length;
     const nm = S.data.maps.filter(x => x.campaignId === c.id).length;
     return `<a class="camp-card" href="#/c/${encodeURIComponent(c.id)}/fichas" style="--c:${esc(color)}">
-      <div class="camp-cover">${c.cover ? imgTag(c.cover, '') : `<div class="cover-fallback">${esc((c.name || '?').trim()[0] || '?')}</div>`}</div>
+      <div class="camp-cover frame">${c.cover ? imgTag(c.cover, '') : `<div class="cover-fallback">${esc((c.name || '?').trim()[0] || '?')}</div>`}</div>
       <div class="camp-body"><h3>${esc(c.name)}</h3>${c.synopsis ? `<p>${esc(c.synopsis)}</p>` : ''}
         <div class="camp-stats"><span>${nc} personage${nc === 1 ? 'm' : 'ns'}</span><span>${nm} mapa${nm === 1 ? '' : 's'}</span></div></div></a>`;
   }).join('');
-  const defaults = (lib.defaultAttrs || []).filter(Boolean);
+  const defaults = libAttrs(lib);
   return {
     html: `<section>
       <a class="back" href="#/">Voltar à estante</a>
@@ -788,7 +1499,7 @@ function libraryView(id) {
         <div><h1 class="display">${esc(lib.name)}</h1>
           ${lib.description ? `<p class="lede">${esc(lib.description)}</p>` : ''}
           <div class="lib-meta">Barras de ${esc(lib.hpLabel || 'Vida')} e ${esc(lib.manaLabel || 'Mana')}${defaults.length ? '. Atributos iniciais das fichas:' : ''}
-            ${defaults.length ? `<div class="tags">${defaults.map(a => `<span class="tag">${esc(a)}</span>`).join('')}</div>` : ''}</div>
+            ${defaults.length ? `<div class="tags">${defaults.map(a => `<span class="tag">${esc(a.name)}${dieChip(a.die, true)}</span>`).join('')}</div>` : ''}</div>
         </div>
         ${isMaster() ? `<div class="row"><button class="btn sm" data-action="edit-library" data-id="${esc(id)}">${I.edit}Editar livro</button>
           <button class="btn sm danger" data-action="del-library" data-id="${esc(id)}">${I.trash}Excluir</button></div>` : ''}
@@ -817,7 +1528,7 @@ function campaignView(id, tab) {
   return {
     html: `<section>
       <div class="camp-hero">
-        ${camp.cover ? `<div class="hero-img">${imgTag(camp.cover, '')}</div>` : ''}
+        ${camp.cover ? `<div class="hero-img frame">${imgTag(camp.cover, '')}</div>` : ''}
         <div class="camp-hero-text"><div><h1 class="display">${esc(camp.name)}</h1>${camp.synopsis ? `<p>${esc(camp.synopsis)}</p>` : ''}</div>
           ${isMaster() ? `<div class="row"><button class="btn sm" data-action="edit-campaign" data-id="${esc(id)}">${I.edit}Editar</button>
             <button class="btn sm danger" data-action="del-campaign" data-id="${esc(id)}">${I.trash}Excluir</button></div>` : ''}</div>
@@ -864,8 +1575,16 @@ function adjust(col, id, stat, d) {
   }, 450);
 }
 
-function portraitBlock(o) {
-  return `<div class="portrait">${o.portrait ? imgTag(o.portrait, o.name) : `<div class="initial">${esc((o.name || '?').trim()[0] || '?')}</div>`}</div>`;
+function portraitBlock(o, kind) {
+  return `<div class="portrait frame">${o.portrait ? imgTag(o.portrait, o.name) : `<div class="initial">${esc((o.name || '?').trim()[0] || '?')}</div>`}
+    ${o.dead ? `<span class="dead-badge">${kind === 'monster' ? 'Derrotado' : 'Morto'}</span>` : ''}</div>`;
+}
+function deathBtn(col, o, can) {
+  if (!can) return '';
+  const mon = col === 'monsters';
+  if (o.dead) return `<button class="btn sm" data-action="revive" data-col="${col}" data-id="${esc(o.id)}">${mon ? 'Trazer de volta' : 'Reviver'}</button>`;
+  if (getStat(col, o, 'hp').cur > 0) return '';
+  return `<button class="btn sm danger" data-action="mark-dead" data-col="${col}" data-id="${esc(o.id)}">${mon ? 'Marcar como derrotado' : 'Marcar como morto'}</button>`;
 }
 
 function charactersTab(camp) {
@@ -876,11 +1595,12 @@ function charactersTab(camp) {
   });
   const cards = chars.map(c => {
     const mine = c.owner === S.user.id;
-    return `<a class="char-card ${mine ? 'mine' : ''}" href="#/p/${encodeURIComponent(c.id)}">
+    return `<a class="char-card ${mine ? 'mine' : ''} ${c.dead ? 'is-dead' : ''}" href="#/p/${encodeURIComponent(c.id)}">
       ${portraitBlock(c)}
       <span class="owner ${mine ? 'you' : ''}">${mine ? 'Seu personagem' : esc(userName(c.owner))}</span>
       <div class="cc-body"><h3>${esc(c.name || 'Sem nome')}</h3>${c.subtitle ? `<div class="cc-sub">${esc(c.subtitle)}</div>` : ''}
-        ${statBar('characters', c, 'hp', L.hp)}${statBar('characters', c, 'mana', L.mana)}</div></a>`;
+        ${statBar('characters', c, 'hp', L.hp)}${statBar('characters', c, 'mana', L.mana)}
+        ${(c.conds || []).length ? `<div class="cc-conds">${condChips('characters', c, false)}</div>` : ''}</div></a>`;
   }).join('');
   return {
     html: `<div class="section-head" style="margin-top:0"><p class="muted" style="margin:0;max-width:60ch">${isMaster() ? 'Todas as fichas da mesa. Você pode editar qualquer uma.' : 'Todos veem os personagens da mesa. Só o dono de cada ficha pode alterá-la.'}</p>
@@ -893,8 +1613,8 @@ function monstersTab(camp) {
   const L = labelsFor(camp.id);
   const all = S.data.monsters.filter(m => m.campaignId === camp.id).sort(byCreated);
   if (isMaster()) {
-    const cards = all.map(m => `<article class="mon-card ${m.visible ? '' : 'off'}">
-      <a href="#/m/${encodeURIComponent(m.id)}">${portraitBlock(m)}</a>
+    const cards = all.map(m => `<article class="mon-card ${m.visible ? '' : 'off'} ${m.dead ? 'is-dead' : ''}">
+      <a href="#/m/${encodeURIComponent(m.id)}">${portraitBlock(m, 'monster')}</a>
       <div class="cc-body">
         <a href="#/m/${encodeURIComponent(m.id)}"><h3>${esc(m.name || 'Sem nome')}</h3></a>
         <button class="vis ${m.visible ? 'on' : ''}" data-action="toggle-vis" data-id="${esc(m.id)}" aria-pressed="${!!m.visible}">${m.visible ? I.eye + 'Visível' : I.eyeOff + 'Não visível'}</button>
@@ -907,8 +1627,9 @@ function monstersTab(camp) {
     };
   }
   const vis = all.filter(m => m.visible);
-  const cards = vis.map(m => `<article class="mon-card">
-    <div class="portrait" ${m.portrait ? `data-action="zoom" data-ref="${esc(m.portrait)}" style="cursor:zoom-in"` : ''}>${m.portrait ? imgTag(m.portrait, '') : '<div class="initial">?</div>'}</div>
+  const cards = vis.map(m => `<article class="mon-card ${m.dead ? 'is-dead' : ''}">
+    <div class="portrait frame" ${m.portrait ? `data-action="zoom" data-ref="${esc(m.portrait)}" style="cursor:zoom-in"` : ''}>${m.portrait ? imgTag(m.portrait, '') : '<div class="initial">?</div>'}
+      ${m.dead ? '<span class="dead-badge">Derrotado</span>' : ''}</div>
     <div class="cc-body"><h3 class="${m.revealName ? '' : 'unknown'}">${m.revealName ? esc(m.name) : 'Criatura desconhecida'}</h3>
       ${statBar('monsters', m, 'hp', L.hp)}${statBar('monsters', m, 'mana', L.mana)}</div></article>`).join('');
   return {
@@ -925,7 +1646,7 @@ function sheetBody(o) {
   const secs = (o.sections || []).filter(s => s.title || (s.fields || []).length);
   const gal = o.gallery || [];
   let h = '';
-  h += `<div class="block"><h2>Atributos</h2>${attrs.length ? `<div class="attrs">${attrs.map(a => `<div class="attr"><div class="av">${esc(String(a.value ?? '').trim() || '—')}</div><div class="an">${esc(a.name)}</div></div>`).join('')}</div>` : '<p class="muted">Nenhum atributo.</p>'}</div>`;
+  h += `<div class="block"><h2>Atributos</h2>${attrs.length ? `<div class="attrs">${attrs.map(a => `<div class="attr">${dieChip(a.die)}<div class="av">${esc(String(a.value ?? '').trim() || '—')}</div><div class="an">${esc(a.name)}</div></div>`).join('')}</div>` : '<p class="muted">Nenhum atributo.</p>'}</div>`;
   h += `<div class="block"><h2>Itens</h2>${items.length ? `<div class="table-wrap"><table><thead><tr><th>Item</th><th>Qtd</th><th>Dano</th><th>Observações</th></tr></thead><tbody>
     ${items.map(i => `<tr><td>${esc(i.name)}</td><td>${esc(i.qty)}</td><td class="dmg">${esc(i.damage || '—')}</td><td>${esc(i.notes)}</td></tr>`).join('')}</tbody></table></div>` : '<p class="muted">Nenhum item.</p>'}</div>`;
   secs.forEach(s => {
@@ -933,7 +1654,7 @@ function sheetBody(o) {
     h += `<div class="block"><h2>${esc(s.title || 'Campos')}</h2>${fs.length ? `<div class="fields">${fs.map(f => `<div class="field"><div class="fl">${esc(f.label)}</div><div class="fv">${esc(f.value)}</div></div>`).join('')}</div>` : '<p class="muted">Seção vazia.</p>'}</div>`;
   });
   if (o.notes) h += `<div class="block"><h2>Anotações</h2><div class="notes">${esc(o.notes)}</div></div>`;
-  if (gal.length) h += `<div class="block"><h2>Galeria</h2><div class="gallery">${gal.map(r => `<button class="g" data-action="zoom" data-ref="${esc(r)}" aria-label="Ampliar imagem">${imgTag(r, '')}</button>`).join('')}</div></div>`;
+  if (gal.length) h += `<div class="block"><h2>Galeria</h2><div class="gallery">${gal.map(r => `<button class="g frame" data-action="zoom" data-ref="${esc(r)}" aria-label="Ampliar imagem">${imgTag(r, '')}</button>`).join('')}</div></div>`;
   return h;
 }
 function characterView(id) {
@@ -946,13 +1667,15 @@ function characterView(id) {
       <a class="back" href="#/c/${encodeURIComponent(c.campaignId)}/fichas">Voltar para ${esc(camp?.name || 'a campanha')}</a>
       <div class="sheet-grid">
         <aside class="sheet-side">
-          <div ${c.portrait ? `data-action="zoom" data-ref="${esc(c.portrait)}"` : ''}>${portraitBlock(c)}</div>
-          <div class="stat-box">${statBar('characters', c, 'hp', L.hp, { adj: edit, big: true })}${statBar('characters', c, 'mana', L.mana, { adj: edit, big: true })}</div>
+          <div class="${c.dead ? 'is-dead' : ''}" ${c.portrait ? `data-action="zoom" data-ref="${esc(c.portrait)}"` : ''}>${portraitBlock(c)}</div>
+          <div class="stat-box">${statBar('characters', c, 'hp', L.hp, { adj: edit, big: true })}${statBar('characters', c, 'mana', L.mana, { adj: edit, big: true })}
+            ${deathBtn('characters', c, edit) ? `<div class="row">${deathBtn('characters', c, edit)}</div>` : ''}</div>
+          ${condChips('characters', c, edit) ? `<div class="stat-box">${condChips('characters', c, edit)}</div>` : ''}
         </aside>
         <div>
           <div class="sheet-head"><div><h1 class="display">${esc(c.name || 'Sem nome')}</h1>
             <div class="cc-sub">${[c.subtitle, 'Jogado por ' + (c.owner === S.user.id ? 'você' : userName(c.owner))].filter(Boolean).map(esc).join('. ')}</div></div>
-            ${edit ? `<div class="row"><button class="btn primary" data-action="edit-char" data-id="${esc(id)}">${I.edit}Editar ficha</button>
+            ${edit ? `<div class="row">${c.owner === S.user.id ? `<button class="btn" data-action="play-char" data-id="${esc(id)}">${I.d20}Modo Jogo</button>` : ''}<button class="btn primary" data-action="edit-char" data-id="${esc(id)}">${I.edit}Editar ficha</button>
               <button class="btn danger" data-action="del-char" data-id="${esc(id)}">${I.trash}Excluir</button></div>` : ''}</div>
           ${sheetBody(c)}
         </div>
@@ -970,9 +1693,12 @@ function monsterView(id) {
       <a class="back" href="#/c/${encodeURIComponent(m.campaignId)}/monstros">Voltar para os monstros</a>
       <div class="sheet-grid">
         <aside class="sheet-side">
-          <div ${m.portrait ? `data-action="zoom" data-ref="${esc(m.portrait)}"` : ''}>${portraitBlock(m)}</div>
+          <div class="${m.dead ? 'is-dead' : ''}" ${m.portrait ? `data-action="zoom" data-ref="${esc(m.portrait)}"` : ''}>${portraitBlock(m, 'monster')}</div>
           <button class="vis ${m.visible ? 'on' : ''}" data-action="toggle-vis" data-id="${esc(m.id)}" aria-pressed="${!!m.visible}">${m.visible ? I.eye + 'Visível para os jogadores' : I.eyeOff + 'Não visível para os jogadores'}</button>
-          <div class="stat-box">${statBar('monsters', m, 'hp', L.hp, { adj: true, big: true })}${statBar('monsters', m, 'mana', L.mana, { adj: true, big: true })}</div>
+          <button class="field-toggle ${m.inField ? 'on' : ''}" data-action="toggle-field" data-id="${esc(m.id)}" aria-pressed="${!!m.inField}">${m.inField ? 'Ativo em campo' : 'Colocar em campo'}</button>
+          <div class="stat-box">${statBar('monsters', m, 'hp', L.hp, { adj: true, big: true })}${statBar('monsters', m, 'mana', L.mana, { adj: true, big: true })}
+            ${deathBtn('monsters', m, true) ? `<div class="row">${deathBtn('monsters', m, true)}</div>` : ''}</div>
+          <div class="stat-box">${condChips('monsters', m, true)}</div>
           <p class="muted" style="font-size:13px;margin:0">${m.visible ? `Os jogadores veem a imagem, as barras e ${m.revealName ? 'o nome' : '“Criatura desconhecida” no lugar do nome'}.` : 'Os jogadores não veem esta criatura.'}</p>
         </aside>
         <div>
@@ -1008,20 +1734,71 @@ function mapTab(camp) {
           <button class="icon-btn" data-action="zoom-map" data-z="fit" aria-label="Enquadrar mapa">${I.fit}</button>
           <button class="icon-btn ${S.mapLabels ? 'toggle-on' : ''}" data-action="map-labels" aria-label="Mostrar nomes dos pontos" aria-pressed="${S.mapLabels}">${I.tag}</button>
           ${master ? `<button class="btn sm ${S.mapEdit ? 'toggle-on' : ''}" data-action="map-edit" aria-pressed="${S.mapEdit}">${I.pin}${S.mapEdit ? 'Concluir pontos' : 'Editar pontos'}</button>
+            <button class="btn sm ${S.fogMode ? 'toggle-on' : ''}" data-action="fog-mode" aria-pressed="${!!S.fogMode}">${I.fog}${S.fogMode ? 'Concluir névoa' : 'Névoa'}</button>
             <button class="btn sm" data-action="edit-map" data-id="${esc(cur.id)}">${I.edit}Mapa</button>
             <button class="btn sm" data-action="new-map" data-camp="${esc(camp.id)}">${I.plus}Novo mapa</button>` : ''}
         </div>
       </div>
+      ${master && S.fogMode ? `<div class="map-hint fog-tools"><span>Pincel:</span>
+        <button class="btn sm ${S.fogBrush === 'hide' ? 'toggle-on' : ''}" data-action="fog-brush" data-b="hide">Cobrir</button>
+        <button class="btn sm ${S.fogBrush === 'reveal' ? 'toggle-on' : ''}" data-action="fog-brush" data-b="reveal">Revelar</button>
+        <span style="width:10px"></span>
+        <button class="btn sm" data-action="fog-all" data-v="1" data-id="${esc(cur.id)}">Cobrir tudo</button>
+        <button class="btn sm" data-action="fog-all" data-v="0" data-id="${esc(cur.id)}">Revelar tudo</button>
+        <span class="muted" style="font-size:13px">Arraste sobre o mapa para pintar.</span></div>` : ''}
       ${master && S.mapEdit ? '<p class="map-hint">Clique em um lugar do mapa para criar um ponto. Arraste um ponto para mudá-lo de lugar; clique nele para editar.</p>' : '<p class="map-hint">Arraste para mover, use a roda do mouse ou o gesto de pinça para zoom. Clique em um ponto para ver as imagens do local.</p>'}
-      <div class="map-vp ${master && S.mapEdit ? 'editing' : ''} ${S.mapLabels ? 'labels' : ''}" id="mapvp">
+      <div class="map-vp frame ${master && S.mapEdit ? 'editing' : ''} ${master && S.fogMode ? 'fogging' : ''} ${S.mapLabels ? 'labels' : ''}" id="mapvp">
         <div class="map-inner" id="mapinner">
           ${imgTag(cur.image, cur.name).replace('<img ', '<img id="mapimg" ').replace(' loading="lazy"', '')}
-          ${wps.map(w => `<button class="wp" data-wp="${esc(w.id)}" style="left:${num(w.x)}%;top:${num(w.y)}%;--pc:${esc(w.color || PIN_COLORS[0])}" aria-label="${esc(w.title || 'Ponto')}"><span class="wp-pin"></span><span class="wp-label">${esc(w.title || 'Ponto')}</span></button>`).join('')}
+          <div class="fog" id="mapfog">${fogCells(cur, master)}</div>
+          ${wps.filter(w => master || !fogHides(cur, w)).map(w => `<button class="wp" data-wp="${esc(w.id)}" style="left:${num(w.x)}%;top:${num(w.y)}%;--pc:${esc(w.color || PIN_COLORS[0])}" aria-label="${esc(w.title || 'Ponto')}"><span class="wp-pin"></span><span class="wp-label">${esc(w.title || 'Ponto')}</span></button>`).join('')}
         </div>
       </div>
-      ${wps.length ? `<div class="wp-list">${wps.map(w => `<button class="chip" data-action="open-wp" data-id="${esc(w.id)}"><span class="dot" style="--pc:${esc(w.color || PIN_COLORS[0])}"></span>${esc(w.title || 'Ponto')}${(w.images || []).length ? ` <span class="muted">(${w.images.length})</span>` : ''}</button>`).join('')}</div>` : ''}`,
+      ${wps.filter(w => master || !fogHides(cur, w)).length ? `<div class="wp-list">${wps.filter(w => master || !fogHides(cur, w)).map(w => `<button class="chip" data-action="open-wp" data-id="${esc(w.id)}"><span class="dot" style="--pc:${esc(w.color || PIN_COLORS[0])}"></span>${esc(w.title || 'Ponto')}${(w.images || []).length ? ` <span class="muted">(${w.images.length})</span>` : ''}</button>`).join('')}</div>` : ''}`,
     after: setupMap
   };
+}
+const FOG_COLS = 24, FOG_ROWS = 16, FOG_N = FOG_COLS * FOG_ROWS;
+function fogOf(map) {
+  const raw = typeof map?.fog === 'string' ? map.fog : '';
+  return raw.length === FOG_N ? raw : '0'.repeat(FOG_N);
+}
+function fogCells(map, master) {
+  const f = fogOf(map);
+  if (f.indexOf('1') < 0) return '';
+  const w = 100 / FOG_COLS, h = 100 / FOG_ROWS;
+  let out = '';
+  for (let i = 0; i < FOG_N; i++) {
+    if (f[i] !== '1') continue;
+    const r = Math.floor(i / FOG_COLS), c = i % FOG_COLS;
+    out += `<i style="left:${(c * w).toFixed(4)}%;top:${(r * h).toFixed(4)}%;width:${(w + 0.06).toFixed(4)}%;height:${(h + 0.06).toFixed(4)}%"></i>`;
+  }
+  return out;
+}
+function fogHides(map, w) {
+  const f = fogOf(map);
+  if (f.indexOf('1') < 0) return false;
+  const c = clamp(Math.floor(num(w.x) / (100 / FOG_COLS)), 0, FOG_COLS - 1);
+  const r = clamp(Math.floor(num(w.y) / (100 / FOG_ROWS)), 0, FOG_ROWS - 1);
+  return f[r * FOG_COLS + c] === '1';
+}
+let fogSaveT = 0;
+function paintFog(p) {
+  const map = curMap(); if (!map) return;
+  const c = clamp(Math.floor(p.x / (100 / FOG_COLS)), 0, FOG_COLS - 1);
+  const r = clamp(Math.floor(p.y / (100 / FOG_ROWS)), 0, FOG_ROWS - 1);
+  const i = r * FOG_COLS + c;
+  const want = S.fogBrush === 'reveal' ? '0' : '1';
+  const cur = S.fogDraft || fogOf(map);
+  if (cur[i] === want) return;
+  S.fogDraft = cur.slice(0, i) + want + cur.slice(i + 1);
+  const host = document.getElementById('mapfog');
+  if (host) host.innerHTML = fogCells({ fog: S.fogDraft }, true);
+  clearTimeout(fogSaveT);
+  fogSaveT = setTimeout(() => {
+    const fog = S.fogDraft; S.fogDraft = null;
+    store.update('maps', map.id, { fog }).catch(() => toast('Não foi possível salvar a névoa.', 'err'));
+  }, 420);
 }
 function curMap() { return get('maps', S.mapId); }
 function setupMap() {
@@ -1066,6 +1843,12 @@ function setupMap() {
     if (pts.size === 1) {
       start = { x: e.clientX, y: e.clientY, vx: v.x, vy: v.y, wp: wpEl ? wpEl.dataset.wp : null };
       moved = false;
+      if (isMaster() && S.fogMode) {
+        start.fog = true; S.drag = true;
+        const p = pctFromClient(e.clientX, e.clientY);
+        if (p.inside) paintFog(p);
+        return;
+      }
       if (wpEl && isMaster() && S.mapEdit) { dragWp = { id: wpEl.dataset.wp, el: wpEl, p: null }; S.drag = true; }
     } else if (pts.size === 2) {
       const [a, b] = [...pts.values()];
@@ -1084,6 +1867,7 @@ function setupMap() {
     const dx = e.clientX - start.x, dy = e.clientY - start.y;
     if (Math.abs(dx) + Math.abs(dy) > 4) moved = true;
     if (!moved) return;
+    if (start.fog) { const p = pctFromClient(e.clientX, e.clientY); if (p.inside) paintFog(p); return; }
     if (dragWp) { const p = pctFromClient(e.clientX, e.clientY); dragWp.el.style.left = p.x + '%'; dragWp.el.style.top = p.y + '%'; dragWp.p = p; }
     else { v.x = start.vx + dx; v.y = start.vy + dy; apply(); vp.classList.add('panning'); }
   });
@@ -1093,6 +1877,7 @@ function setupMap() {
     if (pinch) { if (pts.size < 2) pinch = null; start = null; return; }
     if (!start) return;
     const s = start; start = null;
+    if (s.fog) { S.drag = false; if (S.renderAfterDrag) { S.renderAfterDrag = false; scheduleRender(); } return; }
     if (dragWp) {
       const d = dragWp; dragWp = null; S.drag = false;
       if (e.type === 'pointercancel') { if (S.renderAfterDrag) { S.renderAfterDrag = false; scheduleRender(); } return; }
@@ -1134,40 +1919,554 @@ function gameView() { return { html: isMaster() ? masterGame() : playerGame(), c
 function thumb(o) { return o.portrait ? imgTag(o.portrait, '') : esc(((o.name || '?').trim()[0]) || '?'); }
 function fieldCard(m, L, master, solo) {
   const known = master || m.revealName;
-  return `<article class="field-card ${solo ? 'solo' : ''}">
-    <div class="fc-img" ${m.portrait ? `data-action="zoom" data-ref="${esc(m.portrait)}"` : ''}>${m.portrait ? imgTag(m.portrait, '') : '<div class="initial">?</div>'}</div>
+  return `<article class="field-card ${solo ? 'solo' : ''} ${m.dead ? 'is-dead' : ''}">
+    <div class="fc-img frame" ${m.portrait ? `data-action="zoom" data-ref="${esc(m.portrait)}"` : ''}>${m.portrait ? imgTag(m.portrait, '') : '<div class="initial">?</div>'}</div>
     <div class="fc-body"><h3 class="${known ? '' : 'unknown'}">${known ? esc(m.name || 'Sem nome') : 'Criatura desconhecida'}</h3>
       ${master && !m.revealName ? '<p class="fc-note">Os jogadores veem “Criatura desconhecida”.</p>' : ''}
       ${statBar('monsters', m, 'hp', L.hp, { adj: master, big: master && solo })}${statBar('monsters', m, 'mana', L.mana, { adj: master, big: master && solo })}
-      ${master ? `<button class="btn sm" data-action="toggle-field" data-id="${esc(m.id)}" style="align-self:flex-start">Tirar de campo</button>` : ''}
+      ${master ? `<div class="row">${deathBtn('monsters', m, true)}<button class="btn sm" data-action="toggle-field" data-id="${esc(m.id)}">Tirar de campo</button></div>` : ''}
     </div></article>`;
 }
 function arena(campId, master) {
   const L = labelsFor(campId);
   const act = S.data.monsters.filter(m => m.campaignId === campId && m.inField).sort(byCreated);
   if (!act.length) return `<div class="arena empty-arena"><p>${master ? 'Nenhuma criatura em campo. Ative uma no bestiário para os jogadores verem na hora.' : 'Nenhuma criatura em campo agora. Quando o mestre ativar uma, ela aparece aqui.'}</p></div>`;
-  return `<section class="arena live" aria-live="polite"><div class="arena-head"><span class="live-dot"></span>Em campo agora</div><div class="arena-grid ${act.length === 1 ? 'one' : ''}">${act.map(m => fieldCard(m, L, master, act.length === 1)).join('')}</div></section>`;
+  return `<section class="arena live" aria-live="polite"><div class="arena-head"><span class="live-dot"></span>Em campo agora</div>
+    <div class="arena-grid ${act.length === 1 ? 'one' : ''}">${act.map(m => fieldCard(m, L, master, act.length === 1)).join('')}</div></section>`;
+}
+const COLS_MIN = 4, COLS_MAX = 10, ROWS_MIN = 3, ROWS_MAX = 7;
+function gridOf(camp) {
+  const cols = clamp(num(camp && camp.cols) || 8, COLS_MIN, COLS_MAX);
+  const rows = clamp(num(camp && camp.rows) || 5, ROWS_MIN, ROWS_MAX);
+  const foeRows = Math.max(1, Math.floor((rows - 1) / 2));
+  const h = 100 / (0.75 * (rows - 1) + 1);
+  return { cols, rows, n: cols * rows, foeRows, partyRow: rows - foeRows,
+    w: 100 / (cols + 0.5), h, step: h * 0.75, aspect: (cols + 0.5) / (1.1547 * (0.75 * (rows - 1) + 1)) };
+}
+function rowOrder(r, cols) {
+  const mid = (cols - 1) / 2;
+  return [...Array(cols).keys()].sort((a, b) => Math.abs(a - mid) - Math.abs(b - mid) || a - b).map(c => r * cols + c);
+}
+function slotsFor(g) {
+  const foe = [], ally = [];
+  for (let r = 0; r < g.foeRows; r++) foe.push(...rowOrder(r, g.cols));
+  for (let r = g.rows - 1; r >= g.partyRow; r--) ally.push(...rowOrder(r, g.cols));
+  for (let r = g.foeRows; r < g.partyRow; r++) { foe.push(...rowOrder(r, g.cols)); ally.push(...rowOrder(r, g.cols)); }
+  return { foe, ally };
+}
+const SCENES = [['ruinas', 'Ruínas'], ['floresta', 'Floresta'], ['caverna', 'Caverna'], ['rua', 'Rua à noite'],
+  ['ritual', 'Zona do ritual'], ['neve', 'Nevasca'], ['mansao', 'Salão da mansão'], ['cemiterio', 'Cemitério'],
+  ['deserto', 'Deserto'], ['esgoto', 'Esgoto'], ['laboratorio', 'Laboratório'], ['porto', 'Porto à noite']];
+function arenaPlacement(campId, g) {
+  const chars = S.data.characters.filter(c => c.campaignId === campId).sort(byCreated);
+  const foes = S.data.monsters.filter(m => m.campaignId === campId && m.inField).sort(byCreated);
+  const taken = new Map(), placed = new Set();
+  const put = (col, o, n) => {
+    if (!Number.isInteger(n) || n < 0 || n >= g.n || taken.has(n)) return false;
+    taken.set(n, { col, o }); placed.add(o.id); return true;
+  };
+  foes.forEach(m => put('monsters', m, m.pos));
+  chars.forEach(c => put('characters', c, c.pos));
+  const slots = slotsFor(g);
+  const fill = (col, list, order) => list.forEach(o => {
+    if (placed.has(o.id)) return;
+    let n = order.find(x => !taken.has(x));
+    if (n === undefined) for (let i = 0; i < g.n && n === undefined; i++) if (!taken.has(i)) n = i;
+    put(col, o, n);
+  });
+  fill('monsters', foes, slots.foe);
+  fill('characters', chars, slots.ally);
+  return { taken, foes: foes.length };
+}
+function tokenEl(col, o, solo) {
+  const known = col === 'monsters' ? (isMaster() || o.revealName) : true;
+  const can = col === 'monsters' ? isMaster() : canEditChar(o);
+  const hp = getStat(col, o, 'hp');
+  const pct = hp.max > 0 ? clamp(hp.cur / hp.max * 100, 0, 100) : (hp.cur > 0 ? 100 : 0);
+  const sel = S.token && S.token.id === o.id;
+  const name = known ? (o.name || 'Sem nome') : '???';
+  const mine = col === 'characters' && o.owner === S.user.id;
+  return `<button class="token ${col === 'monsters' ? 'foe' : 'ally'} ${mine ? 'mine' : ''} ${col === 'monsters' && solo ? 'boss' : ''} ${o.dead ? 'is-dead' : ''} ${sel ? 'sel' : ''}"
+    ${can ? `data-action="pick-token" data-col="${col}" data-id="${esc(o.id)}"` : 'disabled'}
+    aria-label="${esc(name)}${can ? ', mover no tabuleiro' : ''}" title="${esc(name)}">
+    <span class="tk-art">${o.portrait ? imgTag(o.portrait, '') : `<span class="tk-initial">${esc((name || '?').trim()[0] || '?')}</span>`}
+      <span class="tk-hp"><i style="width:${pct}%"></i></span></span>
+    ${condDots(o)}
+    <span class="tk-name">${esc(name)}</span></button>`;
+}
+function arenaBoard(campId) {
+  const camp = get('campaigns', campId); if (!camp) return '';
+  const scene = SCENES.some(x => x[0] === camp.scene) ? camp.scene : 'ruinas';
+  const g = gridOf(camp);
+  const { taken, foes } = arenaPlacement(campId, g);
+  const moving = !!S.token;
+  let hexes = '';
+  for (let i = 0; i < g.n; i++) {
+    const row = Math.floor(i / g.cols), col = i % g.cols;
+    const left = (col + (row % 2 ? 0.5 : 0)) * g.w, top = row * g.step;
+    const t = taken.get(i);
+    const zone = row < g.foeRows ? 'z-foe' : row >= g.partyRow ? 'z-party' : 'z-mid';
+    const drop = moving && !t;
+    hexes += `<div class="hex ${zone} ${drop ? 'drop' : ''}" style="left:${left}%;top:${top}%"
+      ${drop ? `data-action="move-token" data-n="${i}"` : ''}>
+      <span class="hex-in"></span>${t ? tokenEl(t.col, t.o, foes === 1) : ''}</div>`;
+  }
+  const tools = isMaster()
+    ? `<div class="row"><label class="camp-select">Cenário<select class="inp" id="arena-scene">
+        ${SCENES.map(([id, n]) => `<option value="${id}" ${id === scene ? 'selected' : ''}>${n}</option>`).join('')}</select></label>
+       <div class="size-ctl"><span class="sl">Pontos</span><div class="stepper">
+         <button data-action="arena-size" data-d="-1" data-camp="${esc(campId)}" aria-label="Menos pontos" ${g.n <= COLS_MIN * ROWS_MIN ? 'disabled' : ''}>−</button>
+         <span class="sv">${g.n}</span>
+         <button data-action="arena-size" data-d="1" data-camp="${esc(campId)}" aria-label="Mais pontos" ${g.n >= COLS_MAX * ROWS_MAX ? 'disabled' : ''}>+</button></div></div>
+       <button class="btn sm" data-action="reset-arena" data-camp="${esc(campId)}">Reorganizar</button></div>`
+    : '';
+  const hint = moving
+    ? 'Escolha um hexágono livre para onde ir, ou clique no token de novo para cancelar.'
+    : (isMaster() ? 'Clique em um token e depois no hexágono de destino. Criaturas em campo entram pela faixa de cima.'
+                  : 'Clique no seu token e depois no hexágono para onde quer andar.');
+  return `<section class="arena-wrap">
+    <div class="arena-bar"><h2>Arena</h2>${tools}</div>
+    <p class="arena-hint">${hint}</p>
+    <div class="board-scroll"><div class="arena-board" data-scene="${scene}" style="aspect-ratio:${g.aspect.toFixed(3)};--hw:${g.w.toFixed(4)}%;--hh:${g.h.toFixed(4)}%">
+      <div class="scene-art" aria-hidden="true">${SCENE_ART[scene] || ''}</div>
+      <span class="zone-tag foe">Inimigos</span><span class="zone-tag party">Grupo</span>
+      ${hexes}
+    </div></div></section>`;
+}
+const DIE_OPTS = ['', 'd4', 'd6', 'd8', 'd10', 'd12', 'd20', 'd100'];
+const dieOf = v => DIE_OPTS.includes(v) ? v : '';
+// aceita o formato antigo (lista de nomes) e o novo ({name, die})
+function libAttrs(lib) {
+  return (lib?.defaultAttrs || []).map(a => typeof a === 'string'
+    ? { name: a.trim(), die: '' }
+    : { name: String(a?.name || '').trim(), die: dieOf(a?.die) }).filter(a => a.name);
+}
+function dieChip(die, sm) {
+  const d = dieOf(die);
+  return d ? `<span class="die-chip ${sm ? 'sm' : ''}" data-shape="${d}" title="Rolado com ${d}"><span>${d}</span></span>` : '';
+}
+function diePicker(die, action, idx, label) {
+  const cur = dieOf(die);
+  return `<div class="die-pick" role="group" aria-label="Dado de ${esc(label || 'atributo')}">
+    <span class="pl">Dado:</span>
+    ${DIE_OPTS.map(v => `<button type="button" class="die-opt ${cur === v ? 'on' : ''}" data-shape="${v || 'none'}"
+      data-action="${action}" data-i="${idx}" data-die="${v}" aria-pressed="${cur === v}"
+      title="${v ? 'Medido com ' + v : 'Sem dado'}"><span>${v ? v.slice(1) : '—'}</span></button>`).join('')}
+  </div>`;
+}
+const CONDITIONS = [
+  ['envenenado', 'Envenenado', '#6aa84f'], ['sangrando', 'Sangrando', '#b3362e'],
+  ['atordoado', 'Atordoado', '#d8b060'], ['caido', 'Caído', '#8a7f9e'],
+  ['lento', 'Lento', '#4a7fb2'], ['acelerado', 'Acelerado', '#2f8a57'],
+  ['protegido', 'Protegido', '#4f86ea'], ['amaldicoado', 'Amaldiçoado', '#8b5cf6'],
+  ['enfraquecido', 'Enfraquecido', '#a06b3a'], ['invisivel', 'Invisível', '#9aa7b5'],
+  ['queimando', 'Em chamas', '#e0652a'], ['apavorado', 'Apavorado', '#c2446e'],
+  ['silenciado', 'Silenciado', '#7a8ba0'], ['inspirado', 'Inspirado', '#d99a2b']
+];
+const condOf = id => CONDITIONS.find(c => c[0] === id);
+function condChips(col, o, canEdit) {
+  const list = (o.conds || []).map(condOf).filter(Boolean);
+  if (!list.length && !canEdit) return '';
+  const chips = list.map(([id, name, color]) => canEdit
+    ? `<button class="cond" style="--cc:${color}" data-action="cond-off" data-col="${col}" data-id="${esc(o.id)}" data-c="${id}" title="Remover ${esc(name)}"><span class="dot"></span>${esc(name)}</button>`
+    : `<span class="cond" style="--cc:${color}"><span class="dot"></span>${esc(name)}</span>`).join('');
+  return `<div class="conds">${chips}
+    ${canEdit ? `<button class="cond add" data-action="open-conds" data-col="${col}" data-id="${esc(o.id)}">${list.length ? '+ condição' : '+ Adicionar condição'}</button>` : ''}</div>`;
+}
+function condDots(o) {
+  const list = (o.conds || []).map(condOf).filter(Boolean).slice(0, 4);
+  return list.length ? `<span class="tk-conds">${list.map(c => `<span style="--cc:${c[2]}" title="${esc(c[1])}"></span>`).join('')}</span>` : '';
+}
+function msgsFor(campId) {
+  return S.data.messages
+    .filter(m => m.campaignId === campId && (m.to === 'all' || m.to === S.user.id || m.from === S.user.id))
+    .sort((a, b) => (b.at || 0) - (a.at || 0));
+}
+function msgTarget(m) {
+  if (m.to === 'all') return 'todos';
+  const name = m.to === 'mestre' ? 'Mestre' : userName(m.to);
+  return m.from === S.user.id ? 'só para ' + name : 'só para você';
+}
+function msgPanel(campId) {
+  const list = msgsFor(campId).slice(0, 6);
+  return `<aside class="msg-panel">
+    <h2>Mensagens</h2>
+    <p class="hint">${isMaster() ? 'Envie um recado ou uma pista para a mesa, ou para um jogador só.' : 'Recados e pistas do mestre aparecem na sua tela.'}</p>
+    <button class="btn sm block" data-action="new-msg" data-camp="${esc(campId)}">${I.mail}Enviar</button>
+    ${list.length ? `<ul class="msg-list">${list.map(m => `<li><button class="msg-item ${S.unread && S.unread.has(m.id) ? 'unread' : ''}" data-action="open-msg" data-id="${esc(m.id)}">
+        <span class="msg-top"><span class="msg-kind ${m.kind === 'pista' ? 'pista' : 'mensagem'}">${m.kind === 'pista' ? 'Pista' : 'Recado'}</span>
+          <span>${esc(m.fromName)}</span><span class="msg-to">${esc(msgTarget(m))}</span></span>
+        <span class="msg-text">${esc(m.text || (m.image ? 'Imagem' : ''))}</span></button></li>`).join('')}</ul>`
+      : '<p class="muted" style="font-size:13px;margin:10px 0 0">Nada por aqui ainda.</p>'}
+  </aside>`;
+}
+function showPost(m) {
+  const host = document.getElementById('splash');
+  const pista = m.kind === 'pista';
+  host.innerHTML = `<div class="post ${pista ? 'pista' : ''}" data-action="close-post">
+    <div class="post-card" data-stop="1">
+      <div class="post-head"><span class="post-seal">${pista ? I.clue : I.mail}</span>
+        <h2>${pista ? 'Nova pista' : 'Recado da mesa'}</h2></div>
+      <p class="post-from">${esc(m.fromName)} · ${esc(msgTarget(m))}</p>
+      ${m.text ? `<p class="post-text">${esc(m.text)}</p>` : ''}
+      ${m.image ? `<div class="post-img" data-action="zoom" data-ref="${esc(m.image)}">${imgTag(m.image, '')}</div>` : ''}
+      <div class="post-foot"><button class="btn primary" data-action="close-post">Fechar</button></div>
+    </div></div>`;
+  hydrateImages(host);
+  if (S.unread) S.unread.delete(m.id);
+}
+function closePost() { const h = document.getElementById('splash'); if (h.querySelector('.post')) h.innerHTML = ''; }
+let prevMsgs = null;
+function checkMessages(list) {
+  const ids = new Set(list.map(m => m.id));
+  const before = prevMsgs; prevMsgs = ids;
+  if (!before || !S.user) return;
+  const camp = viewCampId();
+  const fresh = list.filter(m => !before.has(m.id) && m.from !== S.user.id && (m.to === 'all' || m.to === S.user.id || (isMaster() && m.to === 'mestre')));
+  if (!fresh.length) return;
+  fresh.forEach(m => S.unread.add(m.id));
+  const show = fresh.sort((a, b) => (b.at || 0) - (a.at || 0))[0];
+  if (show.campaignId === camp || !camp) showPost(show);
+  else toast((show.kind === 'pista' ? 'Nova pista de ' : 'Recado de ') + show.fromName);
+}
+function msgEditor(m) {
+  const d = m.draft;
+  const targets = isMaster()
+    ? [['all', 'Todos os jogadores'], ...USERS.filter(u => u.role === 'player').map(u => [u.id, u.name])]
+    : [['all', 'Todos da mesa'], ['mestre', 'Só o mestre']];
+  return modalFrame('Enviar para a mesa', `
+    ${isMaster() ? `<div class="f" style="display:block"><div style="font-size:14px;font-weight:500;margin-bottom:8px">Tipo</div>
+      <div class="row"><button class="chip ${d.kind === 'mensagem' ? 'on' : ''}" data-action="msg-kind" data-k="mensagem">Recado</button>
+        <button class="chip ${d.kind === 'pista' ? 'on' : ''}" data-action="msg-kind" data-k="pista">Pista</button></div>
+      <small class="muted" style="font-size:12px">A pista chega com destaque dourado e lupa; o recado, em azul.</small></div>` : ''}
+    <label class="f">Para<select class="inp" data-bind="to">${targets.map(([v, n]) => `<option value="${v}" ${d.to === v ? 'selected' : ''}>${esc(n)}</option>`).join('')}</select></label>
+    <label class="f">Texto<textarea class="inp" data-bind="text" rows="4" data-autofocus placeholder="${d.kind === 'pista' ? 'O que o grupo descobriu…' : 'Seu recado para a mesa…'}">${esc(d.text)}</textarea></label>
+    <div style="font-size:14px;font-weight:500;margin-bottom:8px">Imagem (opcional)</div>
+    <button class="pick wide" data-action="pick-msgimg">${d.image ? imgTag(d.image, '') : `${I.img}<span>Anexar imagem</span>`}</button>
+    ${d.image ? `<button class="btn sm ghost" style="margin-top:8px" data-action="rm-msgimg">${I.trash}Remover imagem</button>` : ''}${busyNote(m)}`,
+    saveBtns(m, 'Enviar'));
+}
+async function sendMsg(m) {
+  const d = m.draft;
+  if (!d.text.trim() && !d.image) { toast('Escreva algo ou anexe uma imagem.', 'err'); return; }
+  const id = uid();
+  const doc = { campaignId: d.campaignId, from: S.user.id, fromName: S.user.name, to: d.to,
+    kind: isMaster() && d.kind === 'pista' ? 'pista' : 'mensagem', text: d.text.trim(), image: d.image || null, at: Date.now() };
+  try {
+    await store.set('messages', id, doc);
+    cleanupRefs(m, [doc.image]);
+    closeModal(true);
+    toast(doc.kind === 'pista' ? 'Pista enviada.' : 'Recado enviado.');
+    const old = S.data.messages.filter(x => x.campaignId === d.campaignId).sort((a, b) => (b.at || 0) - (a.at || 0)).slice(24);
+    for (const o of old) { store.remove('messages', o.id).catch(() => {}); deleteImageRef(o.image); }
+  } catch (e) { toast('Não foi possível enviar.', 'err'); }
+}
+const DICE = [4, 6, 8, 10, 12, 20, 100];
+function itemsPanel(campId, own) {
+  const rows = o => (o.items || []).filter(i => String(i.name || '').trim());
+  let body = '', count = 0;
+  if (own) {
+    const list = rows(own); count = list.length;
+    body = list.map(i => `<li class="item-row"><span><strong>${esc(i.name)}</strong>
+      <small>${[i.qty ? 'x' + i.qty : '', i.notes || ''].filter(Boolean).map(esc).join(' · ') || 'Sem observações'}</small></span>
+      <span class="item-dmg">${esc(i.damage || '—')}</span></li>`).join('');
+  } else {
+    const foes = S.data.monsters.filter(m => m.campaignId === campId && m.inField).sort(byCreated);
+    body = foes.map(m => {
+      const list = rows(m); count += list.length;
+      if (!list.length) return `<li class="item-owner">${esc(m.name || 'Sem nome')}</li><li class="item-row"><span><small>Sem itens cadastrados</small></span></li>`;
+      return `<li class="item-owner">${esc(m.name || 'Sem nome')}</li>` + list.map(i => `<li class="item-row"><span><strong>${esc(i.name)}</strong>
+        <small>${[i.qty ? 'x' + i.qty : '', i.notes || ''].filter(Boolean).map(esc).join(' · ') || 'Sem observações'}</small></span>
+        <span class="item-dmg">${esc(i.damage || '—')}</span></li>`).join('');
+    }).join('');
+  }
+  return `<aside class="items-panel">
+    <h2>Itens</h2>
+    <p class="hint">${own ? 'O que ' + esc((own.name || '').split(' ')[0] || 'seu personagem') + ' leva para o combate.' : 'Ataques e equipamentos das criaturas em campo.'}</p>
+    ${body ? `<ul class="item-list">${body}</ul>` : `<p class="muted" style="font-size:13px;margin:0">${own ? 'Nenhum item na ficha ainda. Adicione em “Editar ficha”.' : 'Nenhuma criatura em campo.'}</p>`}
+  </aside>`;
+}
+function dicePanel(campId) {
+  const d = S.dice;
+  const rolls = S.data.rolls.filter(r => r.campaignId === campId).sort((a, b) => (b.at || 0) - (a.at || 0)).slice(0, 4);
+  const last = S.lastRoll;
+  const stage = last
+    ? `<div class="die landed" data-shape="d${last.sides}" id="die-face">${last.results.length > 1 ? last.results.length + 'd' + last.sides : last.results[0]}</div>
+       <div><div class="dice-total">${last.total}</div>
+         <div class="dice-detail">${last.label ? esc(last.label) + ' · ' : ''}${last.results.length}d${last.sides}${last.mod ? (last.mod > 0 ? ' +' + last.mod : ' ' + last.mod) : ''} · ${last.results.join(' + ')}</div></div>`
+    : `<div class="die" data-shape="d20">20</div><p class="dice-idle">Escolha um dado e role. Todo mundo na campanha vê o resultado.</p>`;
+  return `<aside class="dice-panel">
+    <h2>Dados</h2>
+    <div class="dice-stage" id="dice-stage">${stage}</div>
+    <div class="dice-opts">
+      <div><span class="sl">Quantidade</span><div class="stepper"><button data-action="dice-qty" data-d="-1" aria-label="Menos um dado">−</button><span class="sv">${d.qty}</span><button data-action="dice-qty" data-d="1" aria-label="Mais um dado">+</button></div></div>
+      <div><span class="sl">Modificador</span><div class="stepper"><button data-action="dice-mod" data-d="-1" aria-label="Diminuir modificador">−</button><span class="sv">${d.mod > 0 ? '+' + d.mod : d.mod}</span><button data-action="dice-mod" data-d="1" aria-label="Aumentar modificador">+</button></div></div>
+    </div>
+    <div class="dice-row">${DICE.map(n => `<button class="dice-btn" data-action="roll" data-sides="${n}" ${campId ? '' : 'disabled'}>d${n}</button>`).join('')}</div>
+    <h3 style="font-size:15px;margin-bottom:8px">Últimas 4 rolagens</h3>
+    ${rolls.length ? `<ul class="roll-log">${rolls.map(r => `<li class="roll-item ${r.user === S.user.id ? 'mine' : ''} ${S.freshRoll === r.id ? 'new' : ''}">
+        <span><span class="roll-who">${esc(r.name)}</span><span class="roll-what"> · ${r.label ? esc(r.label) + ' · ' : ''}${r.qty}d${r.sides}${r.mod ? (r.mod > 0 ? ' +' + r.mod : ' ' + r.mod) : ''} (${r.results.join(', ')})</span></span>
+        <span class="roll-total">${r.total}</span></li>`).join('')}</ul>`
+      : '<p class="muted" style="font-size:13px;margin:0">Nenhuma rolagem nesta campanha ainda.</p>'}
+  </aside>`;
+}
+function rollDice(sides, opts = {}) {
+  const campId = isMaster() ? S.gameCamp : S.playerGameCamp;
+  if (!campId || S.rolling) return;
+  const qty = clamp(num(opts.qty) || S.dice.qty, 1, 12);
+  const mod = opts.mod === undefined ? S.dice.mod : num(opts.mod);
+  const label = String(opts.label || '').trim();
+  const rnd = new Uint32Array(qty);
+  (crypto && crypto.getRandomValues) ? crypto.getRandomValues(rnd) : rnd.forEach((_, i) => { rnd[i] = Math.random() * 4294967295; });
+  const results = [...rnd].map(v => 1 + (v % sides));
+  const total = results.reduce((a, b) => a + b, 0) + mod;
+  S.rolling = true;
+  const stage = document.getElementById('dice-stage');
+  const quick = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finish = async () => {
+    S.rolling = false;
+    S.lastRoll = { sides, results, mod, total, label };
+    const id = uid();
+    S.freshRoll = id;
+    render();
+    try {
+      await store.set('rolls', id, { campaignId: campId, user: S.user.id, name: S.user.name, sides, qty, mod, results, total, label, at: Date.now() });
+      const old = S.data.rolls.filter(r => r.campaignId === campId).sort((a, b) => (b.at || 0) - (a.at || 0)).slice(8);
+      for (const o of old) store.remove('rolls', o.id).catch(() => {});
+    } catch (e) { toast('A rolagem não foi compartilhada com a mesa.', 'err'); }
+  };
+  if (quick) return finish();
+  const host = document.getElementById('splash');
+  host.innerHTML = `<div class="dice-fx"><div class="splash-inner">
+      <div class="splash-ring"></div><div class="splash-ring inner"></div>
+      <div class="die rolling" data-shape="d${sides}" id="die-face">?</div>
+      <p class="splash-txt">${label ? esc(label) + ': ' : 'Rolando '}${qty}d${sides}${mod ? (mod > 0 ? ' +' + mod : ' ' + mod) : ''}…</p>
+    </div></div>`;
+  const face = document.getElementById('die-face');
+  const spin = setInterval(() => { face.textContent = 1 + Math.floor(Math.random() * sides); }, 70);
+  setTimeout(() => {
+    clearInterval(spin);
+    const f = document.getElementById('die-face');
+    if (f) { f.className = 'die landed'; f.textContent = results.length > 1 ? results.length + 'd' + sides : results[0]; }
+    const txt = host.querySelector('.splash-txt');
+    if (txt) txt.outerHTML = `<div><div class="dice-total">${total}</div>
+      <div class="dice-detail">${label ? esc(label) + ' · ' : ''}${results.length}d${sides}${mod ? (mod > 0 ? ' +' + mod : ' ' + mod) : ''} · ${results.join(' + ')}</div></div>`;
+    host.querySelectorAll('.splash-ring').forEach(r => r.remove());
+    setTimeout(() => host.querySelector('.dice-fx')?.classList.add('out'), 1200);
+    setTimeout(() => { host.innerHTML = ''; }, 1700);
+    finish();
+  }, 900);
+}
+function fieldControls(campId) {
+  const L = labelsFor(campId);
+  const act = S.data.monsters.filter(m => m.campaignId === campId && m.inField).sort(byCreated);
+  if (!act.length) return `<div class="arena empty-arena"><p>Nenhuma criatura em campo. Ative uma no bestiário e ela entra na arena na hora.</p></div>`;
+  return `<section class="block" style="margin-top:0"><h2>Em campo</h2>
+    <div class="ctrl-list">${act.map(m => `<div class="ctrl-row ${m.dead ? 'is-dead' : ''}">
+      <span class="bst-thumb">${thumb(m)}</span>
+      <div class="ctrl-main"><strong>${esc(m.name || 'Sem nome')}</strong>
+        ${m.revealName ? '' : '<small>Os jogadores veem “Criatura desconhecida”</small>'}
+        <div class="ctrl-bars">${statBar('monsters', m, 'hp', L.hp, { adj: true })}${statBar('monsters', m, 'mana', L.mana, { adj: true })}</div>
+        <div style="margin-top:8px">${condChips('monsters', m, true)}</div></div>
+      <div class="ctrl-actions">${deathBtn('monsters', m, true)}<button class="btn sm" data-action="toggle-field" data-id="${esc(m.id)}">Tirar de campo</button></div>
+    </div>`).join('')}</div></section>`;
 }
 function gameSheet(c) {
-  const L = labelsFor(c.campaignId); const attrs = (c.attrs || []).filter(a => a.name || a.value); const edit = canEditChar(c);
-  return `<div class="game-sheet"><div class="gs-portrait" ${c.portrait ? `data-action="zoom" data-ref="${esc(c.portrait)}"` : ''}>${portraitBlock(c)}</div><div><div class="gs-title"><h2 class="gs-name">${esc(c.name || 'Sem nome')}</h2>${c.subtitle ? `<p class="cc-sub">${esc(c.subtitle)}</p>` : ''}</div><div class="gs-stats">${statBar('characters', c, 'hp', L.hp, { adj: edit, big: true })}${statBar('characters', c, 'mana', L.mana, { adj: edit, big: true })}</div>${attrs.length ? `<div class="gs-attrs">${attrs.map(a => `<div class="attr"><div class="av">${esc(String(a.value ?? '').trim() || '—')}</div><div class="an">${esc(a.name)}</div></div>`).join('')}</div>` : ''}</div></div>`;
+  const L = labelsFor(c.campaignId);
+  const attrs = (c.attrs || []).filter(a => a.name || a.value);
+  const items = (c.items || []).filter(i => i.name);
+  const gal = c.gallery || [];
+  const edit = canEditChar(c);
+  return `<div class="game-sheet">
+      <div class="gs-portrait ${c.dead ? 'is-dead' : ''}" ${c.portrait ? `data-action="zoom" data-ref="${esc(c.portrait)}"` : ''}>${portraitBlock(c)}</div>
+      <div>
+        <div class="gs-title"><h2 class="gs-name">${esc(c.name || 'Sem nome')}</h2>${c.subtitle ? `<p class="cc-sub">${esc(c.subtitle)}</p>` : ''}</div>
+        <div class="gs-stats">${statBar('characters', c, 'hp', L.hp, { adj: edit, big: true })}${statBar('characters', c, 'mana', L.mana, { adj: edit, big: true })}
+          ${c.dead ? `<p class="fc-note" style="margin:0;font-size:14px">${esc(c.name)} está fora de combate.</p>` : ''}
+          ${condChips('characters', c, edit)}
+          <div class="row">${deathBtn('characters', c, edit)}</div></div>
+        ${attrs.length ? `<div class="gs-attrs">${attrs.map(a => dieOf(a.die)
+          ? `<button class="attr rollable" data-action="roll-attr" data-sides="${dieOf(a.die).slice(1)}" data-mod="${esc(a.value)}" data-label="${esc(a.name)}" title="Rolar ${esc(a.die)} de ${esc(a.name)}">
+              ${dieChip(a.die)}<div class="av">${esc(String(a.value ?? '').trim() || '—')}</div><div class="an">${esc(a.name)}</div></button>`
+          : `<div class="attr"><div class="av">${esc(String(a.value ?? '').trim() || '—')}</div><div class="an">${esc(a.name)}</div></div>`).join('')}</div>` : ''}
+      </div>
+    </div>
+    ${items.length ? `<div class="block"><h2>Itens</h2><div class="table-wrap"><table><thead><tr><th>Item</th><th>Qtd</th><th>Dano</th><th>Observações</th></tr></thead><tbody>
+      ${items.map(i => `<tr><td>${esc(i.name)}</td><td>${esc(i.qty)}</td><td class="dmg">${esc(i.damage || '—')}</td><td>${esc(i.notes)}</td></tr>`).join('')}</tbody></table></div></div>` : ''}
+    ${gal.length ? `<div class="block"><h2>Fotos</h2><div class="gallery">${gal.map(r => `<button class="g frame" data-action="zoom" data-ref="${esc(r)}" aria-label="Ampliar imagem">${imgTag(r, '')}</button>`).join('')}</div></div>` : ''}`;
 }
 function playerGame() {
   const mine = S.data.characters.filter(c => c.owner === S.user.id).sort(byCreated);
   const head = (sub, btn) => `<div class="game-head"><div><h1 class="display">Modo Jogo</h1><p class="lede">${sub}</p></div>${btn ? `<button class="btn" data-action="fullscreen">${I.fit}Tela cheia</button>` : ''}</div>`;
-  if (!mine.length) return head('Mostre sua ficha na mesa durante a sessão.', false) + '<div class="empty"><strong>Você ainda não tem personagem</strong>Crie um na aba Fichas de uma campanha e volte aqui.</div>';
-  const sel = mine.find(c => c.id === S.gameChar) || (mine.length === 1 ? mine[0] : null); S.playerGameCamp = sel?.campaignId || null;
-  const picker = `<div class="game-picker" role="group" aria-label="Escolher personagem">${mine.map(c => { const camp = get('campaigns', c.campaignId); return `<button class="pick-char ${sel?.id === c.id ? 'on' : ''}" data-action="pick-gamechar" data-id="${esc(c.id)}" aria-pressed="${sel?.id === c.id}"><span class="pc-thumb">${thumb(c)}</span><span><strong>${esc(c.name || 'Sem nome')}</strong><small>${esc(camp?.name || '')}</small></span></button>`; }).join('')}</div>`;
+  if (!mine.length) {
+    const camps = [...S.data.campaigns].sort(byCreated);
+    if (!camps.length) {
+      S.playerGameCamp = null;
+      return head('Mostre sua ficha na mesa durante a sessão.', false) +
+        `<div class="empty"><strong>Você ainda não tem personagem</strong>Crie um na aba Fichas de uma campanha e volte aqui.<div style="margin-top:14px"><a class="btn" href="#/">Ir para a estante</a></div></div>`;
+    }
+    const camp = camps.find(c => c.id === S.gameCamp) || camps[0];
+    S.gameCamp = camp.id; S.playerGameCamp = camp.id;
+    return head('Acompanhe a arena enquanto não tem personagem nesta mesa.', true) +
+      `<div class="row" style="margin:-8px 0 20px"><label class="camp-select">Campanha<select class="inp" id="game-camp">
+        ${camps.map(c => `<option value="${esc(c.id)}" ${c.id === camp.id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></label>
+        <a class="btn sm" href="#/c/${encodeURIComponent(camp.id)}/fichas">Criar meu personagem</a></div>` +
+      arenaBoard(camp.id) +
+      `<div class="play-layout"><div class="side-col">${itemsPanel(camp.id, null)}${msgPanel(camp.id)}</div>
+        <div>${arena(camp.id, false)}</div>${dicePanel(camp.id)}</div>`;
+  }
+  let sel = mine.find(c => c.id === S.gameChar);
+  if (!sel && mine.length === 1) sel = mine[0];
+  S.playerGameCamp = sel ? sel.campaignId : null;
+  const picker = `<div class="game-picker" role="group" aria-label="Escolher personagem">${mine.map(c => {
+    const camp = get('campaigns', c.campaignId);
+    return `<button class="pick-char ${sel && sel.id === c.id ? 'on' : ''}" data-action="pick-gamechar" data-id="${esc(c.id)}" aria-pressed="${!!(sel && sel.id === c.id)}">
+      <span class="pc-thumb">${thumb(c)}</span><span><strong>${esc(c.name || 'Sem nome')}</strong><small>${esc(camp?.name || '')}</small></span></button>`;
+  }).join('')}</div>`;
   if (!sel) return head('Escolha o personagem que você vai jogar hoje.', false) + picker;
-  return head('Sua ficha pronta para a mesa. As criaturas que o mestre colocar em campo aparecem aqui na hora.', true) + (mine.length > 1 ? picker : '') + arena(sel.campaignId, false) + gameSheet(sel);
+  return head('Sua ficha pronta para a mesa. As criaturas que o mestre colocar em campo aparecem aqui na hora.', true) +
+    (mine.length > 1 ? picker : '') +
+    arenaBoard(sel.campaignId) +
+    `<div class="play-layout"><div class="side-col">${itemsPanel(sel.campaignId, sel)}${msgPanel(sel.campaignId)}</div>
+      <div>${arena(sel.campaignId, false)}${gameSheet(sel)}</div>
+      ${dicePanel(sel.campaignId)}</div>`;
 }
 function masterGame() {
-  const camps = [...S.data.campaigns].sort(byCreated); const head = extra => `<div class="game-head"><div><h1 class="display">Modo Jogo</h1><p class="lede">Coloque criaturas em campo e os jogadores veem na hora: imagem, vida e mana.</p></div>${extra || ''}</div>`;
-  if (!camps.length) return head('') + '<div class="empty"><strong>Nenhuma campanha ainda</strong>Crie uma campanha na estante para começar a jogar.</div>';
-  const camp = camps.find(c => c.id === S.gameCamp) || camps[0]; S.gameCamp = camp.id;
-  const opts = [...S.data.libraries].sort(byCreated).map(l => { const cs = camps.filter(c => c.libraryId === l.id); return cs.length ? `<optgroup label="${esc(l.name)}">${cs.map(c => `<option value="${esc(c.id)}" ${c.id === camp.id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</optgroup>` : ''; }).join('');
-  const mons = S.data.monsters.filter(m => m.campaignId === camp.id).sort(byCreated); const chars = S.data.characters.filter(c => c.campaignId === camp.id).sort(byCreated); const L = labelsFor(camp.id);
-  return head(`<label class="camp-select">Campanha<select class="inp" id="game-camp">${opts}</select></label>`) + `<div class="gm-layout"><aside class="gm-bestiary"><div class="gm-panel-head"><h2>Bestiário</h2></div>${mons.length ? mons.map(m => `<div class="bst-row ${m.inField ? 'on' : ''}"><span class="bst-thumb">${thumb(m)}</span><span class="bst-name">${esc(m.name || 'Sem nome')}<small>${esc(L.hp)} ${getStat('monsters', m, 'hp').cur}/${getStat('monsters', m, 'hp').max}</small></span><button class="field-toggle ${m.inField ? 'on' : ''}" data-action="toggle-field" data-id="${esc(m.id)}">${m.inField ? 'Ativo em campo' : 'Colocar em campo'}</button></div>`).join('') : '<p class="muted">Nenhum monstro nesta campanha.</p>'}</aside><div>${arena(camp.id, true)}<div class="block" style="margin-top:0"><h2>Grupo</h2>${chars.length ? `<div class="party">${chars.map(c => `<a class="party-card" href="#/p/${encodeURIComponent(c.id)}"><span class="bst-thumb">${thumb(c)}</span><div><strong>${esc(c.name || 'Sem nome')}</strong><small>${esc(userName(c.owner))}</small>${statBar('characters', c, 'hp', L.hp)}${statBar('characters', c, 'mana', L.mana)}</div></a>`).join('')}</div>` : '<p class="muted">Nenhum personagem nesta campanha ainda.</p>'}</div></div></div>`;
+  const camps = [...S.data.campaigns].sort(byCreated);
+  const head = extra => `<div class="game-head"><div><h1 class="display">Modo Jogo</h1><p class="lede">Coloque criaturas em campo e os jogadores veem na hora: imagem, vida e mana.</p></div>${extra || ''}</div>`;
+  if (!camps.length) return head('') + `<div class="empty"><strong>Nenhuma campanha ainda</strong>Crie uma campanha na estante para começar a jogar.<div style="margin-top:14px"><a class="btn" href="#/">Ir para a estante</a></div></div>`;
+  const camp = camps.find(c => c.id === S.gameCamp) || camps[0];
+  S.gameCamp = camp.id;
+  const libs = [...S.data.libraries].sort(byCreated);
+  const opts = libs.map(l => {
+    const cs = camps.filter(c => c.libraryId === l.id);
+    return cs.length ? `<optgroup label="${esc(l.name)}">${cs.map(c => `<option value="${esc(c.id)}" ${c.id === camp.id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</optgroup>` : '';
+  }).join('');
+  const mons = S.data.monsters.filter(m => m.campaignId === camp.id).sort(byCreated);
+  const chars = S.data.characters.filter(c => c.campaignId === camp.id).sort(byCreated);
+  const L = labelsFor(camp.id);
+  const nAct = mons.filter(m => m.inField).length;
+  const cid = encodeURIComponent(camp.id);
+  return head(`<div class="row"><label class="camp-select">Campanha<select class="inp" id="game-camp">${opts}</select></label>
+      <button class="btn" data-action="fullscreen">${I.fit}Tela cheia</button></div>`) + arenaBoard(camp.id) + `
+    <div class="gm-layout with-dice">
+      <aside class="side-col">
+        <div class="gm-bestiary"><div class="gm-panel-head"><h2>Bestiário</h2>${nAct ? `<button class="btn sm ghost" data-action="clear-field" data-camp="${esc(camp.id)}">Limpar campo</button>` : ''}</div>
+        ${mons.length ? mons.map(m => `<div class="bst-row ${m.inField ? 'on' : ''} ${m.dead ? 'is-dead' : ''}">
+            <span class="bst-thumb">${thumb(m)}</span>
+            <span class="bst-name">${m.dead ? '† ' : ''}${esc(m.name || 'Sem nome')}<small>${esc(L.hp)} ${getStat('monsters', m, 'hp').cur}/${getStat('monsters', m, 'hp').max}${m.visible ? '' : ' · fora do bestiário dos jogadores'}</small></span>
+            <button class="field-toggle ${m.inField ? 'on' : ''}" data-action="toggle-field" data-id="${esc(m.id)}" aria-pressed="${!!m.inField}">${m.inField ? 'Ativo em campo' : 'Colocar em campo'}</button>
+          </div>`).join('') : `<p class="muted" style="margin:0">Nenhum monstro nesta campanha. <a href="#/c/${cid}/monstros" style="color:var(--brass);font-weight:600">Criar monstros</a></p>`}</div>
+        ${itemsPanel(camp.id, null)}
+        ${msgPanel(camp.id)}
+      </aside>
+      <div>
+        ${fieldControls(camp.id)}
+        <div class="block" style="margin-top:0"><h2>Grupo</h2>
+          ${chars.length ? `<div class="party">${chars.map(c => `<a class="party-card ${c.dead ? 'is-dead' : ''}" href="#/p/${encodeURIComponent(c.id)}">
+              <span class="bst-thumb">${thumb(c)}</span>
+              <div><strong>${c.dead ? '† ' : ''}${esc(c.name || 'Sem nome')}</strong><small>${esc(userName(c.owner))}</small>
+                ${statBar('characters', c, 'hp', L.hp)}${statBar('characters', c, 'mana', L.mana)}
+                ${(c.conds || []).length ? `<div class="cc-conds">${condChips('characters', c, false)}</div>` : ''}</div></a>`).join('')}</div>`
+            : '<p class="muted">Nenhum personagem nesta campanha ainda.</p>'}
+        </div>
+      </div>
+      ${dicePanel(camp.id)}
+    </div>`;
+}
+function viewCampId() {
+  const r = route();
+  if (r.view === 'jogo') return isMaster() ? S.gameCamp : S.playerGameCamp;
+  if (r.view === 'c') return r.id;
+  if (r.view === 'p') return get('characters', r.id)?.campaignId || null;
+  if (r.view === 'm') return get('monsters', r.id)?.campaignId || null;
+  return null;
+}
+let fxTimers = [];
+function playFx(kind, o, known) {
+  const host = document.getElementById('fx');
+  fxTimers.forEach(clearTimeout); fxTimers = [];
+  const name = known ? esc(o.name || 'Sem nome') : 'Criatura desconhecida';
+  const art = o.portrait ? imgTag(o.portrait, '') : '<div class="initial">?</div>';
+  host.innerHTML = kind === 'boss'
+    ? `<div class="fx fx-boss" data-action="close-fx"><div class="fx-card"><div class="fx-rays"></div>
+        <div class="fx-img frame">${art}</div><p class="fx-stamp">Derrotado</p><p class="fx-name">${name}</p></div></div>`
+    : `<div class="fx fx-death" data-action="close-fx"><div class="fx-card">
+        <div class="fx-img frame">${art}</div><p class="fx-name">${name}</p><p class="fx-sub">caiu em combate</p></div></div>`;
+  hydrateImages(host);
+  fxTimers.push(setTimeout(() => host.querySelector('.fx')?.classList.add('out'), 3300));
+  fxTimers.push(setTimeout(() => { host.innerHTML = ''; }, 4100));
+}
+function closeFx() { fxTimers.forEach(clearTimeout); fxTimers = []; document.getElementById('fx').innerHTML = ''; }
+let prevDead = { characters: null, monsters: null };
+function checkDeaths(col, list) {
+  const dead = new Set(list.filter(o => o.dead).map(o => o.id));
+  const before = prevDead[col];
+  prevDead[col] = dead;
+  if (!before || !S.user) return;
+  const camp = viewCampId();
+  if (!camp) return;
+  for (const id of dead) {
+    if (before.has(id)) continue;
+    const o = list.find(x => x.id === id);
+    if (!o || o.campaignId !== camp) continue;
+    if (col === 'characters') { playFx('death', o, true); return; }
+    if (isMaster() || o.visible || (prevField && prevField.has(id))) { playFx('boss', o, isMaster() || o.revealName); return; }
+  }
+}
+let prevField = null;
+function checkField() {
+  const ids = new Set(S.data.monsters.filter(m => m.inField).map(m => m.id));
+  if (prevField && S.user && !isMaster() && route().view === 'jogo' && S.playerGameCamp) {
+    for (const id of ids) {
+      if (prevField.has(id)) continue;
+      const m = get('monsters', id);
+      if (m && m.campaignId === S.playerGameCamp) { toast(m.revealName ? `${m.name} entrou em campo!` : 'Uma criatura entrou em campo!'); break; }
+    }
+  }
+  prevField = ids;
+}
+
+/* =========================================================
+   Configurações
+   ========================================================= */
+function settingsView(tab) {
+  const t = tab === 'conta' ? 'conta' : 'tema';
+  const dark = document.documentElement.dataset.theme
+    ? document.documentElement.dataset.theme === 'dark'
+    : matchMedia('(prefers-color-scheme: dark)').matches;
+  const temaBody = `
+    <div class="section-head" style="margin-top:0"><h2>Tema</h2>
+      ${S.skin === 'padrao' ? `<button class="btn sm" data-action="theme">${I.moon}Usar modo ${dark ? 'claro' : 'escuro'}</button>` : ''}</div>
+    <div class="skins">
+      ${SKINS.map(k => `<button class="skin-card ${S.skin === k.id ? 'on' : ''}" data-action="set-skin" data-id="${k.id}" aria-pressed="${S.skin === k.id}">
+        <span class="skin-swatch" aria-hidden="true">${k.cols.map(c => `<span style="background:${c}"></span>`).join('')}</span>
+        <span class="skin-name">${esc(k.name)}${S.skin === k.id ? '<span class="skin-on">Em uso</span>' : ''}</span>
+        <span class="skin-desc">${esc(k.desc)}</span></button>`).join('')}
+    </div>
+    <p class="cfg-note">O tema vale para tudo: estante, campanhas, fichas, mapa e Modo Jogo. A escolha é sua e fica salva neste navegador, então cada pessoa da mesa pode usar o tema que quiser.</p>`;
+  const contaBody = `
+    <div class="section-head" style="margin-top:0"><h2>Conta</h2></div>
+    <div class="cfg-box"><dl>
+      <dt>Usuário</dt><dd>${esc(S.user.name)}</dd>
+      <dt>Papel</dt><dd>${isMaster() ? 'Mestre' : 'Jogador'}</dd>
+      <dt>Dados</dt><dd>${S.mode === 'local' ? 'Modo local, só neste navegador' : 'Compartilhados com a mesa'}</dd>
+    </dl>
+    <p class="cfg-note">${isMaster()
+      ? 'Como mestre, você cria livros, campanhas, monstros e mapas, e edita qualquer ficha.'
+      : 'Como jogador, você cria e edita só os seus personagens. O resto você vê, mas não altera.'}</p>
+    <div class="row" style="margin-top:16px"><button class="btn danger" data-action="logout">Sair da conta</button></div></div>`;
+  return {
+    html: `<section>
+      <div class="page-head"><div><h1 class="display">Configurações</h1><p class="lede">Ajuste a aparência do Grimório do seu jeito.</p></div></div>
+      <nav class="tabs" role="tablist">
+        <a class="tab ${t === 'tema' ? 'on' : ''}" href="#/config/tema" role="tab" aria-selected="${t === 'tema'}">Tema</a>
+        <a class="tab ${t === 'conta' ? 'on' : ''}" href="#/config/conta" role="tab" aria-selected="${t === 'conta'}">Conta</a>
+      </nav>
+      ${t === 'tema' ? temaBody : contaBody}
+    </section>`,
+    crumbs: null
+  };
 }
 
 /* =========================================================
@@ -1192,10 +2491,24 @@ function renderModal(first) {
   else if (m.type === 'map') html = mapEditor(m);
   else if (m.type === 'wp-edit') html = wpEditor(m);
   else if (m.type === 'wp-view') html = wpViewer(m);
+  else if (m.type === 'conds') html = condsEditor(m);
+  else if (m.type === 'msg') html = msgEditor(m);
   $('#overlay').innerHTML = `<div class="scrim" data-scrim="overlay">${html}</div>`;
   hydrateImages($('#overlay'));
   const ns = $('#overlay .modal-scroll'); if (ns) ns.scrollTop = top;
   if (first) setTimeout(() => { const f = $('#overlay [data-autofocus]') || $('#overlay .modal-scroll input, #overlay .modal-scroll textarea') || $('#overlay [data-action="close"]'); f?.focus(); });
+}
+function condsEditor(m) {
+  const o = get(m.col, m.id);
+  if (!o) return modalFrame('Ficha removida', '<p class="muted">Esta ficha não existe mais.</p>', '<button class="btn" data-action="close">Fechar</button>', 'small');
+  const on = new Set(o.conds || []);
+  return modalFrame('Condições de ' + (o.name || 'ficha'), `
+    <p class="hint muted" style="margin:0 0 14px;font-size:13px">Toque para marcar ou desmarcar. Todo mundo na mesa vê as condições.</p>
+    <div class="cond-pick">${CONDITIONS.map(([id, name, color]) => `<button class="cond-opt ${on.has(id) ? 'on' : ''}" style="--cc:${color}"
+      data-action="cond-toggle" data-col="${m.col}" data-id="${esc(m.id)}" data-c="${id}" aria-pressed="${on.has(id)}">
+      <span class="dot"></span>${esc(name)}</button>`).join('')}</div>`,
+    `${on.size ? `<button class="btn ghost" data-action="cond-clear" data-col="${m.col}" data-id="${esc(m.id)}">Limpar todas</button><span class="spacer"></span>` : ''}
+     <button class="btn primary" data-action="close">Pronto</button>`, 'wide');
 }
 function modalFrame(title, body, footer, cls = '') {
   return `<div class="modal ${cls}" role="dialog" aria-modal="true" aria-label="${esc(title)}">
@@ -1227,10 +2540,11 @@ function cleanupRefs(m, newRefs) {
 /* ---- ficha (personagem e monstro) ---- */
 function newSheet(campId, kind) {
   const camp = get('campaigns', campId); const lib = camp && get('libraries', camp.libraryId);
-  const attrs = (lib?.defaultAttrs || []).filter(Boolean).map(n => ({ id: uid(), name: n, value: '' }));
+  const attrs = libAttrs(lib).map(a => ({ id: uid(), name: a.name, value: '', die: a.die }));
   const d = { campaignId: campId, name: '', subtitle: '', portrait: null, hp: { cur: 10, max: 10 }, mana: { cur: 5, max: 5 },
-    attrs: attrs.length ? attrs : [{ id: uid(), name: '', value: '' }], items: [], sections: [], gallery: [], notes: '' };
-  if (kind === 'monster') { d.visible = false; d.revealName = false; } else d.owner = S.user.id;
+    attrs: attrs.length ? attrs : [{ id: uid(), name: '', value: '', die: '' }], items: [], sections: [], gallery: [], notes: '' };
+  d.dead = false; d.conds = [];
+  if (kind === 'monster') { d.visible = false; d.revealName = false; d.inField = false; } else d.owner = S.user.id;
   return d;
 }
 function sheetEditor(m) {
@@ -1252,9 +2566,11 @@ function sheetEditor(m) {
       <div class="two"><label class="f">${esc(L.hp)} atual<input class="inp" type="number" data-bind="hp.cur" data-num value="${esc(d.hp.cur)}"></label><label class="f">${esc(L.hp)} máxima<input class="inp" type="number" data-bind="hp.max" data-num value="${esc(d.hp.max)}"></label></div>
       <div class="two"><label class="f">${esc(L.mana)} atual<input class="inp" type="number" data-bind="mana.cur" data-num value="${esc(d.mana.cur)}"></label><label class="f">${esc(L.mana)} máxima<input class="inp" type="number" data-bind="mana.max" data-num value="${esc(d.mana.max)}"></label></div>
     </div>
-    <div class="ed-sec"><h3>Atributos</h3><p class="hint">Crie quantos quiser: força, sanidade, agilidade, o que o sistema pedir.</p>
+    <div class="ed-sec"><h3>Atributos</h3><p class="hint">Crie quantos quiser: força, sanidade, agilidade, o que o sistema pedir. O dado escolhido é o que será rolado no Modo Jogo.</p>
       <div class="lines">${d.attrs.length ? `<div class="line attr-l line-head"><span>Nome</span><span>Valor</span><span></span></div>` : ''}
-      ${d.attrs.map((a, i) => `<div class="line attr-l"><input class="inp" data-bind="attrs.${i}.name" value="${esc(a.name)}" placeholder="Ex.: Força" aria-label="Nome do atributo"><input class="inp" data-bind="attrs.${i}.value" value="${esc(a.value)}" placeholder="Ex.: 14" aria-label="Valor"><button class="x" data-action="rm-row" data-list="attrs" data-i="${i}" aria-label="Remover atributo">${I.x}</button></div>`).join('')}</div>
+      ${d.attrs.map((a, i) => `<div class="attr-edit">
+        <div class="line attr-l"><input class="inp" data-bind="attrs.${i}.name" value="${esc(a.name)}" placeholder="Ex.: Força" aria-label="Nome do atributo"><input class="inp" data-bind="attrs.${i}.value" value="${esc(a.value)}" placeholder="Ex.: 14" aria-label="Valor"><button class="x" data-action="rm-row" data-list="attrs" data-i="${i}" aria-label="Remover atributo">${I.x}</button></div>
+        ${diePicker(a.die, 'sheet-die', i, a.name)}</div>`).join('')}</div>
       <button class="btn sm add-line" data-action="add-row" data-list="attrs">${I.plus}Adicionar atributo</button>
     </div>
     <div class="ed-sec"><h3>Itens</h3><p class="hint">Armas, equipamentos e objetos. O dano pode ser um valor ou uma rolagem, como 1d8+2.</p>
@@ -1269,7 +2585,7 @@ function sheetEditor(m) {
       <button class="btn sm" data-action="add-row" data-list="sections">${I.plus}Nova seção</button>
     </div>
     <div class="ed-sec"><h3>Galeria</h3><p class="hint">${mon ? 'Imagens extras da criatura. Só você vê.' : 'Imagens do personagem que todos da mesa podem ver.'}</p>
-      <div class="thumbs">${d.gallery.map((r, i) => `<div class="thumb">${imgTag(r, '')}<button class="x" data-action="rm-row" data-list="gallery" data-i="${i}" aria-label="Remover imagem">${I.x}</button></div>`).join('')}
+      <div class="thumbs">${d.gallery.map((r, i) => `<div class="thumb frame">${imgTag(r, '')}<button class="x" data-action="rm-row" data-list="gallery" data-i="${i}" aria-label="Remover imagem">${I.x}</button></div>`).join('')}
         <button class="thumb add" data-action="add-gallery">${I.plus}</button></div>${busyNote(m)}
     </div>
     <div class="ed-sec"><h3>Anotações</h3><textarea class="inp" data-bind="notes" rows="5" placeholder="${mon ? 'Comportamento, fraquezas, táticas…' : 'História, aparência, ligações…'}">${esc(d.notes)}</textarea></div>`;
@@ -1280,7 +2596,7 @@ async function saveSheet(m) {
   if (!d.name.trim()) { toast('Dê um nome antes de salvar.', 'err'); $('#overlay [data-bind="name"]')?.focus(); return; }
   d.name = d.name.trim();
   d.hp = { cur: num(d.hp.cur), max: num(d.hp.max) }; d.mana = { cur: num(d.mana.cur), max: num(d.mana.max) };
-  d.attrs = d.attrs.filter(a => String(a.name).trim() || String(a.value).trim());
+  d.attrs = d.attrs.filter(a => String(a.name).trim() || String(a.value).trim()).map(a => ({ ...a, die: dieOf(a.die) }));
   d.items = d.items.filter(i => String(i.name).trim());
   d.sections = d.sections.filter(s => String(s.title).trim() || s.fields.length).map(s => ({ ...s, fields: s.fields.filter(f => String(f.label).trim() || String(f.value).trim()) }));
   const id = m.id || uid(); const now = Date.now();
@@ -1305,7 +2621,13 @@ function libraryEditor(m) {
       <div class="swatches">${LIB_COLORS.map(([c, n]) => `<button class="sw ${d.color === c ? 'on' : ''}" style="--c:${c}" data-action="set-color" data-c="${c}" aria-label="${n}" title="${n}"></button>`).join('')}</div></div>
     <div class="two"><label class="f">Nome da barra de vida<input class="inp" data-bind="hpLabel" value="${esc(d.hpLabel)}" placeholder="Vida"><small>Ex.: PV, Pontos de Vida</small></label>
       <label class="f">Nome da barra de mana<input class="inp" data-bind="manaLabel" value="${esc(d.manaLabel)}" placeholder="Mana"><small>Ex.: PE, Sanidade, Magia</small></label></div>
-    <label class="f">Atributos iniciais das fichas<input class="inp" data-bind="attrsText" value="${esc(d.attrsText)}" placeholder="Ex.: FOR, CON, DES, INT, POD"><small>Separe por vírgula. Toda ficha nova deste livro já começa com eles.</small></label>`,
+    <div class="ed-sec" style="margin-bottom:0"><h3>Atributos iniciais das fichas</h3>
+      <p class="hint">Toda ficha nova deste livro já começa com eles. Escolha o dado que mede cada atributo: ele aparece na ficha e é o dado rolado no Modo Jogo.</p>
+      ${d.attrs.map((a, i) => `<div class="attr-edit">
+        <div class="line attr-l"><input class="inp" data-bind="attrs.${i}.name" value="${esc(a.name)}" placeholder="Ex.: Agilidade" aria-label="Nome do atributo">
+          <span></span><button class="x" data-action="rm-row" data-list="attrs" data-i="${i}" aria-label="Remover atributo">${I.x}</button></div>
+        ${diePicker(a.die, 'lib-die', i, a.name)}</div>`).join('')}
+      <button class="btn sm add-line" data-action="add-lib-attr">${I.plus}Adicionar atributo</button></div>`,
     saveBtns(m, m.isNew ? 'Criar livro' : 'Salvar'));
 }
 async function saveLibrary(m) {
@@ -1313,7 +2635,8 @@ async function saveLibrary(m) {
   if (!d.name.trim()) { toast('Dê um nome ao livro.', 'err'); return; }
   const id = m.id || uid(); const prev = m.id ? get('libraries', id) : null;
   const doc = { name: d.name.trim(), description: d.description.trim(), color: d.color, hpLabel: d.hpLabel.trim(), manaLabel: d.manaLabel.trim(),
-    defaultAttrs: d.attrsText.split(',').map(s => s.trim()).filter(Boolean), createdAt: prev?.createdAt || Date.now(), updatedAt: Date.now() };
+    defaultAttrs: d.attrs.map(a => ({ name: String(a.name || '').trim(), die: dieOf(a.die) })).filter(a => a.name),
+    createdAt: prev?.createdAt || Date.now(), updatedAt: Date.now() };
   try { await store.set('libraries', id, doc); closeModal(true); toast(m.isNew ? 'Livro colocado na estante.' : 'Livro salvo.'); if (m.isNew) go('#/b/' + encodeURIComponent(id)); }
   catch (e) { toast('Não foi possível salvar o livro.', 'err'); }
 }
@@ -1369,7 +2692,7 @@ function wpEditor(m) {
     <div style="font-size:14px;font-weight:500;margin-bottom:8px">Cor do marcador</div>
     <div class="swatches" style="margin-bottom:18px">${PIN_COLORS.map(c => `<button class="sw round ${d.color === c ? 'on' : ''}" style="--c:${c}" data-action="set-color" data-c="${c}" aria-label="Cor ${c}"></button>`).join('')}</div>
     <div style="font-size:14px;font-weight:500;margin-bottom:8px">Imagens do local</div>
-    <div class="thumbs">${d.images.map((r, i) => `<div class="thumb">${imgTag(r, '')}<button class="x" data-action="rm-row" data-list="images" data-i="${i}" aria-label="Remover imagem">${I.x}</button></div>`).join('')}
+    <div class="thumbs">${d.images.map((r, i) => `<div class="thumb frame">${imgTag(r, '')}<button class="x" data-action="rm-row" data-list="images" data-i="${i}" aria-label="Remover imagem">${I.x}</button></div>`).join('')}
       <button class="thumb add" data-action="add-wpimg">${I.plus}</button></div>${busyNote(m)}`,
     `${!m.isNew ? `<button class="btn danger" data-action="del-wp">${I.trash}Excluir ponto</button><span class="spacer"></span>` : ''}${saveBtns(m, m.isNew ? 'Criar ponto' : 'Salvar ponto')}`);
 }
@@ -1387,7 +2710,7 @@ function wpViewer(m) {
   const imgs = w.images || [];
   return modalFrame(w.title || 'Local', `
     ${w.description ? `<p class="wp-desc">${esc(w.description)}</p>` : ''}
-    ${imgs.length ? `<div class="gallery">${imgs.map(r => `<button class="g" data-action="zoom" data-ref="${esc(r)}" aria-label="Ampliar imagem">${imgTag(r, '')}</button>`).join('')}</div>` : '<p class="muted">Nenhuma imagem deste local ainda.</p>'}`,
+    ${imgs.length ? `<div class="gallery">${imgs.map(r => `<button class="g frame" data-action="zoom" data-ref="${esc(r)}" aria-label="Ampliar imagem">${imgTag(r, '')}</button>`).join('')}</div>` : '<p class="muted">Nenhuma imagem deste local ainda.</p>'}`,
     isMaster() ? `<button class="btn" data-action="close">Fechar</button><button class="btn primary" data-action="edit-wp">${I.edit}Editar ponto</button>` : '<button class="btn" data-action="close">Fechar</button>', 'wide');
 }
 
@@ -1434,11 +2757,18 @@ document.addEventListener('input', e => {
   if (t.dataset.num !== undefined) v = t.value === '' ? '' : num(t.value);
   setPath(m.draft, t.dataset.bind, v);
 });
-document.addEventListener('change', e => {
-  if (e.target.id === 'game-camp') { S.gameCamp = e.target.value; ls('grimorio-gamecamp', S.gameCamp); render(); }
+document.addEventListener('change', async e => {
+  if (e.target.id === 'game-camp') { S.gameCamp = e.target.value; ls('grimorio-gamecamp', S.gameCamp); S.token = null; render(); }
+  if (e.target.id === 'arena-scene') {
+    const camp = get('campaigns', isMaster() ? S.gameCamp : S.playerGameCamp);
+    if (camp) { try { await store.update('campaigns', camp.id, { scene: e.target.value }); } catch (err) { toast('Não foi possível trocar o cenário.', 'err'); } }
+  }
 });
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
+  if (document.getElementById('splash').querySelector('.post')) { closePost(); render(); return; }
+  if (S.token) { S.token = null; render(); return; }
+  if (document.getElementById('fx').innerHTML) return closeFx();
   if ($('#lightbox').innerHTML) return closeLightbox();
   if ($('#confirm').innerHTML) return endConfirm(false);
   if (S.modal && !S.modal.busy) closeModal();
@@ -1455,7 +2785,12 @@ document.addEventListener('click', async e => {
   const a = el.dataset.action; const m = S.modal; const ds = el.dataset;
   switch (a) {
     case 'pick-user': $('#lu').value = ds.u; $('#lerr').classList.add('hidden'); $('#lp').value = ''; $('#lp').focus(); break;
-    case 'logout': closeModal(); S.user = null; ls('grimorio-user', null); S.mapEdit = false; location.hash = ''; $('#app').innerHTML = ''; render(); break;
+    case 'logout': closeModal(); applySkin(null); S.user = null; ls('grimorio-user', null); S.mapEdit = false; location.hash = ''; $('#app').innerHTML = ''; render(); break;
+    case 'set-skin': {
+      applySkin(ds.id); ls('grimorio-skin-' + S.user.id, S.skin); render();
+      toast('Tema ' + (SKINS.find(k => k.id === S.skin)?.name || '') + ' aplicado.');
+      break;
+    }
     case 'theme': {
       const root = document.documentElement;
       const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
@@ -1467,6 +2802,105 @@ document.addEventListener('click', async e => {
     case 'confirm-yes': endConfirm(true); break;
     case 'confirm-no': endConfirm(false); break;
     case 'adj': adjust(ds.col, ds.id, ds.stat, num(ds.d)); break;
+    case 'dice-qty': S.dice.qty = clamp(S.dice.qty + num(ds.d), 1, 12); render(); break;
+    case 'dice-mod': S.dice.mod = clamp(S.dice.mod + num(ds.d), -20, 20); render(); break;
+    case 'roll': rollDice(num(ds.sides)); break;
+    case 'roll-attr': rollDice(num(ds.sides), { qty: 1, mod: num(ds.mod), label: ds.label }); break;
+    case 'add-lib-attr': if (m) { m.draft.attrs.push({ id: uid(), name: '', die: '' }); renderModal();
+      const inp = $('#overlay').querySelectorAll('[data-bind^="attrs."]'); inp[inp.length - 1]?.focus(); } break;
+    case 'lib-die': if (m) { m.draft.attrs[num(ds.i)].die = dieOf(ds.die); renderModal(); } break;
+    case 'sheet-die': if (m) { m.draft.attrs[num(ds.i)].die = dieOf(ds.die); renderModal(); } break;
+    case 'pick-token': {
+      const o = get(ds.col, ds.id); if (!o) break;
+      if (ds.col === 'monsters' ? !isMaster() : !canEditChar(o)) break;
+      S.token = (S.token && S.token.id === ds.id) ? null : { col: ds.col, id: ds.id };
+      render(); break;
+    }
+    case 'move-token': {
+      const t = S.token; if (!t) break;
+      S.token = null;
+      try { await store.update(t.col, t.id, { pos: num(ds.n) }); } catch (err) { toast('Não foi possível mover o token.', 'err'); }
+      render(); break;
+    }
+    case 'arena-size': {
+      const camp = get('campaigns', ds.camp); if (!camp || !isMaster()) break;
+      const g = gridOf(camp); const d = num(ds.d);
+      let cols = g.cols, rows = g.rows;
+      if (d > 0) { if (cols <= rows * 1.6 && cols < COLS_MAX) cols++; else if (rows < ROWS_MAX) rows++; else if (cols < COLS_MAX) cols++; }
+      else { if (rows > cols / 1.6 && rows > ROWS_MIN) rows--; else if (cols > COLS_MIN) cols--; else if (rows > ROWS_MIN) rows--; }
+      if (cols === g.cols && rows === g.rows) break;
+      S.token = null;
+      try { await store.update('campaigns', camp.id, { cols, rows }); toast(cols * rows + ' pontos no campo.'); }
+      catch (err) { toast('Não foi possível mudar o tamanho do campo.', 'err'); }
+      break;
+    }
+    case 'reset-arena': {
+      const ids = [...S.data.characters.filter(c => c.campaignId === ds.camp), ...S.data.monsters.filter(m => m.campaignId === ds.camp)];
+      S.token = null;
+      try { for (const o of ids) if (Number.isInteger(o.pos)) await store.update(S.data.characters.includes(o) ? 'characters' : 'monsters', o.id, { pos: null }); toast('Tokens reorganizados.'); }
+      catch (err) { toast('Não foi possível reorganizar.', 'err'); }
+      break;
+    }
+    case 'new-msg': openModal({ type: 'msg', draft: { campaignId: ds.camp, to: isMaster() ? 'all' : 'mestre', kind: 'mensagem', text: '', image: null }, orig: [] }); break;
+    case 'msg-kind': if (m) { m.draft.kind = ds.k; renderModal(); } break;
+    case 'pick-msgimg': { const f = await pickFiles(false); uploadInto(f, 'photo', r => { S.modal.draft.image = r; }); break; }
+    case 'rm-msgimg': if (m) { m.draft.image = null; renderModal(); } break;
+    case 'open-msg': { const msg = get('messages', ds.id); if (msg) showPost(msg); render(); break; }
+    case 'close-post': if (e.target.closest('[data-stop]') && !e.target.closest('[data-action="close-post"]')) break; closePost(); render(); break;
+    case 'open-conds': {
+      const o = get(ds.col, ds.id); if (!o) break;
+      if (ds.col === 'monsters' ? !isMaster() : !canEditChar(o)) break;
+      openModal({ type: 'conds', col: ds.col, id: ds.id, draft: {} });
+      break;
+    }
+    case 'cond-toggle': case 'cond-off': case 'cond-clear': {
+      const o = get(ds.col, ds.id); if (!o) break;
+      if (ds.col === 'monsters' ? !isMaster() : !canEditChar(o)) break;
+      let conds = [...(o.conds || [])];
+      if (a === 'cond-clear') conds = [];
+      else if (a === 'cond-off') conds = conds.filter(x => x !== ds.c);
+      else conds = conds.includes(ds.c) ? conds.filter(x => x !== ds.c) : [...conds, ds.c];
+      try { await store.update(ds.col, ds.id, { conds }); if (S.modal && S.modal.type === 'conds') renderModal(); }
+      catch (err) { toast('Não foi possível salvar a condição.', 'err'); }
+      break;
+    }
+    case 'mark-dead': {
+      const col = ds.col, o = get(col, ds.id); if (!o) break;
+      if (col === 'characters' && !canEditChar(o)) break;
+      if (col === 'monsters' && !isMaster()) break;
+      try {
+        await store.update(col, ds.id, col === 'monsters' ? { dead: true, inField: false } : { dead: true });
+        toast(col === 'monsters' ? 'Criatura derrotada e fora de campo.' : 'Personagem marcado como morto.');
+      } catch (err) { toast('Não foi possível salvar.', 'err'); }
+      break;
+    }
+    case 'revive': {
+      const col = ds.col, o = get(col, ds.id); if (!o) break;
+      if (col === 'characters' && !canEditChar(o)) break;
+      if (col === 'monsters' && !isMaster()) break;
+      try { await store.update(col, ds.id, { dead: false }); toast(col === 'monsters' ? 'Criatura de volta ao bestiário.' : 'Personagem de volta ao jogo.'); }
+      catch (err) { toast('Não foi possível salvar.', 'err'); }
+      break;
+    }
+    case 'close-fx': closeFx(); break;
+    case 'toggle-field': {
+      const mo = get('monsters', ds.id); if (!mo) break;
+      try { await store.update('monsters', mo.id, { inField: !mo.inField }); toast(!mo.inField ? 'Em campo: os jogadores já estão vendo.' : 'Criatura saiu de campo.'); }
+      catch (err) { toast('Não foi possível atualizar o campo.', 'err'); }
+      break;
+    }
+    case 'clear-field': {
+      const act = S.data.monsters.filter(x => x.campaignId === ds.camp && x.inField);
+      try { for (const x of act) await store.update('monsters', x.id, { inField: false }); toast('Campo limpo.'); }
+      catch (err) { toast('Não foi possível limpar o campo.', 'err'); }
+      break;
+    }
+    case 'pick-gamechar': S.gameChar = ds.id; ls('grimorio-gamechar-' + S.user.id, ds.id); render(); window.scrollTo(0, 0); break;
+    case 'play-char': S.gameChar = ds.id; ls('grimorio-gamechar-' + S.user.id, ds.id); go('#/jogo'); break;
+    case 'fullscreen':
+      try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); }
+      catch (err) { toast('O navegador não liberou a tela cheia aqui. Tente a tecla F11.', 'err'); }
+      break;
     case 'toggle-vis': {
       const mo = get('monsters', ds.id); if (!mo) break;
       try { await store.update('monsters', mo.id, { visible: !mo.visible }); toast(!mo.visible ? 'Agora os jogadores veem esta criatura.' : 'Criatura oculta dos jogadores.'); }
@@ -1475,9 +2909,9 @@ document.addEventListener('click', async e => {
     }
 
     /* biblioteca */
-    case 'new-library': openModal({ type: 'library', isNew: true, draft: { name: '', description: '', color: LIB_COLORS[S.data.libraries.length % LIB_COLORS.length][0], hpLabel: '', manaLabel: '', attrsText: '' } }); break;
+    case 'new-library': openModal({ type: 'library', isNew: true, draft: { name: '', description: '', color: LIB_COLORS[S.data.libraries.length % LIB_COLORS.length][0], hpLabel: '', manaLabel: '', attrs: [{ id: uid(), name: '', die: '' }] } }); break;
     case 'edit-library': { const l = get('libraries', ds.id); if (!l) break;
-      openModal({ type: 'library', id: l.id, draft: { name: l.name || '', description: l.description || '', color: l.color || LIB_COLORS[0][0], hpLabel: l.hpLabel || '', manaLabel: l.manaLabel || '', attrsText: (l.defaultAttrs || []).join(', ') } }); break; }
+      openModal({ type: 'library', id: l.id, draft: { name: l.name || '', description: l.description || '', color: l.color || LIB_COLORS[0][0], hpLabel: l.hpLabel || '', manaLabel: l.manaLabel || '', attrs: libAttrs(l).map(a => ({ id: uid(), ...a })) } }); break; }
     case 'del-library': { const l = get('libraries', ds.id); if (!l) break;
       const camps = S.data.campaigns.filter(c => c.libraryId === l.id);
       if (!await confirmDialog('Excluir livro?', `“${l.name}” e ${camps.length ? `suas ${camps.length} campanha(s), com todas as fichas, monstros e mapas,` : 'tudo que estiver nele'} serão apagados para todos. Não dá para desfazer.`, 'Excluir livro')) break;
@@ -1518,7 +2952,7 @@ document.addEventListener('click', async e => {
     case 'add-gallery': { const f = await pickFiles(true); uploadInto(f, 'photo', r => { S.modal.draft.gallery.push(r); }); break; }
     case 'add-row': if (m) {
       const L = ds.list;
-      if (L === 'attrs') m.draft.attrs.push({ id: uid(), name: '', value: '' });
+      if (L === 'attrs') m.draft.attrs.push({ id: uid(), name: '', value: '', die: '' });
       if (L === 'items') m.draft.items.push({ id: uid(), name: '', qty: '1', damage: '', notes: '' });
       if (L === 'sections') m.draft.sections.push({ id: uid(), title: '', fields: [{ id: uid(), label: '', value: '' }] });
       renderModal();
@@ -1539,7 +2973,16 @@ document.addEventListener('click', async e => {
       if (!await confirmDialog('Excluir mapa?', `“${mp.name}” e todos os pontos dele serão apagados para todos.`, 'Excluir mapa')) break;
       closeModal(); try { await removeMap(mp); S.mapId = null; toast('Mapa excluído.'); } catch (err) { toast('Não foi possível excluir o mapa.', 'err'); } break; }
     case 'pick-map': S.mapId = ds.id; S.mapView = { s: 1, x: 0, y: 0 }; S.mapFitted = false; S.mapEdit = false; render(); break;
-    case 'map-edit': S.mapEdit = !S.mapEdit; render(); break;
+    case 'map-edit': S.mapEdit = !S.mapEdit; if (S.mapEdit) S.fogMode = false; render(); break;
+    case 'fog-mode': S.fogMode = !S.fogMode; if (S.fogMode) { S.mapEdit = false; S.fogBrush = S.fogBrush || 'hide'; } render(); break;
+    case 'fog-brush': S.fogBrush = ds.b; render(); break;
+    case 'fog-all': {
+      const map = get('maps', ds.id); if (!map || !isMaster()) break;
+      S.fogDraft = null;
+      try { await store.update('maps', map.id, { fog: (ds.v === '1' ? '1' : '0').repeat(FOG_N) }); toast(ds.v === '1' ? 'Mapa coberto pela névoa.' : 'Mapa todo revelado.'); }
+      catch (err) { toast('Não foi possível salvar a névoa.', 'err'); }
+      break;
+    }
     case 'map-labels': S.mapLabels = !S.mapLabels; render(); break;
     case 'zoom-map': S.mapZoom && S.mapZoom(ds.z); break;
     case 'open-wp': openWaypoint(ds.id); break;
@@ -1556,7 +2999,8 @@ document.addEventListener('click', async e => {
     case 'save-modal':
       if (!m || m.busy) break;
       el.disabled = true;
-      if (m.type === 'sheet') await saveSheet(m);
+      if (m.type === 'msg') await sendMsg(m);
+      else if (m.type === 'sheet') await saveSheet(m);
       else if (m.type === 'library') await saveLibrary(m);
       else if (m.type === 'campaign') await saveCampaign(m);
       else if (m.type === 'map') await saveMap(m);
@@ -1572,39 +3016,39 @@ document.addEventListener('click', async e => {
 (function init() {
   const t = ls('grimorio-theme'); if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t;
   const saved = ls('grimorio-user'); S.user = USERS.find(u => u.id === saved) || null;
-  if (S.user) S.gameChar = ls('grimorio-gamechar-' + S.user.id);
+  if (S.user) { S.gameChar = ls('grimorio-gamechar-' + S.user.id); applySkin(ls('grimorio-skin-' + S.user.id)); }
   S.gameCamp = ls('grimorio-gamecamp');
   render();
   boot();
 })();
 async function boot() {
   let db = null;
-  try {
-    if (window.supabase && SUPABASE_CONFIG.url && SUPABASE_CONFIG.anonKey) {
-      db = makeSupabaseStore(window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey));
-    }
-  } catch (e) { db = null; }
+  try { if (window.claude && typeof window.claude.use === 'function') db = await window.claude.use('db'); } catch (e) { db = null; }
   if (db) {
-    store = db; S.mode = 'online';
+    store = makeDbStore(db); S.mode = 'online';
+    window.claude.use('assets').then(a => { S.assets = a || null; }).catch(() => {});
   } else {
     store = makeLocalStore(); S.mode = 'local';
   }
   const pending = new Set(COLS);
+  // trava de segurança: se alguma coleção não responder, a tela abre assim mesmo
+  const readyT = setTimeout(() => { if (!S.ready) { S.ready = true; scheduleRender(); } }, 2500);
+  const markReady = () => { if (!pending.size) { S.ready = true; clearTimeout(readyT); } };
   COLS.forEach(c => {
-    store.watch(c, list => {
-      S.data[c] = list; pending.delete(c);
-      if (!pending.size) S.ready = true;
-      if (S.ready) {
+    try {
+      store.watch(c, list => {
+        S.data[c] = list; pending.delete(c);
+        if (c === 'characters' || c === 'monsters') checkDeaths(c, list);
+        if (c === 'messages') checkMessages(list);
+        if (c === 'monsters') checkField();
+        markReady();
         scheduleRender();
-        if (S.modal && S.modal.type === 'wp-view') renderModal();
-      }
-    }, err => {
-      pending.delete(c); if (!pending.size) S.ready = true; scheduleRender();
-      if (err && err.code !== 'revoked') {
-        const detail = err.message || err.code || 'erro desconhecido';
-        toast('Supabase: ' + detail, 'err');
-      }
-    });
+        if (S.ready && S.modal && (S.modal.type === 'wp-view' || S.modal.type === 'conds')) renderModal();
+      }, err => {
+        pending.delete(c); markReady(); scheduleRender();
+        if (err && err.code !== 'revoked') toast('A conexão com os dados da mesa caiu. Recarregue a página.', 'err');
+      });
+    } catch (e) { pending.delete(c); markReady(); scheduleRender(); }
   });
 }
 </script>
