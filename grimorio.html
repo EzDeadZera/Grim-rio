@@ -1646,7 +1646,7 @@ function sheetBody(o) {
   const secs = (o.sections || []).filter(s => s.title || (s.fields || []).length);
   const gal = o.gallery || [];
   let h = '';
-  h += `<div class="block"><h2>Atributos</h2>${attrs.length ? `<div class="attrs">${attrs.map(a => `<div class="attr">${dieChip(a.die)}<div class="av">${esc(String(a.value ?? '').trim() || '—')}</div><div class="an">${esc(a.name)}</div></div>`).join('')}</div>` : '<p class="muted">Nenhum atributo.</p>'}</div>`;
+  h += `<div class="block"><h2>Atributos</h2>${attrs.length ? `<div class="attrs">${attrs.map(a => `<div class="attr">${dieChip(attrDie(o, a))}<div class="av">${esc(String(a.value ?? '').trim() || '—')}</div><div class="an">${esc(a.name)}</div></div>`).join('')}</div>` : '<p class="muted">Nenhum atributo.</p>'}</div>`;
   h += `<div class="block"><h2>Itens</h2>${items.length ? `<div class="table-wrap"><table><thead><tr><th>Item</th><th>Qtd</th><th>Dano</th><th>Observações</th></tr></thead><tbody>
     ${items.map(i => `<tr><td>${esc(i.name)}</td><td>${esc(i.qty)}</td><td class="dmg">${esc(i.damage || '—')}</td><td>${esc(i.notes)}</td></tr>`).join('')}</tbody></table></div>` : '<p class="muted">Nenhum item.</p>'}</div>`;
   secs.forEach(s => {
@@ -2041,6 +2041,18 @@ function libAttrs(lib) {
     ? { name: a.trim(), die: '' }
     : { name: String(a?.name || '').trim(), die: dieOf(a?.die) }).filter(a => a.name);
 }
+function libOfSheet(o) {
+  const camp = get('campaigns', o?.campaignId);
+  return camp ? get('libraries', camp.libraryId) : null;
+}
+const sameName = (a, b) => String(a || '').trim().toLowerCase() === String(b || '').trim().toLowerCase();
+// fichas antigas não gravaram o dado: busca o da biblioteca pelo nome do atributo
+function attrDie(o, a) {
+  const own = dieOf(a?.die);
+  if (own) return own;
+  const m = libAttrs(libOfSheet(o)).find(x => sameName(x.name, a?.name));
+  return m ? m.die : '';
+}
 function dieChip(die, sm) {
   const d = dieOf(die);
   return d ? `<span class="die-chip ${sm ? 'sm' : ''}" data-shape="${d}" title="Rolado com ${d}"><span>${d}</span></span>` : '';
@@ -2285,9 +2297,9 @@ function gameSheet(c) {
           ${c.dead ? `<p class="fc-note" style="margin:0;font-size:14px">${esc(c.name)} está fora de combate.</p>` : ''}
           ${condChips('characters', c, edit)}
           <div class="row">${deathBtn('characters', c, edit)}</div></div>
-        ${attrs.length ? `<div class="gs-attrs">${attrs.map(a => dieOf(a.die)
-          ? `<button class="attr rollable" data-action="roll-attr" data-sides="${dieOf(a.die).slice(1)}" data-mod="${esc(a.value)}" data-label="${esc(a.name)}" title="Rolar ${esc(a.die)} de ${esc(a.name)}">
-              ${dieChip(a.die)}<div class="av">${esc(String(a.value ?? '').trim() || '—')}</div><div class="an">${esc(a.name)}</div></button>`
+        ${attrs.length ? `<div class="gs-attrs">${attrs.map(a => attrDie(c, a)
+          ? `<button class="attr rollable" data-action="roll-attr" data-sides="${attrDie(c, a).slice(1)}" data-mod="${esc(a.value)}" data-label="${esc(a.name)}" title="Rolar ${attrDie(c, a)} de ${esc(a.name)}">
+              ${dieChip(attrDie(c, a))}<div class="av">${esc(String(a.value ?? '').trim() || '—')}</div><div class="an">${esc(a.name)}</div></button>`
           : `<div class="attr"><div class="av">${esc(String(a.value ?? '').trim() || '—')}</div><div class="an">${esc(a.name)}</div></div>`).join('')}</div>` : ''}
       </div>
     </div>
@@ -2937,7 +2949,7 @@ document.addEventListener('click', async e => {
       const col = a === 'edit-char' ? 'characters' : 'monsters'; const o = get(col, ds.id); if (!o) break;
       if (col === 'characters' && !canEditChar(o)) break;
       const d = clone(o); delete d.id;
-      d.attrs = d.attrs || []; d.items = d.items || []; d.sections = (d.sections || []).map(s => ({ ...s, fields: s.fields || [] })); d.gallery = d.gallery || [];
+      d.attrs = (d.attrs || []).map(a => ({ ...a, die: attrDie(o, a) })); d.items = d.items || []; d.sections = (d.sections || []).map(s => ({ ...s, fields: s.fields || [] })); d.gallery = d.gallery || [];
       d.hp = d.hp || { cur: 0, max: 0 }; d.mana = d.mana || { cur: 0, max: 0 }; d.notes = d.notes || ''; d.subtitle = d.subtitle || '';
       openModal({ type: 'sheet', col, id: o.id, draft: d, orig: sheetRefs(o) }); break;
     }
