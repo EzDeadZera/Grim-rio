@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Grimório — mesa de RPG</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b1730'/%3E%3Cg transform='translate(4 4)' fill='none' stroke='%23d8b060' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M12 2 21 7v10l-9 5-9-5V7z' stroke-width='2.2'/%3E%3Cpath d='M12 2 7.5 9.5h9zM3 7l4.5 2.5L3 17M21 7l-4.5 2.5L21 17M7.5 9.5 12 17l4.5-7.5M12 17v5M3 17h18' stroke-width='1.35'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=Rye&family=Oswald:wght@500;600&family=Metal+Mania&family=MedievalSharp&family=Press+Start+2P&family=Luckiest+Guy&display=swap" rel="stylesheet">
@@ -333,6 +334,110 @@
 .fog-tools{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .fog-tools .btn.sm{padding:5px 10px}
 
+/* ===== Mesa 3D ===== */
+.m3-wrap{display:grid;grid-template-columns:230px 1fr 300px;gap:18px;align-items:start}
+.m3-wrap.no-side{grid-template-columns:1fr 320px}
+@media (max-width:1320px){.m3-wrap{grid-template-columns:210px 1fr}
+  .m3-wrap>:last-child{grid-column:1/-1}
+  .m3-wrap>.side-col,.m3-wrap>.dice-panel{position:static;max-height:none;overflow:visible}}
+@media (max-width:1100px){.m3-wrap.no-side{grid-template-columns:1fr}.m3-wrap.no-side>:last-child{grid-column:auto}
+  .m3-wrap>.side-col{position:static;max-height:none;overflow:visible}}
+@media (max-width:900px){.m3-wrap{grid-template-columns:1fr}}
+.m3-panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+.m3-panel+.m3-panel,.m3-panel+.dice-panel{margin-top:14px}
+.m3-panel h2{font-size:18px;margin-bottom:8px}
+.m3-panel .hint{font-size:12px;color:var(--muted);margin:0 0 10px}
+.m3-h3{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:14px 0 7px;font-family:var(--sans);font-weight:700}
+.m3-h3:first-of-type{margin-top:4px}
+.m3-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.m3-tools-grid.b3{grid-template-columns:repeat(3,1fr)}
+.m3-tool[disabled],.icon-btn[disabled]{opacity:.45;cursor:not-allowed}
+.m3-cur{display:inline-flex;align-items:center;gap:7px;margin-left:auto;padding:5px 11px;border-radius:999px;
+  border:1px solid color-mix(in srgb,var(--brass) 55%,var(--line));background:color-mix(in srgb,var(--brass) 14%,transparent);
+  font-size:12px;font-weight:600;white-space:nowrap}
+@media (max-width:620px){.m3-cur{margin-left:0}}
+.m3-tool{display:flex;align-items:center;gap:7px;padding:7px 9px;border:1px solid var(--line);border-radius:9px;
+  background:var(--surface2);cursor:pointer;font-size:13px;font-weight:500;text-align:left;min-width:0}
+.m3-tool:hover{border-color:var(--brass)}
+.m3-tool.on{border-color:var(--brass);background:color-mix(in srgb,var(--brass) 22%,transparent);font-weight:600}
+.m3-tool svg{width:14px;height:14px;flex:none}
+.sw-g{width:13px;height:13px;border-radius:3px;background:var(--gc);flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.35)}
+.m3-stage{min-width:0}
+.m3-tools{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.m3-host.edit{cursor:crosshair}
+.m3-host.panning{cursor:grab}
+.m3-host{position:relative;width:100%;height:min(66vh,640px);min-height:340px;border-radius:14px;overflow:hidden;
+  border:1px solid var(--line);touch-action:none;cursor:grab;
+  background:radial-gradient(ellipse 80% 70% at 50% 18%,color-mix(in srgb,var(--brass) 13%,transparent),transparent 70%),
+    linear-gradient(180deg,var(--bg2),var(--bg))}
+.m3-host:active{cursor:grabbing}
+.m3-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.m3-labels{position:absolute;inset:0;pointer-events:none;z-index:2}
+.m3-lbl{position:absolute;top:0;left:0;display:grid;justify-items:center;gap:2px;will-change:transform}
+.m3-lbl .n{font-size:11px;font-weight:600;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis;
+  padding:1px 7px;border-radius:999px;background:rgba(10,8,14,.78);color:#f2ead9}
+.m3-lbl .hb{width:46px;height:4px;border-radius:99px;background:rgba(8,6,12,.8);overflow:hidden}
+.m3-lbl .hb i{display:block;height:100%;background:#6bbf63}
+.m3-lbl.foe .hb i{background:#d4483a}
+.m3-lbl.dead .n{text-decoration:line-through;opacity:.7}
+.m3-hint{margin:8px 0 0;font-size:13px;color:var(--muted)}
+.m3-loading{display:grid;place-items:center;gap:14px;height:340px;color:var(--muted);font-family:var(--serif);font-size:19px;
+  border:1px dashed var(--line);border-radius:14px;background:var(--surface2)}
+.m3-spin{width:42px;height:42px;border-radius:50%;border:3px solid color-mix(in srgb,var(--brass) 25%,transparent);
+  border-top-color:var(--brass);animation:spin 1s linear infinite}
+.m3-turns{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 10px;margin-bottom:10px;
+  border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.m3-turns.empty-turns{color:var(--muted);font-size:13px}
+.m3-round{font-family:var(--serif);font-size:14px;font-weight:700;padding:3px 10px;border-radius:999px;
+  background:var(--brass);color:var(--on-brass);white-space:nowrap}
+.m3-turn-list{display:flex;gap:6px;overflow-x:auto;flex:1 1 320px;min-width:0;padding:2px}
+.m3-turn{display:flex;align-items:center;gap:7px;padding:4px 10px 4px 4px;border:1px solid var(--line);border-radius:999px;
+  background:var(--surface2);cursor:pointer;white-space:nowrap}
+.m3-turn:hover{border-color:var(--brass)}
+.m3-turn.on{border-color:var(--brass);background:color-mix(in srgb,var(--brass) 25%,transparent);
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--brass) 35%,transparent)}
+.m3-turn.is-dead{opacity:.55}
+.m3-turn .bst-thumb{width:28px;height:28px;font-size:13px}
+.m3-turn-n{font-size:13px;font-weight:600;display:grid;line-height:1.25}
+.m3-turn-n small{font-weight:400;font-size:11px;color:var(--muted)}
+.m3-sel{display:grid;gap:10px}
+.m3-sel-head,.m3-obj-head{display:flex;align-items:center;gap:10px}
+.m3-sel-head .bst-thumb{width:46px;height:46px}
+.m3-sel-head small{display:block;font-size:12px;color:var(--muted)}
+.m3-attrs{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:6px}
+.m3-attr{position:relative;display:grid;gap:1px;padding:8px 6px;border:1px solid var(--line);border-radius:9px;
+  background:var(--surface2);text-align:center;font:inherit;color:inherit}
+button.m3-attr{cursor:pointer}
+button.m3-attr:hover{border-color:var(--brass)}
+.m3-attr b{font-family:var(--serif);font-size:19px;line-height:1.1}
+.m3-attr span{font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.m3-attr .die-chip{position:absolute;top:-6px;right:-5px}
+.m3-txt{margin:0;font-size:14px;white-space:pre-wrap;line-height:1.55}
+.m3-secret{border:1px dashed color-mix(in srgb,var(--brass) 55%,transparent);border-radius:10px;padding:9px 11px;
+  background:color-mix(in srgb,var(--brass) 10%,transparent)}
+.m3-secret-t{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--brass)}
+.m3-secret p{margin:4px 0 0;font-size:13px;white-space:pre-wrap}
+.m3-objs{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.m3-roster{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.m3-rost{width:100%;display:flex;align-items:center;gap:9px;padding:6px 8px;border:1px solid var(--line);
+  border-radius:10px;background:var(--surface2);cursor:pointer;text-align:left}
+.m3-rost:hover{border-color:var(--brass)}
+.m3-rost.on{border-color:var(--brass);background:color-mix(in srgb,var(--brass) 18%,transparent)}
+.m3-rost .bst-thumb{width:34px;height:34px;flex:none;font-size:14px}
+.m3-rost .rt{min-width:0}
+.m3-rost strong{display:block;font-size:13px;font-weight:600;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m3-rost small{display:block;font-size:11px;color:var(--muted)}
+.m3-rost.dead{opacity:.6}
+.m3-rost.dead strong{text-decoration:line-through}
+.m3-rost.foe .bst-thumb{box-shadow:0 0 0 2px color-mix(in srgb,var(--hp) 55%,transparent)}
+.m3-obj{width:100%;display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid var(--line);
+  border-radius:9px;background:var(--surface2);cursor:pointer;font-size:13px;text-align:left}
+.m3-obj:hover{border-color:var(--brass)}
+.m3-obj.on{border-color:var(--brass);background:color-mix(in srgb,var(--brass) 18%,transparent)}
+.m3-obj.done{opacity:.7}
+.m3-obj small{color:var(--muted)}
+@media (max-width:900px){.m3-host{height:min(54vh,460px)}.m3-tools-grid{grid-template-columns:1fr 1fr 1fr}}
+
 /* ===== dados dos atributos ===== */
 .attr-edit{border:1px solid var(--line);border-radius:11px;padding:10px 11px;background:var(--surface2)}
 .attr-edit+.attr-edit{margin-top:8px}
@@ -478,10 +583,12 @@ button.cond:hover{border-color:var(--cc)}
 @media (max-width:760px){.ctrl-row{grid-template-columns:52px 1fr}.ctrl-bars{grid-template-columns:1fr}.ctrl-actions{grid-column:1/-1;justify-content:flex-start}}
 
 .play-layout{display:grid;grid-template-columns:240px 1fr 280px;gap:20px;align-items:start}
-@media (max-width:1280px){.play-layout{grid-template-columns:240px 1fr}.play-layout .dice-panel{grid-column:1/-1}}
+@media (max-width:1280px){.play-layout{grid-template-columns:240px 1fr}.play-layout .dice-panel{grid-column:1/-1}
+  .play-layout>.side-col,.play-layout>.dice-panel{position:static;max-height:none;overflow:visible}}
 @media (max-width:900px){.play-layout{grid-template-columns:1fr}}
-.side-col{display:grid;gap:16px;position:sticky;top:84px}
-@media (max-width:900px){.side-col{position:static}}
+.side-col{display:grid;gap:16px;position:sticky;top:84px;max-height:calc(100vh - 100px);overflow-y:auto;overscroll-behavior:contain;padding-right:2px}
+.side-col::-webkit-scrollbar{width:8px}.side-col::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+@media (max-width:900px){.side-col{position:static;max-height:none;overflow:visible}}
 .items-panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
 .items-panel h2{font-size:19px;margin-bottom:4px}
 .items-panel .hint{font-size:12px;color:var(--muted);margin:0 0 10px}
@@ -493,10 +600,11 @@ button.cond:hover{border-color:var(--cc)}
 .item-owner{font-size:12px;font-weight:600;color:var(--muted);margin:12px 0 6px}
 .item-owner:first-child{margin-top:0}
 .gm-layout.with-dice{grid-template-columns:260px 1fr 280px}
-@media (max-width:1300px){.gm-layout.with-dice{grid-template-columns:270px 1fr}.gm-layout.with-dice .dice-panel{grid-column:1/-1}}
+@media (max-width:1300px){.gm-layout.with-dice{grid-template-columns:270px 1fr}.gm-layout.with-dice .dice-panel{grid-column:1/-1}
+  .gm-layout.with-dice>.side-col,.gm-layout.with-dice>.dice-panel{position:static;max-height:none;overflow:visible}}
 @media (max-width:900px){.gm-layout.with-dice{grid-template-columns:1fr}}
-.dice-panel{position:sticky;top:84px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
-@media (max-width:1080px){.dice-panel{position:static}}
+.dice-panel{position:sticky;top:84px;max-height:calc(100vh - 100px);overflow-y:auto;overscroll-behavior:contain;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+@media (max-width:1080px){.dice-panel{position:static;max-height:none;overflow:visible}}
 .dice-panel h2{font-size:19px;margin-bottom:12px}
 .dice-stage{display:grid;place-items:center;gap:8px;min-height:168px;border-radius:12px;background:var(--surface2);border:1px solid var(--line);padding:14px;margin-bottom:14px;text-align:center}
 .die{width:88px;height:88px;display:grid;place-items:center;background:linear-gradient(145deg,color-mix(in srgb,var(--brass) 85%,#fff),var(--brass));color:var(--on-brass);
@@ -932,7 +1040,7 @@ const USERS = [
   { id: 'jogador4', name: 'Jogador 4', pass: '12344', role: 'player' },
   { id: 'mestre',   name: 'Mestre',    pass: 'mestre123', role: 'master' }
 ];
-const COLS = ['libraries', 'campaigns', 'characters', 'monsters', 'maps', 'rolls', 'messages'];
+const COLS = ['libraries', 'campaigns', 'characters', 'monsters', 'maps', 'rolls', 'messages', 'scenes'];
 const LIB_COLORS = [['#7a2630','Sangue'],['#2f5a3f','Musgo'],['#243f6b','Abismo'],['#4f2f6e','Arcano'],['#1f5a5e','Maré'],['#8a6320','Ocre'],['#3a3a44','Carvão'],['#cfc3a6','Osso']];
 const MARKS = {
   padrao: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M50 6 92 29v42L50 94 8 71V29z"/><path d="M50 6 31 40h38zM8 29l23 11L8 71M92 29 69 40l23 31M31 40l19 31 19-31M50 71v23M8 71h84"/></svg>',
@@ -1141,6 +1249,10 @@ const I = {
   mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
   clue: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.5-4.5"/><path d="M11 8v3l2 2"/></svg>',
   fog: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 9h11a3 3 0 1 0-3-3M3 13h15a3 3 0 1 1-3 3M5 17h9"/></svg>',
+  rotl: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>',
+  rotr: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>',
+  grid: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>',
+  cube: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 3 21 8v8l-9 5-9-5V8z"/><path d="m3 8 9 5 9-5M12 13v8"/></svg>',
   gear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 13.5a7.7 7.7 0 0 0 0-3l1.8-1.4-1.9-3.3-2.2.9a7.6 7.6 0 0 0-2.6-1.5L14.1 3H9.9l-.4 2.2a7.6 7.6 0 0 0-2.6 1.5l-2.2-.9-1.9 3.3 1.8 1.4a7.7 7.7 0 0 0 0 3l-1.8 1.4 1.9 3.3 2.2-.9a7.6 7.6 0 0 0 2.6 1.5l.4 2.2h4.2l.4-2.2a7.6 7.6 0 0 0 2.6-1.5l2.2.9 1.9-3.3z"/></svg>',
   img: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.8"/><path d="M21 16l-5-5-9 9"/></svg>'
 };
@@ -1179,10 +1291,10 @@ function toast(msg, kind) {
    ========================================================= */
 const S = {
   user: null, ready: false, mode: 'connecting', assets: null,
-  data: { libraries: [], campaigns: [], characters: [], monsters: [], maps: [], rolls: [], messages: [] },
+  data: { libraries: [], campaigns: [], characters: [], monsters: [], maps: [], rolls: [], messages: [], scenes: [] },
   dice: { qty: 1, mod: 0 }, rolling: false, lastRoll: null,
   adj: {}, adjT: {}, skin: 'padrao', token: null, unread: new Set(), fogMode: false, fogBrush: 'hide', fogDraft: null,
-  modal: null,
+  modal: null, m3Id: null, m3Edit: false, m3Draft: null,
   mapId: null, mapEdit: false, mapLabels: false, mapView: { s: 1, x: 0, y: 0 },
   drag: false, renderAfterDrag: false
 };
@@ -1349,6 +1461,7 @@ function route() {
   return { view: h[0] || '', id: h[1] ? decodeURIComponent(h[1]) : '', tab: h[2] || '' };
 }
 function go(h) { if (location.hash === h) render(); else location.hash = h; }
+addEventListener('resize', () => { if (route().view === 'mesa') m3Tick(); });
 window.addEventListener('hashchange', () => { closeLightbox(); window.scrollTo(0, 0); render(); });
 
 let raf = 0;
@@ -1366,6 +1479,7 @@ function render() {
   else if (r.view === 'p') v = characterView(r.id);
   else if (r.view === 'm') v = monsterView(r.id);
   else if (r.view === 'jogo') v = gameView();
+  else if (r.view === 'mesa') v = mesaView();
   else if (r.view === 'config') v = settingsView(r.id || 'tema');
   else v = shelfView();
   app.innerHTML = shell(v.html, v.crumbs === null ? null : (v.crumbs || []));
@@ -1379,8 +1493,9 @@ function shell(content, crumbs) {
   <header class="topbar">
     <a class="brand" href="#/" aria-label="Grimório, voltar à estante">${MARKS[S.skin] || I.d20}<span>Grimório</span></a>
     <nav class="modes" aria-label="Seções">
-      <a class="mode ${route().view === 'jogo' ? '' : 'on'}" href="#/">Biblioteca</a>
+      <a class="mode ${['jogo', 'mesa', 'config'].includes(route().view) ? '' : 'on'}" href="#/">Biblioteca</a>
       <a class="mode ${route().view === 'jogo' ? 'on' : ''}" href="#/jogo">Modo Jogo</a>
+      <a class="mode ${route().view === 'mesa' ? 'on' : ''}" href="#/mesa">${I.cube}<span class="mode-txt">Mesa 3D</span></a>
       <a class="mode ${route().view === 'config' ? 'on' : ''}" href="#/config/tema" aria-label="Configurações">${I.gear}<span class="mode-txt">Config</span></a>
     </nav>
     <nav class="crumbs" aria-label="Caminho">
@@ -2388,7 +2503,7 @@ function masterGame() {
 }
 function viewCampId() {
   const r = route();
-  if (r.view === 'jogo') return isMaster() ? S.gameCamp : S.playerGameCamp;
+  if (r.view === 'jogo' || r.view === 'mesa') return isMaster() ? S.gameCamp : S.playerGameCamp;
   if (r.view === 'c') return r.id;
   if (r.view === 'p') return get('characters', r.id)?.campaignId || null;
   if (r.view === 'm') return get('monsters', r.id)?.campaignId || null;
@@ -2437,6 +2552,1007 @@ function checkField() {
     }
   }
   prevField = ids;
+}
+
+/* =========================================================
+   Mesa 3D — cena isométrica montada pelo mestre
+   ========================================================= */
+const M3_URLS = [
+  'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js'
+];
+const M3_GROUND = {
+  p: ['Pedra', 0x76757e], m: ['Madeira', 0x8a5a30], g: ['Grama', 0x4f7a3c],
+  s: ['Areia', 0xc0a468], a: ['Água', 0x2f6f94], c: ['Tapete', 0x8c3630], '.': ['Vazio', 0x14121a]
+};
+const M3_GORDER = ['p', 'm', 'g', 's', 'a', 'c', '.'];
+const M3_PROPS = {
+  t: ['Tocha', 0xffb347, 0], x: ['Caixa', 0x9a6a38, 1], b: ['Baú', 0xc08b3a, 1],
+  e: ['Mesa', 0x7d5531, 1], l: ['Pilar', 0x8d8a96, 1], v: ['Arbusto', 0x4a7a40, 0],
+  d: ['Porta', 0x6b4426, 1], r: ['Rocha', 0x6a6873, 1]
+};
+const M3_KINDS = { pista: ['Pista', 0xd8b060], enigma: ['Enigma', 0x9b6cf6], npc: ['NPC', 0x3ecf8e] };
+const M3_SIZES = [[12, 9], [16, 12], [20, 15], [24, 18]];
+
+const M3 = {
+  lib: null, loading: false, failed: false,
+  renderer: null, scene: null, cam: null, host: null, labels: null, raf: 0,
+  ground: null, walls: null, marks: null, deco: [], objs: [], tokens: new Map(),
+  terrainSig: '', tokenSig: '', objSig: '',
+  yaw: Math.PI / 4, pitch: 0.68, zoom: 1, tx: 0, tz: 0, needFit: true,
+  sel: null, reach: new Map(), hover: null, draft: null, flushT: 0,
+  wired: false, tool: 'p', grid: true, lastW: 0, lastH: 0,
+  brush: 0, rect: false, rectFrom: null, hoverCell: null, ghost: null, undo: [], space: false
+};
+const m3Idx = (sc, x, y) => y * sc.w + x;
+const m3In = (sc, x, y) => x >= 0 && y >= 0 && x < sc.w && y < sc.h;
+const m3G = (sc, x, y) => (sc.ground || '')[m3Idx(sc, x, y)] || 'p';
+const m3H = (sc, x, y) => num((sc.height || '')[m3Idx(sc, x, y)] || '0');
+const m3Prop = (sc, x, y) => (sc.props || {})[x + ',' + y] || '';
+function m3Walk(sc, x, y) {
+  if (!m3In(sc, x, y) || m3G(sc, x, y) === '.' || m3H(sc, x, y) > 0) return false;
+  const p = m3Prop(sc, x, y);
+  return !(p && M3_PROPS[p] && M3_PROPS[p][2]);
+}
+function m3NewScene(campId, n) {
+  const [w, h] = M3_SIZES[1];
+  return { campaignId: campId, name: n || 'Nova cena', w, h, ground: 'p'.repeat(w * h),
+    height: '0'.repeat(w * h), props: {}, objects: [], turn: null, createdAt: Date.now(), updatedAt: Date.now() };
+}
+function m3Scenes(campId) { return S.data.scenes.filter(s => s.campaignId === campId).sort(byCreated); }
+function m3Cur() {
+  const sc = get('scenes', S.m3Id);
+  if (!sc) return null;
+  return S.m3Draft && S.m3Draft.id === sc.id ? { ...sc, ...S.m3Draft.patch } : sc;
+}
+/* quantos quadrados o personagem anda: lê o atributo de deslocamento, senão 6 */
+function m3Move(o) {
+  const a = (o.attrs || []).find(x => /desl|movi|veloc/i.test(String(x.name || '').normalize('NFD').replace(/[̀-ͯ]/g, '')));
+  if (!a) return 6;
+  const raw = String(a.value || '');
+  const n = parseFloat(raw.replace(',', '.'));
+  if (!Number.isFinite(n) || n <= 0) return 6;
+  return /m/i.test(raw) && n >= 3 ? Math.max(1, Math.round(n / 1.5)) : Math.max(1, Math.round(n));
+}
+/* tokens da cena: personagens da campanha + criaturas em campo */
+function m3Tokens(sc) {
+  if (!sc) return [];
+  const chars = S.data.characters.filter(c => c.campaignId === sc.campaignId).sort(byCreated);
+  const mons = S.data.monsters.filter(m => m.campaignId === sc.campaignId && m.inField).sort(byCreated);
+  const taken = new Set(), out = [];
+  const put = (col, o, x, y) => { taken.add(x + ',' + y); out.push({ key: col[0] + ':' + o.id, col, o, x, y }); };
+  const free = (sx, sy) => {
+    for (let r = 0; r < Math.max(sc.w, sc.h); r++)
+      for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) {
+        const x = clamp(sx + dx, 0, sc.w - 1), y = clamp(sy + dy, 0, sc.h - 1);
+        if (m3Walk(sc, x, y) && !taken.has(x + ',' + y)) return [x, y];
+      }
+    return [0, 0];
+  };
+  const place = (col, list, sy) => list.forEach((o, i) => {
+    const c = o.cell;
+    if (c && m3In(sc, num(c.x), num(c.y)) && !taken.has(num(c.x) + ',' + num(c.y))) return put(col, o, num(c.x), num(c.y));
+    const [x, y] = free(Math.floor(sc.w / 2) + (i % 2 ? 1 : -1) * Math.ceil(i / 2), sy);
+    put(col, o, x, y);
+  });
+  place('monsters', mons, 1);
+  place('characters', chars, sc.h - 2);
+  return out;
+}
+const m3CanMove = t => t.col === 'monsters' ? isMaster() : canEditChar(t.o);
+function m3MyTurn(sc, t) {
+  if (isMaster()) return true;
+  const tn = sc.turn;
+  if (!tn || !tn.order || !tn.order.length) return true;
+  if (!tn.order.includes(t.key)) return true;   // fora do combate, anda livre
+  return tn.order[tn.idx % tn.order.length] === t.key;
+}
+/* alcance de movimento: busca em largura pelas casas livres */
+function m3Reach(sc, from, steps, tokens) {
+  const block = new Set(tokens.filter(t => !(t.x === from.x && t.y === from.y)).map(t => t.x + ',' + t.y));
+  const seen = new Map([[from.x + ',' + from.y, 0]]);
+  let edge = [[from.x, from.y]];
+  for (let d = 1; d <= steps; d++) {
+    const next = [];
+    for (const [x, y] of edge)
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+        if (!dx && !dy) continue;
+        const nx = x + dx, ny = y + dy, k = nx + ',' + ny;
+        if (seen.has(k) || !m3Walk(sc, nx, ny) || block.has(k)) continue;
+        if (dx && dy && !(m3Walk(sc, x + dx, y) && m3Walk(sc, x, y + dy))) continue;
+        seen.set(k, d); next.push([nx, ny]);
+      }
+    edge = next;
+    if (!edge.length) break;
+  }
+  seen.delete(from.x + ',' + from.y);
+  return seen;
+}
+
+/* ---------- carregar o motor 3D ---------- */
+function m3Load() {
+  if (M3.lib || M3.loading || M3.failed) return;  // depois de falhar, só volta pelo "Tentar de novo"
+  if (window.THREE) { M3.lib = window.THREE; scheduleRender(); return; }
+  M3.loading = true; M3.failed = false;
+  let i = 0, done = false;
+  const give = ok => {
+    if (done) return; done = true;
+    clearTimeout(M3.loadT);
+    M3.loading = false; M3.lib = ok ? window.THREE : null; M3.failed = !M3.lib;
+    scheduleRender();
+  };
+  // se a rede travar sem dar erro, não deixa a tela presa em "Montando a cena…"
+  M3.loadT = setTimeout(() => give(!!window.THREE), 14000);
+  const tryNext = () => {
+    if (done) return;
+    if (i >= M3_URLS.length) return give(false);
+    const sc = document.createElement('script');
+    sc.src = M3_URLS[i++];
+    sc.onload = () => give(true);
+    sc.onerror = () => { sc.remove(); tryNext(); };
+    document.head.appendChild(sc);
+  };
+  tryNext();
+}
+/* ---------- texturas dos retratos ---------- */
+const m3Tex = new Map();
+function m3Portrait(ref) {
+  if (!ref) return null;
+  if (m3Tex.has(ref)) { const v = m3Tex.get(ref); return v && v.isTexture ? v : null; }
+  m3Tex.set(ref, 'loading');
+  const make = src => {
+    if (!src) { m3Tex.set(ref, null); return; }
+    const T = M3.lib;
+    new T.TextureLoader().load(src, tx => {
+      tx.colorSpace = T.SRGBColorSpace || tx.colorSpace;
+      m3Tex.set(ref, tx); M3.tokenSig = ''; scheduleRender();
+    }, undefined, () => m3Tex.set(ref, null));
+  };
+  if (ref.startsWith('a:')) make('/_blob/' + ref.slice(2));
+  else {
+    const c = imgCache.get(ref);
+    if (typeof c === 'string') make(c);
+    else Promise.resolve(c || store.getImage(ref.slice(2)).then(d => { imgCache.set(ref, d || ''); return d; }))
+      .then(d => make(d)).catch(() => m3Tex.set(ref, null));
+  }
+  return null;
+}
+
+/* ---------- montar o mundo ---------- */
+function m3Init() {
+  const T = M3.lib;
+  const sc = new T.Scene();
+  const cam = new T.OrthographicCamera(-10, 10, 10, -10, 0.1, 400);
+  sc.add(new T.HemisphereLight(0xcfe0ff, 0x4a3a2a, 1.25));
+  const sun = new T.DirectionalLight(0xfff0d8, 1.5);
+  sun.position.set(14, 24, 10);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(1024, 1024);
+  const d = 22;
+  Object.assign(sun.shadow.camera, { left: -d, right: d, top: d, bottom: -d, near: 1, far: 90 });
+  sun.shadow.bias = -0.0012;
+  sc.add(sun, sun.target);
+  const rend = new T.WebGLRenderer({ antialias: true, alpha: true });
+  rend.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+  rend.shadowMap.enabled = true;
+  rend.shadowMap.type = T.PCFSoftShadowMap;
+  rend.domElement.className = 'm3-canvas';
+  M3.renderer = rend; M3.scene = sc; M3.cam = cam; M3.sun = sun;
+}
+function m3Terrain(sc) {
+  const T = M3.lib, S3 = M3.scene;
+  [M3.ground, M3.walls].forEach(m => { if (m) { S3.remove(m); m.geometry.dispose(); m.material.dispose(); } });
+  M3.deco.forEach(m => S3.remove(m)); M3.deco = [];
+  const n = sc.w * sc.h;
+  const gMat = new T.MeshLambertMaterial();
+  const gMesh = new T.InstancedMesh(new T.BoxGeometry(1, 0.3, 1), gMat, n);
+  gMesh.receiveShadow = true;
+  const wMat = new T.MeshLambertMaterial();
+  const wMesh = new T.InstancedMesh(new T.BoxGeometry(1, 1, 1), wMat, n);
+  wMesh.castShadow = wMesh.receiveShadow = true;
+  const d = new T.Object3D(), col = new T.Color();
+  let gi = 0, wi = 0;
+  for (let y = 0; y < sc.h; y++) for (let x = 0; x < sc.w; x++) {
+    const g = m3G(sc, x, y), h = m3H(sc, x, y);
+    if (g === '.') continue;
+    const wobble = ((x * 7 + y * 13) % 5) * 0.012;
+    d.position.set(x + 0.5, g === 'a' ? -0.22 : -0.15, y + 0.5);
+    d.scale.set(1, 1, 1); d.rotation.set(0, 0, 0); d.updateMatrix();
+    gMesh.setMatrixAt(gi, d.matrix);
+    col.setHex(M3_GROUND[g] ? M3_GROUND[g][1] : 0x76757e).offsetHSL(0, 0, wobble - 0.02);
+    gMesh.setColorAt(gi, col); gi++;
+    if (h > 0) {
+      const hh = Math.min(h, 3) * 0.95;
+      d.position.set(x + 0.5, hh / 2, y + 0.5);
+      d.scale.set(0.99, hh, 0.99); d.updateMatrix();
+      wMesh.setMatrixAt(wi, d.matrix);
+      col.setHex(0x8c8698).offsetHSL(0, 0, wobble - 0.03 + h * 0.015);
+      wMesh.setColorAt(wi, col); wi++;
+    }
+  }
+  gMesh.count = gi; wMesh.count = wi;
+  gMesh.instanceMatrix.needsUpdate = true; wMesh.instanceMatrix.needsUpdate = true;
+  if (gMesh.instanceColor) gMesh.instanceColor.needsUpdate = true;
+  if (wMesh.instanceColor) wMesh.instanceColor.needsUpdate = true;
+  S3.add(gMesh, wMesh);
+  M3.ground = gMesh; M3.walls = wMesh;
+  // cenário decorativo
+  let fires = 0;                               // no máximo 10 tochas acesas, o resto fica só com o poste
+  Object.entries(sc.props || {}).forEach(([k, t]) => {
+    const p = M3_PROPS[t]; if (!p) return;
+    const [x, y] = k.split(',').map(Number);
+    if (!m3In(sc, x, y)) return;
+    const g = m3Deco(t), mesh = new T.Mesh(g, new T.MeshLambertMaterial({ color: p[1] }));
+    mesh.position.set(x + 0.5, 0, y + 0.5);
+    mesh.castShadow = mesh.receiveShadow = true;
+    mesh.rotation.y = ((x * 5 + y * 3) % 4) * Math.PI / 2;
+    S3.add(mesh); M3.deco.push(mesh);
+    if (t === 't' && fires++ < 10) {
+      const fire = new T.PointLight(0xffa64d, 7, 9, 2);
+      fire.position.set(x + 0.5, 1.5, y + 0.5);
+      S3.add(fire); M3.deco.push(fire);
+    }
+  });
+  // grade
+  if (M3.gridLines) { S3.remove(M3.gridLines); M3.gridLines.geometry.dispose(); M3.gridLines = null; }
+  const pts = [];
+  for (let x = 0; x <= sc.w; x++) pts.push(x, 0.02, 0, x, 0.02, sc.h);
+  for (let y = 0; y <= sc.h; y++) pts.push(0, 0.02, y, sc.w, 0.02, y);
+  const gg = new T.BufferGeometry();
+  gg.setAttribute('position', new T.Float32BufferAttribute(pts, 3));
+  M3.gridLines = new T.LineSegments(gg, new T.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.1 }));
+  S3.add(M3.gridLines);
+}
+function m3Deco(t) {
+  const T = M3.lib;
+  if (t === 't') return new T.CylinderGeometry(0.07, 0.1, 1.5, 6).translate(0, 0.75, 0);
+  if (t === 'x') return new T.BoxGeometry(0.66, 0.6, 0.66).translate(0, 0.3, 0);
+  if (t === 'b') return new T.BoxGeometry(0.8, 0.5, 0.56).translate(0, 0.25, 0);
+  if (t === 'e') return new T.BoxGeometry(0.92, 0.18, 0.92).translate(0, 0.62, 0);
+  if (t === 'l') return new T.CylinderGeometry(0.26, 0.3, 2.4, 10).translate(0, 1.2, 0);
+  if (t === 'v') return new T.IcosahedronGeometry(0.42, 0).translate(0, 0.42, 0);
+  if (t === 'd') return new T.BoxGeometry(0.9, 1.9, 0.18).translate(0, 0.95, 0);
+  return new T.DodecahedronGeometry(0.45, 0).translate(0, 0.36, 0);
+}
+function m3Objects(sc) {
+  const T = M3.lib;
+  M3.objs.forEach(m => M3.scene.remove(m)); M3.objs = [];
+  (sc.objects || []).forEach(o => {
+    if (!isMaster() && o.hidden) return;
+    const k = M3_KINDS[o.kind] || M3_KINDS.pista;
+    const m = new T.Mesh(new T.OctahedronGeometry(0.3, 0),
+      new T.MeshLambertMaterial({ color: k[1], emissive: k[1], emissiveIntensity: o.revealed ? 0.15 : 0.6,
+        transparent: true, opacity: o.hidden ? 0.5 : 1 }));
+    m.position.set(o.x + 0.5, 0.9, o.y + 0.5);
+    m.userData = { obj: o.id };
+    M3.scene.add(m); M3.objs.push(m);
+  });
+}
+function m3BuildTokens(sc, toks) {
+  const T = M3.lib;
+  M3.tokens.forEach(g => M3.scene.remove(g));
+  M3.tokens = new Map();
+  toks.forEach(t => {
+    const g = new T.Group();
+    const dead = !!t.o.dead;
+    const base = new T.Mesh(new T.CylinderGeometry(0.42, 0.42, 0.12, 24),
+      new T.MeshLambertMaterial({ color: dead ? 0x6b6b74 : t.col === 'monsters' ? 0xb33a2c : (t.o.owner === S.user.id ? 0x4f9b3f : 0xc8963c) }));
+    base.position.y = 0.07; base.receiveShadow = true; base.castShadow = true;
+    g.add(base);
+    const tex = m3Portrait(t.o.portrait);
+    const bill = new T.Mesh(new T.PlaneGeometry(0.92, 1.18),
+      tex ? new T.MeshBasicMaterial({ map: tex, transparent: true })
+          : new T.MeshBasicMaterial({ color: dead ? 0x55525c : 0x2f2b3d }));
+    bill.position.y = 0.72; bill.userData.bill = 1;
+    g.add(bill);
+    const ring = new T.Mesh(new T.RingGeometry(0.46, 0.56, 28),
+      new T.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, side: T.DoubleSide }));
+    ring.rotation.x = -Math.PI / 2; ring.position.y = 0.14;
+    g.add(ring);
+    g.userData = { tok: t.key, ring, bill, tx: t.x, tz: t.y };
+    g.position.set(t.x + 0.5, 0, t.y + 0.5);
+    M3.scene.add(g); M3.tokens.set(t.key, g);
+  });
+}
+function m3Marks(sc) {
+  const T = M3.lib;
+  if (M3.marks) { M3.scene.remove(M3.marks); M3.marks.geometry.dispose(); M3.marks.material.dispose(); M3.marks = null; }
+  const cells = [...M3.reach.keys()];
+  if (!cells.length) return;
+  const mesh = new T.InstancedMesh(new T.BoxGeometry(0.78, 0.05, 0.78),
+    new T.MeshBasicMaterial({ color: 0x66d9ff, transparent: true, opacity: 0.42, depthWrite: false }), cells.length);
+  const d = new T.Object3D();
+  cells.forEach((k, i) => {
+    const [x, y] = k.split(',').map(Number);
+    d.position.set(x + 0.5, 0.18, y + 0.5); d.updateMatrix();
+    mesh.setMatrixAt(i, d.matrix);
+  });
+  mesh.instanceMatrix.needsUpdate = true;
+  M3.scene.add(mesh); M3.marks = mesh;
+}
+/* ---------- câmera ---------- */
+function m3Place(sc, cam) {
+  const cx = sc.w / 2 + M3.tx, cz = sc.h / 2 + M3.tz, r = 60;
+  cam.position.set(cx + r * Math.cos(M3.pitch) * Math.sin(M3.yaw), r * Math.sin(M3.pitch), cz + r * Math.cos(M3.pitch) * Math.cos(M3.yaw));
+  cam.lookAt(cx, 0, cz);
+  return [cx, cz];
+}
+/* ajusta o zoom para o tabuleiro caber inteiro na tela */
+function m3Fit(sc) {
+  const T = M3.lib, cam = M3.cam, host = M3.host;
+  if (!host) return;
+  const w = host.clientWidth || 800, h = host.clientHeight || 500, asp = w / h;
+  const keep = { tx: M3.tx, tz: M3.tz };
+  M3.tx = M3.tz = 0;
+  m3Place(sc, cam); cam.updateMatrixWorld(true);
+  let mx = 0, my = 0;
+  const v = new T.Vector3();
+  [[0, 0], [sc.w, 0], [0, sc.h], [sc.w, sc.h]].forEach(([x, z]) => [0, 2.6].forEach(y => {
+    v.set(x, y, z); cam.worldToLocal(v);
+    mx = Math.max(mx, Math.abs(v.x)); my = Math.max(my, Math.abs(v.y));
+  }));
+  M3.tx = keep.tx; M3.tz = keep.tz;
+  const span = Math.max(my * 2, mx * 2 / asp) * 1.06;
+  M3.zoom = span > 0 ? Math.max(sc.w, sc.h) / span : 1;
+}
+function m3Camera(sc) {
+  const T = M3.lib, cam = M3.cam, host = M3.host;
+  if (!host) return;
+  const w = host.clientWidth || 800, h = host.clientHeight || 500;
+  M3.renderer.setSize(w, h, false);
+  if (M3.needFit) { M3.needFit = false; m3Fit(sc); }
+  const span = Math.max(sc.w, sc.h) / M3.zoom;
+  const asp = w / h;
+  cam.left = -span * asp / 2; cam.right = span * asp / 2;
+  cam.top = span / 2; cam.bottom = -span / 2;
+  cam.updateProjectionMatrix();
+  const [cx, cz] = m3Place(sc, cam);
+  M3.sun.position.set(cx + 14, 30, cz + 10);
+  M3.sun.target.position.set(cx, 0, cz);
+  M3.sun.target.updateMatrixWorld();
+}
+function m3Frame() {
+  M3.raf = 0;
+  const sc = m3Cur();
+  if (!M3.renderer || !M3.host || !M3.host.isConnected || !sc || route().view !== 'mesa') return;
+  const T = M3.lib, t = performance.now() / 1000;
+  m3Camera(sc);
+  M3.tokens.forEach(g => {
+    const u = g.userData;
+    g.position.x += ((u.tx + 0.5) - g.position.x) * 0.22;
+    g.position.z += ((u.tz + 0.5) - g.position.z) * 0.22;
+    u.bill.quaternion.copy(M3.cam.quaternion);
+    const on = M3.sel && M3.sel.kind === 'token' && M3.sel.key === u.tok;
+    const act = m3Active(sc) === u.tok;
+    u.ring.material.opacity = on ? 0.95 : act ? 0.55 + Math.sin(t * 3) * 0.2 : 0;
+    u.ring.material.color.setHex(on ? 0xffffff : 0xffd24a);
+    u.ring.quaternion.set(0, 0, 0, 1); u.ring.rotation.x = -Math.PI / 2;
+  });
+  M3.objs.forEach((m, i) => {
+    m.rotation.y = t * 0.8 + i;
+    m.position.y = 0.9 + Math.sin(t * 1.6 + i) * 0.08;
+  });
+  if (M3.gridLines) M3.gridLines.visible = M3.grid;
+  M3.renderer.render(M3.scene, M3.cam);
+  m3Labels(sc);
+  M3.raf = requestAnimationFrame(m3Frame);
+}
+function m3Tick() { if (!M3.raf) M3.raf = requestAnimationFrame(m3Frame); }
+function m3Stop() { if (M3.raf) cancelAnimationFrame(M3.raf); M3.raf = 0; }
+/* rótulos sobre os tokens */
+function m3Labels(sc) {
+  const host = M3.labels; if (!host) return;
+  const L = labelsFor(sc.campaignId);
+  const w = M3.host.clientWidth, h = M3.host.clientHeight;
+  const V = new M3.lib.Vector3();
+  const placed = [];
+  M3.tokens.forEach((g, key) => {
+    let el = host.querySelector(`[data-lk="${key}"]`);
+    const t = (M3.toks || []).find(x => x.key === key);
+    if (!t) { if (el) el.remove(); return; }
+    if (!el) {
+      el = document.createElement('div');
+      el.className = 'm3-lbl'; el.dataset.lk = key;
+      el.innerHTML = '<span class="n"></span><span class="hb"><i></i></span>';
+      host.appendChild(el);
+    }
+    const known = t.col === 'characters' || isMaster() || t.o.revealName;
+    const nm = known ? (t.o.name || '?') : '???';
+    const hp = getStat(t.col, t.o, 'hp');
+    const pct = hp.max > 0 ? clamp(hp.cur / hp.max * 100, 0, 100) : (hp.cur > 0 ? 100 : 0);
+    const nEl = el.querySelector('.n');
+    if (nEl.textContent !== nm) nEl.textContent = nm;
+    el.querySelector('.hb i').style.width = pct + '%';
+    el.classList.toggle('foe', t.col === 'monsters');
+    el.classList.toggle('dead', !!t.o.dead);
+    V.set(g.position.x, 1.62, g.position.z).project(M3.cam);
+    let px = (V.x * 0.5 + 0.5) * w, py = (-V.y * 0.5 + 0.5) * h;
+    // empurra para cima quando dois rótulos se sobrepõem
+    for (let i = 0; i < 6; i++) {
+      if (!placed.some(q => Math.abs(q.x - px) < 78 && Math.abs(q.y - py) < 23)) break;
+      py -= 23;
+    }
+    placed.push({ x: px, y: py });
+    el.style.transform = `translate(-50%,-100%) translate(${px}px,${py}px)`;
+    el.style.display = V.z > 1 ? 'none' : '';
+  });
+}
+function m3Active(sc) {
+  const tn = sc.turn;
+  return tn && tn.order && tn.order.length ? tn.order[tn.idx % tn.order.length] : null;
+}
+
+/* ---------- escrita com atraso (pintura do cenário) ---------- */
+function m3Patch(patch, now) {
+  const sc = get('scenes', S.m3Id); if (!sc) return;
+  S.m3Draft = { id: sc.id, patch: { ...(S.m3Draft && S.m3Draft.id === sc.id ? S.m3Draft.patch : {}), ...patch } };
+  M3.terrainSig = ''; M3.objSig = '';
+  clearTimeout(M3.flushT);
+  const flush = () => {
+    const d = S.m3Draft; if (!d) return;
+    S.m3Draft = null;
+    store.update('scenes', d.id, { ...d.patch, updatedAt: Date.now() })
+      .catch(() => toast('Não foi possível salvar a cena.', 'err'));
+  };
+  if (now) flush(); else M3.flushT = setTimeout(flush, 450);
+}
+function m3Paint(sc, x, y) {
+  if (!isMaster() || !m3In(sc, x, y)) return;
+  const i = m3Idx(sc, x, y), t = M3.tool;
+  const props = { ...(sc.props || {}) };
+  if (t === 'erase') {
+    delete props[x + ',' + y];
+    m3Patch({ height: m3Set(sc.height, i, '0'), props });
+  } else if (M3_GROUND[t]) {
+    m3Patch({ ground: m3Set(sc.ground, i, t) });
+  } else if (t === 'wall+' || t === 'wall-') {
+    const h = clamp(m3H(sc, x, y) + (t === 'wall+' ? 1 : -1), 0, 3);
+    m3Patch({ height: m3Set(sc.height, i, String(h)) });
+  } else if (M3_PROPS[t]) {
+    props[x + ',' + y] = t;
+    m3Patch({ props, height: m3Set(sc.height, i, '0') });
+  }
+}
+const m3Set = (s, i, ch) => (s || '').slice(0, i) + ch + (s || '').slice(i + 1);
+/* casas do pincel (0 = 1x1, 1 = 3x3, 2 = 5x5) e casas de um retângulo */
+function m3BrushCells(sc, c) {
+  const r = M3.brush, out = [];
+  for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++)
+    if (m3In(sc, c.x + dx, c.y + dy)) out.push([c.x + dx, c.y + dy]);
+  return out;
+}
+function m3AreaCells(sc, a, b) {
+  const out = [];
+  for (let y = Math.min(a.y, b.y); y <= Math.max(a.y, b.y); y++)
+    for (let x = Math.min(a.x, b.x); x <= Math.max(a.x, b.x); x++)
+      if (m3In(sc, x, y)) out.push([x, y]);
+  return out;
+}
+/* aplica a peça escolhida em várias casas de uma vez só */
+function m3PaintCells(sc, cells) {
+  if (!isMaster() || !sc || !cells || !cells.length) return;
+  const t = M3.tool;
+  let ground = sc.ground || '', height = sc.height || '';
+  const props = { ...(sc.props || {}) };
+  cells.forEach(([x, y]) => {
+    const i = m3Idx(sc, x, y);
+    if (t === 'erase') { delete props[x + ',' + y]; height = m3Set(height, i, '0'); }
+    else if (M3_GROUND[t]) ground = m3Set(ground, i, t);
+    else if (t === 'wall+' || t === 'wall-') height = m3Set(height, i, String(clamp(num(height[i] || '0') + (t === 'wall+' ? 1 : -1), 0, 3)));
+    else if (M3_PROPS[t]) { props[x + ',' + y] = t; height = m3Set(height, i, '0'); }
+  });
+  const patch = {};
+  if (ground !== (sc.ground || '')) patch.ground = ground;
+  if (height !== (sc.height || '')) patch.height = height;
+  if (M3_PROPS[t] || t === 'erase') patch.props = props;
+  if (!Object.keys(patch).length) return;
+  m3Patch(patch);
+  if (S.drag && M3.renderer) {                 // mostra o traço na hora
+    const cur = m3Cur();
+    if (cur) { m3Terrain(cur); M3.terrainSig = m3TSig(cur); m3Tick(); }
+  }
+}
+function m3Paint(sc, x, y) { m3PaintCells(sc, [[x, y]]); }
+const m3TSig = sc => [sc.id, sc.w, sc.h, sc.ground, sc.height, JSON.stringify(sc.props || {})].join('|');
+/* guarda o estado antes de cada traço, para o Desfazer */
+function m3UndoPush(sc) {
+  if (!sc) return;
+  M3.undo.push({ id: sc.id, ground: sc.ground, height: sc.height,
+    props: { ...(sc.props || {}) }, objects: (sc.objects || []).map(o => ({ ...o })) });
+  if (M3.undo.length > 30) M3.undo.shift();
+}
+function m3UndoPop() {
+  const sc = m3Cur(), u = M3.undo.pop();
+  if (!sc || !u) return;
+  if (u.id !== sc.id) { M3.undo.length = 0; return; }
+  m3Patch({ ground: u.ground, height: u.height, props: u.props, objects: u.objects }, true);
+  M3.terrainSig = ''; M3.objSig = ''; M3.sel = null; M3.reach = new Map();
+  scheduleRender();
+}
+/* sombra da casa que vai receber a peça */
+function m3GhostCells(sc) {
+  if (!sc || !isMaster() || !S.m3Edit || !M3.hoverCell) return [];
+  const a = M3.rectFrom;
+  return a ? m3AreaCells(sc, a, M3.hoverCell) : m3BrushCells(sc, M3.hoverCell);
+}
+function m3Ghost(sc) {
+  const T = M3.lib; if (!T || !M3.scene) return;
+  if (M3.ghost) { M3.scene.remove(M3.ghost); M3.ghost.geometry.dispose(); M3.ghost.material.dispose(); M3.ghost = null; }
+  const cells = m3GhostCells(sc);
+  if (!cells.length) return;
+  const col = M3.tool === 'erase' ? 0xff8f7a : M3_GROUND[M3.tool] ? M3_GROUND[M3.tool][1]
+    : M3_PROPS[M3.tool] ? M3_PROPS[M3.tool][1] : M3_KINDS[M3.tool] ? M3_KINDS[M3.tool][1] : 0xffd98a;
+  const mesh = new T.InstancedMesh(new T.BoxGeometry(0.96, 0.08, 0.96),
+    new T.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.5, depthWrite: false }), cells.length);
+  const d = new T.Object3D();
+  cells.forEach(([x, y], i) => { d.position.set(x + 0.5, 0.22, y + 0.5); d.updateMatrix(); mesh.setMatrixAt(i, d.matrix); });
+  mesh.instanceMatrix.needsUpdate = true;
+  M3.scene.add(mesh); M3.ghost = mesh;
+}
+
+/* ---------- entrada do ponteiro ---------- */
+function m3Wire() {
+  const el = M3.renderer.domElement;
+  if (M3.wired) return; M3.wired = true;
+  const T = M3.lib, ray = new T.Raycaster(), v2 = new T.Vector2();
+  const planeAt = yy => new T.Plane(new T.Vector3(0, 1, 0), -yy);
+  const cellAt = (cx, cy) => {
+    const r = el.getBoundingClientRect();
+    v2.set(((cx - r.left) / r.width) * 2 - 1, -((cy - r.top) / r.height) * 2 + 1);
+    ray.setFromCamera(v2, M3.cam);
+    const hitObj = ray.intersectObjects(M3.objs, false)[0];
+    const hitTok = ray.intersectObjects([...M3.tokens.values()], true)[0];
+    const p = new T.Vector3();
+    ray.ray.intersectPlane(planeAt(0), p);
+    const cell = p ? { x: Math.floor(p.x), y: Math.floor(p.z) } : null;
+    return { cell, obj: hitObj && hitObj.object.userData.obj, tok: hitTok && m3Owner(hitTok.object) };
+  };
+  let down = null, moved = false, pts = new Map(), pinch = null;
+  el.addEventListener('pointerdown', e => {
+    el.setPointerCapture(e.pointerId);
+    pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pts.size === 2) { const [a, b] = [...pts.values()]; pinch = { d: Math.hypot(a.x - b.x, a.y - b.y) || 1, z: M3.zoom }; down = null; return; }
+    const rot = e.button === 2;
+    const pan = e.button === 1 || M3.space;    // botão do meio ou espaço move a vista, mesmo montando
+    down = { x: e.clientX, y: e.clientY, yaw: M3.yaw, pitch: M3.pitch, tx: M3.tx, tz: M3.tz, rot, paint: false };
+    moved = false;
+    const sc = m3Cur();
+    if (!rot && !pan && isMaster() && S.m3Edit && sc && !M3_KINDS[M3.tool]) {
+      const h = cellAt(e.clientX, e.clientY);
+      if (h.cell && m3In(sc, h.cell.x, h.cell.y)) {
+        down.paint = true; S.drag = true; m3UndoPush(sc);
+        M3.hoverCell = h.cell; M3.hoverKey = h.cell.x + ',' + h.cell.y;
+        if (M3.rect || e.shiftKey) { M3.rectFrom = h.cell; m3Ghost(sc); m3Tick(); }
+        else { down.last = M3.hoverKey; m3PaintCells(sc, m3BrushCells(sc, h.cell)); m3Ghost(sc); }
+      }
+    }
+  });
+  el.addEventListener('pointermove', e => {
+    if (pts.has(e.pointerId)) pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pinch && pts.size === 2) {
+      const [a, b] = [...pts.values()];
+      M3.zoom = clamp(pinch.z * (Math.hypot(a.x - b.x, a.y - b.y) / pinch.d), 0.45, 4); m3Tick(); return;
+    }
+    if (!down) {
+      if (!isMaster() || !S.m3Edit) return;    // prévia da casa sob o cursor
+      const sc = m3Cur(); if (!sc) return;
+      const h = cellAt(e.clientX, e.clientY);
+      const c = h.cell && m3In(sc, h.cell.x, h.cell.y) ? h.cell : null;
+      const k = c ? c.x + ',' + c.y : '';
+      if (k === (M3.hoverKey || '')) return;
+      M3.hoverKey = k; M3.hoverCell = c; m3Ghost(sc); m3Tick();
+      return;
+    }
+    const dx = e.clientX - down.x, dy = e.clientY - down.y;
+    if (Math.abs(dx) + Math.abs(dy) > 4) moved = true;
+    if (down.paint) {
+      const sc = m3Cur(); const h = cellAt(e.clientX, e.clientY);
+      if (!sc || !h.cell || !m3In(sc, h.cell.x, h.cell.y)) return;
+      M3.hoverCell = h.cell; M3.hoverKey = h.cell.x + ',' + h.cell.y;
+      if (M3.rectFrom) { m3Ghost(sc); m3Tick(); return; }
+      if (M3.hoverKey === down.last) return;   // só pinta ao entrar numa casa nova
+      down.last = M3.hoverKey;
+      m3PaintCells(sc, m3BrushCells(sc, h.cell)); m3Ghost(sc);
+      return;
+    }
+    if (!moved) return;
+    if (down.rot) {
+      M3.yaw = down.yaw - dx * 0.008;
+      M3.pitch = clamp(down.pitch - dy * 0.006, 0.28, 1.5);
+    } else {
+      const k = 0.022 / M3.zoom * (Math.max(m3Cur() ? m3Cur().w : 16, 10) / 16);
+      const s = Math.sin(M3.yaw), c = Math.cos(M3.yaw);
+      M3.tx = down.tx - (dx * c - dy * s) * k;
+      M3.tz = down.tz - (dx * s + dy * c) * k;
+    }
+    m3Tick();
+  });
+  const up = e => {
+    pts.delete(e.pointerId);
+    if (pts.size < 2) pinch = null;
+    const d = down; down = null;
+    if (d && d.paint) {
+      const sc = m3Cur();
+      if (M3.rectFrom && sc && M3.hoverCell) m3PaintCells(sc, m3AreaCells(sc, M3.rectFrom, M3.hoverCell));
+      M3.rectFrom = null; S.drag = false;
+      if (S.m3Draft) m3Patch({}, true);
+      m3Ghost(m3Cur()); scheduleRender(); return;
+    }
+    if (!d || moved || e.type === 'pointercancel') return;
+    m3Click(cellAt(e.clientX, e.clientY));
+  };
+  el.addEventListener('pointerup', up);
+  el.addEventListener('pointercancel', up);
+  el.addEventListener('contextmenu', e => e.preventDefault());
+  el.addEventListener('pointerleave', () => {
+    if (M3.hoverCell == null && !M3.hoverKey) return;
+    M3.hoverCell = null; M3.hoverKey = ''; M3.rectFrom = null; m3Ghost(m3Cur()); m3Tick();
+  });
+  el.addEventListener('wheel', e => { e.preventDefault(); M3.zoom = clamp(M3.zoom * (e.deltaY < 0 ? 1.12 : 1 / 1.12), 0.45, 4); m3Tick(); }, { passive: false });
+}
+function m3Owner(obj) {
+  let o = obj;
+  while (o && !o.userData.tok) o = o.parent;
+  return o && o.userData.tok;
+}
+function m3Click(hit) {
+  const sc = m3Cur(); if (!sc) return;
+  if (isMaster() && S.m3Edit) {
+    if (M3.tool === 'pista' || M3.tool === 'enigma' || M3.tool === 'npc') {
+      if (hit.cell && m3In(sc, hit.cell.x, hit.cell.y))
+        openModal({ type: 'sobj', sceneId: sc.id, isNew: true,
+          draft: { id: uid(), kind: M3.tool, x: hit.cell.x, y: hit.cell.y, name: '', pub: '', secret: '', hidden: false, revealed: false } });
+      return;
+    }
+    if (hit.obj) { m3OpenObj(sc, hit.obj); return; }
+    return;
+  }
+  if (hit.obj) { m3OpenObj(sc, hit.obj); return; }
+  if (hit.tok) {
+    const t = (M3.toks || []).find(x => x.key === hit.tok);
+    if (!t) return;
+    if (M3.sel && M3.sel.kind === 'token' && M3.sel.key === hit.tok) { m3Select(null); return; }
+    m3Select({ kind: 'token', key: hit.tok });
+    return;
+  }
+  if (hit.cell && M3.sel && M3.sel.kind === 'token' && M3.reach.has(hit.cell.x + ',' + hit.cell.y)) {
+    m3MoveTo(sc, M3.sel.key, hit.cell);
+    return;
+  }
+  m3Select(null);
+}
+function m3Select(sel) {
+  M3.sel = sel; M3.reach = new Map();
+  const sc = m3Cur();
+  if (sel && sel.kind === 'token' && sc) {
+    const t = (M3.toks || []).find(x => x.key === sel.key);
+    if (t && m3CanMove(t) && m3MyTurn(sc, t) && !t.o.dead)
+      M3.reach = m3Reach(sc, t, m3Move(t.o), M3.toks || []);
+  }
+  m3Marks(sc);
+  scheduleRender();
+}
+async function m3MoveTo(sc, key, cell) {
+  const t = (M3.toks || []).find(x => x.key === key); if (!t) return;
+  const g = M3.tokens.get(key);
+  if (g) { g.userData.tx = cell.x; g.userData.tz = cell.y; }
+  t.x = cell.x; t.y = cell.y;
+  M3.reach = new Map(); m3Marks(sc); m3Tick();
+  try { await store.update(t.col, t.o.id, { cell: { x: cell.x, y: cell.y } }); }
+  catch (e) { toast('Não foi possível mover.', 'err'); }
+}
+function m3OpenObj(sc, id) {
+  const o = (sc.objects || []).find(x => x.id === id); if (!o) return;
+  M3.sel = { kind: 'obj', id }; M3.reach = new Map(); m3Marks(sc);
+  scheduleRender();
+}
+
+/* ---------- turnos ---------- */
+async function m3StartTurns(sc, roll) {
+  const toks = m3Tokens(sc).filter(t => !t.o.dead);
+  const ord = toks.map(t => {
+    let ini = 0;
+    if (roll) {
+      const a = (t.o.attrs || []).find(x => /ini|agi/i.test(String(x.name || '').normalize('NFD').replace(/[̀-ͯ]/g, '')));
+      const bonus = a ? num(parseFloat(String(a.value).replace(',', '.'))) : 0;
+      ini = 1 + Math.floor(Math.random() * 20) + bonus;
+    }
+    return { key: t.key, ini };
+  });
+  if (roll) ord.sort((a, b) => b.ini - a.ini);
+  try {
+    await store.update('scenes', sc.id, { turn: { order: ord.map(o => o.key), ini: ord.map(o => o.ini), idx: 0, round: 1, at: Date.now() }, updatedAt: Date.now() });
+    toast(roll ? 'Iniciativa rolada.' : 'Combate iniciado.');
+  } catch (e) { toast('Não foi possível iniciar os turnos.', 'err'); }
+}
+async function m3NextTurn(sc, back) {
+  const tn = sc.turn; if (!tn) return;
+  const n = tn.order.length || 1;
+  let idx = tn.idx + (back ? -1 : 1), round = tn.round || 1;
+  if (idx >= n) { idx = 0; round++; }
+  if (idx < 0) { idx = n - 1; round = Math.max(1, round - 1); }
+  try { await store.update('scenes', sc.id, { turn: { ...tn, idx, round, at: Date.now() }, updatedAt: Date.now() }); }
+  catch (e) { toast('Não foi possível passar o turno.', 'err'); }
+}
+
+/* ---------- a tela ---------- */
+function mesaView() {
+  m3Load();
+  const camps = [...S.data.campaigns].sort(byCreated);
+  const head = extra => `<div class="game-head"><div><h1 class="display">Mesa 3D</h1>
+      <p class="lede">${isMaster() ? 'Monte o cenário no grid e conduza a cena. O que você montar aparece na hora para a mesa.' : 'A cena montada pelo mestre, vista de cima. Clique no seu personagem para andar.'}</p></div>${extra || ''}</div>`;
+  if (!camps.length) return { html: head('') + `<div class="empty"><strong>Nenhuma campanha ainda</strong>Crie uma campanha na estante para montar a cena.<div style="margin-top:14px"><a class="btn" href="#/">Ir para a estante</a></div></div>`, crumbs: null };
+  const camp = camps.find(c => c.id === S.gameCamp) || camps[0];
+  S.gameCamp = camp.id; S.playerGameCamp = camp.id;
+  const list = m3Scenes(camp.id);
+  let cur = list.find(s => s.id === S.m3Id) || list[0] || null;
+  if (cur && S.m3Id !== cur.id) { S.m3Id = cur.id; M3.terrainSig = ''; M3.sel = null; M3.reach = new Map(); }
+  if (!cur) S.m3Id = null;
+  const libs = [...S.data.libraries].sort(byCreated);
+  const opts = libs.map(l => {
+    const cs = camps.filter(c => c.libraryId === l.id);
+    return cs.length ? `<optgroup label="${esc(l.name)}">${cs.map(c => `<option value="${esc(c.id)}" ${c.id === camp.id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</optgroup>` : '';
+  }).join('');
+  const bar = `<div class="row"><label class="camp-select">Campanha<select class="inp" id="m3-camp">${opts}</select></label>
+    ${list.length > 1 ? `<label class="camp-select">Cena<select class="inp" id="m3-scene">${list.map(s => `<option value="${esc(s.id)}" ${cur && s.id === cur.id ? 'selected' : ''}>${esc(s.name)}</option>`).join('')}</select></label>` : ''}
+    ${isMaster() ? `<button class="btn sm" data-action="m3-new" data-camp="${esc(camp.id)}">${I.plus}Nova cena</button>` : ''}
+    <button class="btn sm" data-action="fullscreen">${I.fit}Tela cheia</button></div>`;
+  if (!cur) return { html: head(bar) + `<div class="empty"><strong>Nenhuma cena nesta campanha</strong>${isMaster() ? 'Crie uma cena e comece a montar o cenário.' : 'O mestre ainda não montou a cena.'}
+      ${isMaster() ? `<div style="margin-top:14px"><button class="btn primary" data-action="m3-new" data-camp="${esc(camp.id)}">${I.plus}Criar cena</button></div>` : ''}</div>`, crumbs: null, after: m3Stop };
+  const toks = m3Tokens(cur);
+  M3.toks = toks;
+  const body = M3.failed
+    ? `<div class="empty"><strong>Não consegui carregar o motor 3D</strong>A cena 3D precisa de internet para carregar a biblioteca de desenho. Verifique a conexão e recarregue a página.
+        <div style="margin-top:14px"><button class="btn" data-action="m3-retry">Tentar de novo</button></div></div>`
+    : !M3.lib
+      ? `<div class="m3-loading"><span class="m3-spin"></span>Montando a cena…</div>`
+      : `<div class="m3-wrap ${isMaster() ? '' : 'no-side'}">
+          ${isMaster() ? m3Palette(cur) : ''}
+          <div class="m3-stage">
+            ${m3TurnBar(cur, toks)}
+            <div class="m3-tools">
+              <button class="icon-btn" data-action="m3-zoom" data-z="in" aria-label="Aproximar">${I.zin}</button>
+              <button class="icon-btn" data-action="m3-zoom" data-z="out" aria-label="Afastar">${I.zout}</button>
+              <button class="icon-btn" data-action="m3-rot" data-d="-1" aria-label="Girar à esquerda">${I.rotl}</button>
+              <button class="icon-btn" data-action="m3-rot" data-d="1" aria-label="Girar à direita">${I.rotr}</button>
+              <button class="icon-btn" data-action="m3-zoom" data-z="fit" aria-label="Centralizar">${I.fit}</button>
+              <button class="icon-btn ${M3.grid ? 'toggle-on' : ''}" data-action="m3-grid" aria-pressed="${M3.grid}" aria-label="Mostrar grade">${I.grid}</button>
+              ${isMaster() && S.m3Edit ? `<button class="icon-btn" data-action="m3-undo" ${M3.undo.length ? '' : 'disabled'} aria-label="Desfazer" title="Desfazer (Ctrl+Z)">${I.rotl}</button>` : ''}
+              ${isMaster() ? `<button class="btn sm ${S.m3Edit ? 'toggle-on' : ''}" data-action="m3-edit" aria-pressed="${!!S.m3Edit}">${I.pin}${S.m3Edit ? 'Concluir cenário' : 'Montar cenário'}</button>` : ''}
+              ${isMaster() && S.m3Edit ? `<span class="m3-cur"><span class="sw-g" style="--gc:#${m3ToolColor().toString(16).padStart(6, '0')}"></span>${esc(m3ToolName())}${M3_KINDS[M3.tool] ? '' : ` · ${['1×1', '3×3', '5×5'][M3.brush]}`}${M3.rect ? ' · retângulo' : ''}</span>` : ''}
+            </div>
+            <div class="m3-host" id="m3-host"><div class="m3-labels" id="m3-labels"></div></div>
+            <p class="m3-hint">${isMaster() && S.m3Edit
+              ? 'Arraste para pintar; Shift (ou Retângulo) preenche uma área. Espaço ou botão do meio move a vista, botão direito gira, roda dá zoom, Ctrl+Z desfaz.'
+              : 'Clique no token para selecionar e numa casa iluminada para andar. Arraste para mover a vista, botão direito gira, roda dá zoom.'}</p>
+          </div>
+          ${m3Inspector(cur, toks)}
+        </div>`;
+  return { html: head(bar) + body, crumbs: null, after: () => m3Mount(cur, toks) };
+}
+const m3ToolName = () => M3_GROUND[M3.tool] ? M3_GROUND[M3.tool][0] : M3_PROPS[M3.tool] ? M3_PROPS[M3.tool][0]
+  : M3_KINDS[M3.tool] ? M3_KINDS[M3.tool][0] : M3.tool === 'wall+' ? 'Levantar parede' : M3.tool === 'wall-' ? 'Baixar parede' : 'Apagar';
+const m3ToolColor = () => M3_GROUND[M3.tool] ? M3_GROUND[M3.tool][1] : M3_PROPS[M3.tool] ? M3_PROPS[M3.tool][1]
+  : M3_KINDS[M3.tool] ? M3_KINDS[M3.tool][1] : 0x9a9aa8;
+function m3Palette(sc) {
+  if (!S.m3Edit) return `<aside class="side-col"><div class="m3-panel"><h2>Cenário</h2>
+    <p class="hint">Use “Montar cenário” para pintar o piso, levantar paredes e espalhar objetos.</p>
+    <div class="row"><button class="btn sm" data-action="m3-edit">${I.pin}Montar cenário</button>
+      <button class="btn sm" data-action="m3-rename" data-id="${esc(sc.id)}">${I.edit}Cena</button></div></div></aside>`;
+  const g = (t, n) => `<button class="m3-tool ${M3.tool === t ? 'on' : ''}" data-action="m3-tool" data-t="${t}" title="${esc(n)}"><span class="sw-g" style="--gc:#${(M3_GROUND[t] ? M3_GROUND[t][1] : 0).toString(16).padStart(6, '0')}"></span>${esc(n)}</button>`;
+  const p = (t, n) => `<button class="m3-tool ${M3.tool === t ? 'on' : ''}" data-action="m3-tool" data-t="${t}" title="${esc(n)}"><span class="sw-g" style="--gc:#${M3_PROPS[t][1].toString(16).padStart(6, '0')}"></span>${esc(n)}</button>`;
+  return `<aside class="side-col"><div class="m3-panel">
+    <h2>Peças</h2>
+    <h3 class="m3-h3">Piso</h3><div class="m3-tools-grid">${M3_GORDER.map(k => g(k, M3_GROUND[k][0])).join('')}</div>
+    <h3 class="m3-h3">Paredes</h3><div class="m3-tools-grid">
+      <button class="m3-tool ${M3.tool === 'wall+' ? 'on' : ''}" data-action="m3-tool" data-t="wall+">Levantar</button>
+      <button class="m3-tool ${M3.tool === 'wall-' ? 'on' : ''}" data-action="m3-tool" data-t="wall-">Baixar</button></div>
+    <h3 class="m3-h3">Objetos</h3><div class="m3-tools-grid">${Object.keys(M3_PROPS).map(k => p(k, M3_PROPS[k][0])).join('')}</div>
+    <h3 class="m3-h3">Interativos</h3><div class="m3-tools-grid">
+      ${Object.entries(M3_KINDS).map(([k, v]) => `<button class="m3-tool ${M3.tool === k ? 'on' : ''}" data-action="m3-tool" data-t="${k}"><span class="sw-g" style="--gc:#${v[1].toString(16).padStart(6, '0')}"></span>${esc(v[0])}</button>`).join('')}</div>
+    <h3 class="m3-h3">Pincel</h3>
+    <div class="m3-tools-grid b3">
+      ${['1×1', '3×3', '5×5'].map((n, i) => `<button class="m3-tool ${M3.brush === i ? 'on' : ''}" data-action="m3-brush" data-b="${i}">${n}</button>`).join('')}</div>
+    <div class="m3-tools-grid" style="margin-top:6px">
+      <button class="m3-tool ${M3.rect ? 'on' : ''}" data-action="m3-rect" title="Arraste de um canto ao outro (ou segure Shift)">${I.grid}Retângulo</button>
+      <button class="m3-tool ${M3.tool === 'erase' ? 'on' : ''}" data-action="m3-tool" data-t="erase">${I.trash}Apagar</button></div>
+    <div class="m3-tools-grid" style="margin-top:6px">
+      <button class="m3-tool" data-action="m3-fill" title="Cobre a cena inteira com a peça escolhida">Preencher tudo</button>
+      <button class="m3-tool" data-action="m3-undo" ${M3.undo.length ? '' : 'disabled'} title="Ctrl+Z">${I.rotl}Desfazer</button></div>
+    <div class="row" style="margin-top:14px"><button class="btn sm" data-action="m3-rename" data-id="${esc(sc.id)}">${I.edit}Tamanho e nome</button>
+      <button class="btn sm danger" data-action="m3-del" data-id="${esc(sc.id)}">${I.trash}Excluir cena</button></div>
+  </div></aside>`;
+}
+function m3TurnBar(sc, toks) {
+  const tn = sc.turn;
+  if (!tn || !tn.order || !tn.order.length) {
+    return isMaster() ? `<div class="m3-turns empty-turns"><span class="muted">Nenhum combate em andamento.</span>
+      <button class="btn sm primary" data-action="m3-turn-start" data-roll="1">Rolar iniciativa</button>
+      <button class="btn sm" data-action="m3-turn-start" data-roll="">Ordem livre</button></div>` : '';
+  }
+  const act = m3Active(sc);
+  const chips = tn.order.map((k, i) => {
+    const t = toks.find(x => x.key === k);
+    if (!t) return '';
+    const known = t.col === 'characters' || isMaster() || t.o.revealName;
+    const ini = tn.ini && tn.ini[i];
+    return `<button class="m3-turn ${k === act ? 'on' : ''} ${t.o.dead ? 'is-dead' : ''}" data-action="m3-focus" data-k="${esc(k)}">
+      <span class="bst-thumb">${t.o.portrait ? imgTag(t.o.portrait, '') : esc((known ? t.o.name || '?' : '?').trim()[0] || '?')}</span>
+      <span class="m3-turn-n">${known ? esc(t.o.name || 'Sem nome') : '???'}${ini ? `<small>iniciativa ${ini}</small>` : ''}</span></button>`;
+  }).join('');
+  return `<div class="m3-turns"><span class="m3-round">Rodada ${tn.round || 1}</span>
+    <div class="m3-turn-list">${chips}</div>
+    ${isMaster() ? `<div class="row">
+      ${toks.filter(t => !t.o.dead && !tn.order.includes(t.key)).length
+        ? `<button class="btn sm" data-action="m3-turn-sync" title="Entrar na ordem quem chegou depois">+${toks.filter(t => !t.o.dead && !tn.order.includes(t.key)).length} na cena</button>` : ''}
+      <button class="icon-btn" data-action="m3-turn-step" data-d="-1" aria-label="Turno anterior">‹</button>
+      <button class="btn sm primary" data-action="m3-turn-step" data-d="1">Próximo turno</button>
+      <button class="btn sm ghost" data-action="m3-turn-end">Encerrar</button></div>` : ''}</div>`;
+}
+function m3Inspector(sc, toks) {
+  const sel = M3.sel;
+  let body = '';
+  if (sel && sel.kind === 'token') {
+    const t = toks.find(x => x.key === sel.key);
+    if (t) {
+      const L = labelsFor(sc.campaignId);
+      const known = t.col === 'characters' || isMaster() || t.o.revealName;
+      const edit = t.col === 'monsters' ? isMaster() : canEditChar(t.o);
+      const attrs = (t.o.attrs || []).filter(a => a.name && (t.col === 'characters' || isMaster()));
+      body = `<div class="m3-sel">
+        <div class="m3-sel-head"><span class="bst-thumb">${t.o.portrait ? imgTag(t.o.portrait, '') : esc(((known ? t.o.name : '?') || '?').trim()[0] || '?')}</span>
+          <div><strong>${known ? esc(t.o.name || 'Sem nome') : 'Criatura desconhecida'}</strong>
+            <small>${t.col === 'monsters' ? 'Criatura' : esc(userName(t.o.owner))} · anda ${m3Move(t.o)} casas</small></div></div>
+        ${statBar(t.col, t.o, 'hp', L.hp, { adj: edit })}${statBar(t.col, t.o, 'mana', L.mana, { adj: edit })}
+        ${condChips(t.col, t.o, edit)}
+        ${attrs.length ? `<div class="m3-attrs">${attrs.map(a => {
+          const d = attrDie(t.o, a);
+          return d ? `<button class="m3-attr" data-action="roll-attr" data-sides="${d.slice(1)}" data-mod="${esc(a.value)}" data-label="${esc(a.name)}" title="Rolar ${d}">
+              <b>${esc(String(a.value ?? '').trim() || '—')}</b><span>${esc(a.name)}</span>${dieChip(d, true)}</button>`
+            : `<div class="m3-attr"><b>${esc(String(a.value ?? '').trim() || '—')}</b><span>${esc(a.name)}</span></div>`;
+        }).join('')}</div>` : ''}
+        ${(t.o.items || []).filter(i => i.name).length ? `<h3 class="m3-h3">Itens</h3><ul class="item-list">${(t.o.items || []).filter(i => i.name).map(i =>
+          `<li class="item-row"><span><strong>${esc(i.name)}</strong></span><span class="item-dmg">${esc(i.damage || '—')}</span></li>`).join('')}</ul>` : ''}
+        <div class="row" style="margin-top:12px">${t.col === 'characters'
+          ? `<a class="btn sm" href="#/p/${encodeURIComponent(t.o.id)}">Abrir ficha</a>`
+          : isMaster() ? `<a class="btn sm" href="#/m/${encodeURIComponent(t.o.id)}">Abrir ficha</a>` : ''}
+          ${deathBtn(t.col, t.o, edit)}</div></div>`;
+    }
+  } else if (sel && sel.kind === 'obj') {
+    const o = (sc.objects || []).find(x => x.id === sel.id && (isMaster() || !x.hidden));
+    if (o) {
+      const k = M3_KINDS[o.kind] || M3_KINDS.pista;
+      body = `<div class="m3-sel">
+        <div class="m3-obj-head"><span class="msg-kind ${o.kind === 'pista' ? 'pista' : 'mensagem'}">${esc(k[0])}</span>
+          <strong>${esc(o.name || 'Sem nome')}</strong></div>
+        ${o.pub ? `<p class="m3-txt">${esc(o.pub)}</p>` : '<p class="muted" style="font-size:13px">Sem descrição.</p>'}
+        ${isMaster() && o.secret ? `<div class="m3-secret"><span class="m3-secret-t">Só o mestre vê</span><p>${esc(o.secret)}</p></div>` : ''}
+        ${isMaster() ? `<div class="row" style="margin-top:12px">
+            <button class="btn sm ${o.hidden ? '' : 'toggle-on'}" data-action="m3-obj-hide" data-id="${esc(o.id)}">${o.hidden ? I.eyeOff + 'Oculto' : I.eye + 'Visível'}</button>
+            <button class="btn sm primary" data-action="m3-obj-reveal" data-id="${esc(o.id)}">Revelar à mesa</button>
+            <button class="btn sm" data-action="m3-obj-edit" data-id="${esc(o.id)}">${I.edit}Editar</button>
+            <button class="btn sm danger" data-action="m3-obj-del" data-id="${esc(o.id)}">${I.trash}</button></div>` : ''}
+      </div>`;
+    }
+  }
+  if (!body) body = `<p class="muted" style="font-size:13px;margin:0">Clique num token ou num ponto brilhante do cenário para ver os detalhes aqui.</p>`;
+  const objs = (sc.objects || []).filter(o => isMaster() || !o.hidden);
+  const cbase = '#/c/' + encodeURIComponent(sc.campaignId) + '/';
+  const nChar = toks.filter(t => t.col === 'characters').length;
+  const roster = toks.map(t => {
+    const known = t.col === 'characters' || isMaster() || t.o.revealName;
+    const nm = known ? (t.o.name || 'Sem nome') : 'Criatura desconhecida';
+    return `<li><button class="m3-rost ${M3.sel && M3.sel.kind === 'token' && M3.sel.key === t.key ? 'on' : ''} ${t.col === 'monsters' ? 'foe' : ''} ${t.o.dead ? 'dead' : ''}" data-action="m3-focus" data-k="${esc(t.key)}" title="Centralizar na cena">
+      <span class="bst-thumb">${t.o.portrait ? imgTag(t.o.portrait, '') : esc((nm || '?').trim()[0] || '?')}</span>
+      <span class="rt"><strong>${esc(nm)}</strong><small>${t.col === 'monsters' ? 'Criatura' : esc(userName(t.o.owner))}</small></span></button></li>`;
+  }).join('');
+  return `<aside class="side-col"><div class="m3-panel"><h2>Inspetor</h2>${body}</div>
+    <div class="m3-panel"><h2>Em cena</h2>
+      ${toks.length ? `<ul class="m3-roster">${roster}</ul>` : ''}
+      ${!nChar ? `<p class="hint" style="margin:${toks.length ? '10px 0 8px' : '0 0 8px'}">Nenhuma ficha nesta campanha ainda. Toda ficha criada entra sozinha na cena, na faixa de baixo do tabuleiro.</p>
+        <a class="btn sm" href="${cbase}fichas">${I.plus}Criar personagem</a>` : ''}
+      ${isMaster() && !toks.some(t => t.col === 'monsters') ? `<p class="hint" style="margin:${nChar ? '10px' : '12px'} 0 8px">Criaturas entram quando você marca <strong>em campo</strong> na aba Monstros.</p>
+        <a class="btn sm" href="${cbase}monstros">${I.eye}Abrir monstros</a>` : ''}</div>
+    ${objs.length ? `<div class="m3-panel"><h2>Pontos de interesse</h2>
+      <ul class="m3-objs">${objs.map(o => `<li><button class="m3-obj ${M3.sel && M3.sel.id === o.id ? 'on' : ''} ${o.revealed ? 'done' : ''}" data-action="m3-obj-sel" data-id="${esc(o.id)}">
+        <span class="dot" style="--pc:#${(M3_KINDS[o.kind] || M3_KINDS.pista)[1].toString(16).padStart(6, '0')}"></span>
+        ${esc(o.name || 'Sem nome')}${o.hidden ? ' <small>(oculto)</small>' : ''}</button></li>`).join('')}</ul></div>` : ''}
+    ${dicePanel(sc.campaignId)}</aside>`;
+}
+/* monta o canvas na tela depois de cada render */
+function m3Mount(sc, toks) {
+  if (M3.failed) { m3Stop(); return; }
+  if (!M3.lib) { m3Load(); m3Stop(); return; }
+  if (!M3.renderer) { try { m3Init(); } catch (e) { M3.failed = true; m3Stop(); scheduleRender(); return; } }
+  const host = document.getElementById('m3-host');
+  if (!host) { m3Stop(); return; }
+  M3.host = host; M3.labels = document.getElementById('m3-labels');
+  host.classList.toggle('edit', !!(isMaster() && S.m3Edit));
+  host.classList.toggle('panning', !!M3.space);
+  if (M3.renderer.domElement.parentElement !== host) host.insertBefore(M3.renderer.domElement, host.firstChild);
+  m3Wire();
+  const tSig = m3TSig(sc);
+  if (tSig !== M3.terrainSig) {
+    M3.terrainSig = tSig;
+    m3Terrain(sc);
+    if (sc.w !== M3.lastW || sc.h !== M3.lastH) { M3.lastW = sc.w; M3.lastH = sc.h; M3.tx = M3.tz = 0; M3.needFit = true; }
+  }
+  const oSig = JSON.stringify([isMaster(), (sc.objects || []).map(o => [o.id, o.x, o.y, o.kind, o.hidden, o.revealed])]);
+  if (oSig !== M3.objSig) { M3.objSig = oSig; m3Objects(sc); }
+  const kSig = S.user.id + '|' + toks.map(t => [t.key, t.o.portrait, t.o.dead, t.col === 'characters' && t.o.owner].join(',')).join('|');
+  if (kSig !== M3.tokenSig) { M3.tokenSig = kSig; m3BuildTokens(sc, toks); }
+  else toks.forEach(t => { const g = M3.tokens.get(t.key); if (g) { g.userData.tx = t.x; g.userData.tz = t.y; } });
+  if (M3.sel && M3.sel.kind === 'token' && !toks.some(t => t.key === M3.sel.key)) { M3.sel = null; M3.reach = new Map(); }
+  m3Marks(sc);
+  m3Tick();
+}
+/* ---------- modais da cena ---------- */
+function sceneEditor(m) {
+  const d = m.draft;
+  return modalFrame(m.isNew ? 'Nova cena' : 'Cena', `
+    <label class="f">Nome<input class="inp" data-bind="name" value="${esc(d.name)}" data-autofocus placeholder="Ex.: Porão da mansão"></label>
+    <div class="f" style="display:block"><div style="font-size:14px;font-weight:500;margin-bottom:8px">Tamanho do grid</div>
+      <div class="row">${M3_SIZES.map(([w, h]) => `<button class="chip ${d.w === w && d.h === h ? 'on' : ''}" data-action="m3-size" data-w="${w}" data-h="${h}">${w} × ${h}</button>`).join('')}</div>
+      <small class="muted" style="font-size:12px">Ao aumentar, as casas novas entram como piso de pedra. Ao diminuir, o que ficar fora é descartado.</small></div>`,
+    saveBtns(m, m.isNew ? 'Criar cena' : 'Salvar'));
+}
+async function saveScene(m) {
+  const d = m.draft;
+  const name = d.name.trim() || 'Cena';
+  if (m.isNew) {
+    const id = uid(), sc = m3NewScene(d.campaignId, name);
+    sc.w = d.w; sc.h = d.h; sc.ground = 'p'.repeat(d.w * d.h); sc.height = '0'.repeat(d.w * d.h);
+    try { await store.set('scenes', id, sc); S.m3Id = id; M3.terrainSig = ''; closeModal(true); toast('Cena criada.'); }
+    catch (e) { toast('Não foi possível criar a cena.', 'err'); }
+    return;
+  }
+  const prev = get('scenes', m.id); if (!prev) { closeModal(); return; }
+  const patch = { name, updatedAt: Date.now() };
+  if (d.w !== prev.w || d.h !== prev.h) {
+    let g = '', h = '';
+    for (let y = 0; y < d.h; y++) for (let x = 0; x < d.w; x++) {
+      const inside = x < prev.w && y < prev.h;
+      g += inside ? m3G(prev, x, y) : 'p';
+      h += inside ? String(m3H(prev, x, y)) : '0';
+    }
+    const props = {};
+    Object.entries(prev.props || {}).forEach(([k, v]) => { const [x, y] = k.split(',').map(Number); if (x < d.w && y < d.h) props[k] = v; });
+    Object.assign(patch, { w: d.w, h: d.h, ground: g, height: h, props,
+      objects: (prev.objects || []).filter(o => o.x < d.w && o.y < d.h) });
+  }
+  try { await store.update('scenes', m.id, patch); M3.terrainSig = ''; closeModal(true); toast('Cena salva.'); }
+  catch (e) { toast('Não foi possível salvar a cena.', 'err'); }
+}
+function sobjEditor(m) {
+  const d = m.draft;
+  return modalFrame(m.isNew ? 'Novo ponto de interesse' : 'Ponto de interesse', `
+    <div class="f" style="display:block"><div style="font-size:14px;font-weight:500;margin-bottom:8px">Tipo</div>
+      <div class="row">${Object.entries(M3_KINDS).map(([k, v]) => `<button class="chip ${d.kind === k ? 'on' : ''}" data-action="m3-okind" data-k="${k}">${esc(v[0])}</button>`).join('')}</div></div>
+    <label class="f">Nome<input class="inp" data-bind="name" value="${esc(d.name)}" data-autofocus placeholder="${d.kind === 'npc' ? 'Ex.: Velho coveiro' : 'Ex.: Bilhete rasgado'}"></label>
+    <label class="f">O que a mesa vê<textarea class="inp" data-bind="pub" rows="3" placeholder="${d.kind === 'npc' ? 'A fala do NPC…' : 'A descrição que os jogadores leem ao examinar.'}">${esc(d.pub)}</textarea></label>
+    <label class="f">Só o mestre vê<textarea class="inp" data-bind="secret" rows="3" placeholder="A verdade por trás, a resposta do enigma, o que acontece…">${esc(d.secret)}</textarea></label>
+    <label class="switch"><input type="checkbox" data-bind="hidden" ${d.hidden ? 'checked' : ''}>Oculto dos jogadores por enquanto</label>`,
+    `${!m.isNew ? `<button class="btn danger" data-action="m3-obj-del" data-id="${esc(d.id)}">${I.trash}Excluir</button><span class="spacer"></span>` : ''}${saveBtns(m, m.isNew ? 'Criar' : 'Salvar')}`);
+}
+async function saveSobj(m) {
+  const sc = get('scenes', m.sceneId); if (!sc) { closeModal(); return; }
+  const d = clone(m.draft);
+  d.name = d.name.trim() || (M3_KINDS[d.kind] || M3_KINDS.pista)[0];
+  d.pub = d.pub.trim(); d.secret = d.secret.trim();
+  const objs = clone(sc.objects || []);
+  const i = objs.findIndex(o => o.id === d.id);
+  if (i >= 0) objs[i] = { ...objs[i], ...d }; else objs.push(d);
+  try { await store.update('scenes', sc.id, { objects: objs, updatedAt: Date.now() }); M3.objSig = ''; closeModal(true); toast(m.isNew ? 'Ponto criado.' : 'Ponto salvo.'); }
+  catch (e) { toast('Não foi possível salvar o ponto.', 'err'); }
+}
+async function m3ObjPatch(sc, id, patch) {
+  const objs = clone(sc.objects || []);
+  const i = objs.findIndex(o => o.id === id); if (i < 0) return;
+  objs[i] = { ...objs[i], ...patch };
+  M3.objSig = '';
+  try { await store.update('scenes', sc.id, { objects: objs, updatedAt: Date.now() }); }
+  catch (e) { toast('Não foi possível salvar.', 'err'); }
+  return objs[i];
 }
 
 /* =========================================================
@@ -2505,6 +3621,8 @@ function renderModal(first) {
   else if (m.type === 'wp-view') html = wpViewer(m);
   else if (m.type === 'conds') html = condsEditor(m);
   else if (m.type === 'msg') html = msgEditor(m);
+  else if (m.type === 'scene') html = sceneEditor(m);
+  else if (m.type === 'sobj') html = sobjEditor(m);
   $('#overlay').innerHTML = `<div class="scrim" data-scrim="overlay">${html}</div>`;
   hydrateImages($('#overlay'));
   const ns = $('#overlay .modal-scroll'); if (ns) ns.scrollTop = top;
@@ -2770,6 +3888,8 @@ document.addEventListener('input', e => {
   setPath(m.draft, t.dataset.bind, v);
 });
 document.addEventListener('change', async e => {
+  if (e.target.id === 'm3-camp') { S.gameCamp = e.target.value; ls('grimorio-gamecamp', S.gameCamp); S.m3Id = null; M3.sel = null; M3.terrainSig = ''; render(); }
+  if (e.target.id === 'm3-scene') { S.m3Id = e.target.value; M3.sel = null; M3.terrainSig = ''; render(); }
   if (e.target.id === 'game-camp') { S.gameCamp = e.target.value; ls('grimorio-gamecamp', S.gameCamp); S.token = null; render(); }
   if (e.target.id === 'arena-scene') {
     const camp = get('campaigns', isMaster() ? S.gameCamp : S.playerGameCamp);
@@ -2777,14 +3897,25 @@ document.addEventListener('change', async e => {
   }
 });
 document.addEventListener('keydown', e => {
+  const typing = /^(input|textarea|select)$/i.test(document.activeElement && document.activeElement.tagName || '');
+  if (route().view === 'mesa' && !typing && !S.modal) {
+    if (e.code === 'Space' && !e.repeat) { M3.space = true; const h = M3.host; if (h) h.classList.add('panning'); e.preventDefault(); }
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z') && isMaster() && S.m3Edit) { e.preventDefault(); m3UndoPop(); render(); return; }
+  }
   if (e.key !== 'Escape') return;
   if (document.getElementById('splash').querySelector('.post')) { closePost(); render(); return; }
+  if (M3.sel && route().view === 'mesa') { m3Select(null); return; }
   if (S.token) { S.token = null; render(); return; }
   if (document.getElementById('fx').innerHTML) return closeFx();
   if ($('#lightbox').innerHTML) return closeLightbox();
   if ($('#confirm').innerHTML) return endConfirm(false);
   if (S.modal && !S.modal.busy) closeModal();
 });
+document.addEventListener('keyup', e => {
+  if (e.code !== 'Space') return;
+  M3.space = false; const h = M3.host; if (h) h.classList.remove('panning');
+});
+window.addEventListener('blur', () => { M3.space = false; const h = M3.host; if (h) h.classList.remove('panning'); });
 document.addEventListener('pointerdown', e => { S.scrimDown = e.target.dataset?.scrim || null; });
 document.addEventListener('click', async e => {
   const scrim = e.target.dataset?.scrim;
@@ -2797,7 +3928,7 @@ document.addEventListener('click', async e => {
   const a = el.dataset.action; const m = S.modal; const ds = el.dataset;
   switch (a) {
     case 'pick-user': $('#lu').value = ds.u; $('#lerr').classList.add('hidden'); $('#lp').value = ''; $('#lp').focus(); break;
-    case 'logout': closeModal(); applySkin(null); S.user = null; ls('grimorio-user', null); S.mapEdit = false; location.hash = ''; $('#app').innerHTML = ''; render(); break;
+    case 'logout': closeModal(); applySkin(null); M3.sel = null; M3.reach = new Map(); M3.objSig = ''; M3.tokenSig = ''; S.user = null; ls('grimorio-user', null); S.mapEdit = false; location.hash = ''; $('#app').innerHTML = ''; render(); break;
     case 'set-skin': {
       applySkin(ds.id); ls('grimorio-skin-' + S.user.id, S.skin); render();
       toast('Tema ' + (SKINS.find(k => k.id === S.skin)?.name || '') + ' aplicado.');
@@ -2853,6 +3984,73 @@ document.addEventListener('click', async e => {
       catch (err) { toast('Não foi possível reorganizar.', 'err'); }
       break;
     }
+    case 'm3-retry': M3.failed = false; M3.lib = null; m3Load(); render(); break;
+    case 'm3-tool': M3.tool = ds.t; M3.rectFrom = null; m3Ghost(m3Cur()); render(); break;
+    case 'm3-brush': M3.brush = clamp(num(ds.b), 0, 2); M3.rectFrom = null; m3Ghost(m3Cur()); render(); break;
+    case 'm3-rect': M3.rect = !M3.rect; M3.rectFrom = null; m3Ghost(m3Cur()); render(); break;
+    case 'm3-undo': m3UndoPop(); render(); break;
+    case 'm3-fill': {
+      const sc = m3Cur(); if (!sc || !isMaster()) break;
+      if (M3_PROPS[M3.tool] || M3_KINDS[M3.tool]) { toast('Preencher tudo vale para piso, paredes e apagar.'); break; }
+      m3UndoPush(sc);
+      m3PaintCells(sc, m3AreaCells(sc, { x: 0, y: 0 }, { x: sc.w - 1, y: sc.h - 1 }));
+      m3Patch({}, true); render(); break;
+    }
+    case 'm3-grid': M3.grid = !M3.grid; m3Tick(); render(); break;
+    case 'm3-edit': S.m3Edit = !S.m3Edit; M3.sel = null; M3.reach = new Map(); render(); break;
+    case 'm3-zoom':
+      if (ds.z === 'fit') { M3.tx = M3.tz = 0; M3.yaw = Math.PI / 4; M3.pitch = 0.68; M3.needFit = true; }
+      else M3.zoom = clamp(M3.zoom * (ds.z === 'in' ? 1.25 : 1 / 1.25), 0.45, 4);
+      m3Tick(); break;
+    case 'm3-rot': M3.yaw += num(ds.d) * Math.PI / 8; m3Tick(); break;
+    case 'm3-focus': {
+      const t = (M3.toks || []).find(x => x.key === ds.k); if (!t) break;
+      const sc = m3Cur(); if (sc) { M3.tx = t.x + 0.5 - sc.w / 2; M3.tz = t.y + 0.5 - sc.h / 2; }
+      m3Select({ kind: 'token', key: ds.k }); break;
+    }
+    case 'm3-new': openModal({ type: 'scene', isNew: true, draft: { campaignId: ds.camp, name: '', w: M3_SIZES[1][0], h: M3_SIZES[1][1] } }); break;
+    case 'm3-rename': { const sc = get('scenes', ds.id); if (!sc) break;
+      openModal({ type: 'scene', id: sc.id, draft: { campaignId: sc.campaignId, name: sc.name || '', w: sc.w, h: sc.h } }); break; }
+    case 'm3-size': if (m) { m.draft.w = num(ds.w); m.draft.h = num(ds.h); renderModal(); } break;
+    case 'm3-okind': if (m) { m.draft.kind = ds.k; renderModal(); } break;
+    case 'm3-del': { const sc = get('scenes', ds.id); if (!sc || !isMaster()) break;
+      if (!await confirmDialog('Excluir cena?', `“${sc.name}” e tudo que você montou nela serão apagados para a mesa.`, 'Excluir cena')) break;
+      try { await store.remove('scenes', sc.id); S.m3Id = null; M3.terrainSig = ''; toast('Cena excluída.'); } catch (err) { toast('Não foi possível excluir.', 'err'); }
+      break; }
+    case 'm3-turn-start': { const sc = m3Cur(); if (sc && isMaster()) await m3StartTurns(sc, !!ds.roll); break; }
+    case 'm3-turn-sync': { const sc = m3Cur(); if (!sc || !isMaster() || !sc.turn) break;
+      const tn = sc.turn, novos = (M3.toks || []).filter(t => !t.o.dead && !tn.order.includes(t.key));
+      if (!novos.length) break;
+      const order = [...tn.order, ...novos.map(t => t.key)];
+      const ini = tn.ini ? [...tn.ini, ...novos.map(() => 0)] : null;
+      try { await store.update('scenes', sc.id, { turn: { ...tn, order, ini }, updatedAt: Date.now() }); toast('Ordem atualizada.'); }
+      catch (err) { toast('Não foi possível atualizar a ordem.', 'err'); }
+      break; }
+    case 'm3-turn-step': { const sc = m3Cur(); if (sc && isMaster()) await m3NextTurn(sc, num(ds.d) < 0); break; }
+    case 'm3-turn-end': { const sc = m3Cur(); if (!sc || !isMaster()) break;
+      try { await store.update('scenes', sc.id, { turn: null, updatedAt: Date.now() }); toast('Combate encerrado.'); } catch (err) {}
+      break; }
+    case 'm3-obj-sel': { const sc = m3Cur(); if (sc) m3OpenObj(sc, ds.id); break; }
+    case 'm3-obj-edit': { const sc = m3Cur(); const o = sc && (sc.objects || []).find(x => x.id === ds.id); if (!o) break;
+      openModal({ type: 'sobj', sceneId: sc.id, draft: { ...o, pub: o.pub || '', secret: o.secret || '', name: o.name || '' } }); break; }
+    case 'm3-obj-hide': { const sc = m3Cur(); const o = sc && (sc.objects || []).find(x => x.id === ds.id); if (!o || !isMaster()) break;
+      await m3ObjPatch(sc, ds.id, { hidden: !o.hidden }); toast(!o.hidden ? 'Oculto dos jogadores.' : 'Visível no cenário.'); break; }
+    case 'm3-obj-del': { const sc = m3Cur(); if (!sc || !isMaster()) break;
+      if (!await confirmDialog('Excluir ponto?', 'Ele some do cenário para todos.', 'Excluir')) break;
+      const objs = clone(sc.objects || []).filter(x => x.id !== ds.id);
+      M3.objSig = ''; if (M3.sel && M3.sel.id === ds.id) M3.sel = null;
+      if (S.modal && S.modal.type === 'sobj') closeModal();
+      try { await store.update('scenes', sc.id, { objects: objs, updatedAt: Date.now() }); toast('Ponto excluído.'); } catch (err) {}
+      break; }
+    case 'm3-obj-reveal': { const sc = m3Cur(); const o = sc && (sc.objects || []).find(x => x.id === ds.id); if (!o || !isMaster()) break;
+      await m3ObjPatch(sc, ds.id, { revealed: true, hidden: false });
+      const kind = o.kind === 'npc' ? 'mensagem' : 'pista';
+      try {
+        await store.set('messages', uid(), { campaignId: sc.campaignId, from: S.user.id, fromName: S.user.name, to: 'all',
+          kind, text: (o.name || '') + (o.pub ? '\n' + o.pub : ''), image: null, at: Date.now() });
+        toast('Revelado à mesa.');
+      } catch (err) { toast('Não foi possível revelar.', 'err'); }
+      break; }
     case 'new-msg': openModal({ type: 'msg', draft: { campaignId: ds.camp, to: isMaster() ? 'all' : 'mestre', kind: 'mensagem', text: '', image: null }, orig: [] }); break;
     case 'msg-kind': if (m) { m.draft.kind = ds.k; renderModal(); } break;
     case 'pick-msgimg': { const f = await pickFiles(false); uploadInto(f, 'photo', r => { S.modal.draft.image = r; }); break; }
@@ -3012,6 +4210,8 @@ document.addEventListener('click', async e => {
       if (!m || m.busy) break;
       el.disabled = true;
       if (m.type === 'msg') await sendMsg(m);
+      else if (m.type === 'scene') await saveScene(m);
+      else if (m.type === 'sobj') await saveSobj(m);
       else if (m.type === 'sheet') await saveSheet(m);
       else if (m.type === 'library') await saveLibrary(m);
       else if (m.type === 'campaign') await saveCampaign(m);
